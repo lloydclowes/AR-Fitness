@@ -1,0 +1,22 @@
+[
+    {
+        "Name": "Sit ups",
+        "Muscle Group": "Core",
+        "Intensity": "High"
+    },
+    {
+        "Name": "Crunches",
+        "Muscle Group": "Core",
+        "Intensity": "High"
+    },
+    {
+        "Name": "Squats",
+        "Muscle Group": "Legs",
+        "Intensity": "High"
+    },
+    {
+        "Name": "Lunges",
+        "Muscle Group": "Legs",
+        "Intensity": "Low"
+    }
+]
