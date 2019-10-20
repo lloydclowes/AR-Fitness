@@ -28,26 +28,27 @@ struct ExerciseView: View {
                 HStack(alignment: .center) {
                     Spacer()
                     NavigationLink(destination: ExerciseDetailView(title: self.exercises[0], muscleGroupFilter: self.exercises[0])) {
-                        ExerciseTileView(text: self.exercises[0], color: .red)
+                        ExerciseTileView(text: self.exercises[0], color: Color(red: 1.00, green: 0.98, blue: 0.98))
                     }
                     Spacer()
                     NavigationLink(destination: ExerciseDetailView(title: self.exercises[1], muscleGroupFilter: self.exercises[1])) {
-                        ExerciseTileView(text: self.exercises[1], color: .red)
+                        ExerciseTileView(text: self.exercises[1], color: Color(red: 1.00, green: 0.98, blue: 0.98))
                     }
                     Spacer()
                 }.padding()
                 HStack(alignment: .center) {
                     Spacer()
                     NavigationLink(destination: ExerciseDetailView(title: self.exercises[2], muscleGroupFilter: self.exercises[2])) {
-                        ExerciseTileView(text: self.exercises[2], color: .red)
+                        ExerciseTileView(text: self.exercises[2], color: Color(red: 1.00, green: 0.98, blue: 0.98))
                     }
                     Spacer()
                     NavigationLink(destination: ExerciseDetailView(title: self.exercises[3], muscleGroupFilter: self.exercises[3])) {
-                        ExerciseTileView(text: self.exercises[3], color: .red)
+                        ExerciseTileView(text: self.exercises[3], color: Color(red: 1.00, green: 0.98, blue: 0.98))
                     }
                     Spacer()
                 }.padding()
             }
+                
             .navigationBarTitle(Text("Exercises"))
         }
     }

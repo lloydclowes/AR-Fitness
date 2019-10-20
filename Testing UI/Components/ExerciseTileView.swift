@@ -16,7 +16,7 @@ struct ExerciseTileView: View {
     var body: some View {
         Text(self.text.uppercased())
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 120, maxHeight: 120)
-            .background(Color.red)
+            .background(color)
             .foregroundColor(.black)
             .shadow(radius: 7)
             .font(.system(size: 23))
@@ -27,6 +27,6 @@ struct ExerciseTileView: View {
 
 struct ExerciseTileView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseTileView(text: "Hello world", color: .red)
+        ExerciseTileView(text: "Hello world", color: Color(red: 1.00, green: 0.98, blue: 0.98))
     }
 }
