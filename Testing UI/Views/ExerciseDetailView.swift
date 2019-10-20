@@ -20,12 +20,15 @@ struct ExerciseDetailView: View {
                 Spacer()
                 ExerciseRowView(exercise: "Sit ups",
                                  intensity: "high",
-                                 equipement: "None",
+                                 equipment: "None",
+                                 duration: "00:15",
                                  color: Color(red: 1.00, green: 0.98, blue: 0.98))
                 Spacer()
                 ExerciseRowView(exercise: "Crunches",
                                  intensity: "low",
-                                 equipement: "None", color: Color(red: 1.00, green: 0.98, blue: 0.98))
+                                 equipment: "None",
+                                 duration: "1:30",
+                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
                 Spacer()
             }
             .padding()
