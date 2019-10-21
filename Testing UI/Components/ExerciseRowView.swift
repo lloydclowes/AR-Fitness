@@ -47,17 +47,13 @@ struct ExerciseRowView: View {
                     .font(.system(size: 15))
                 
             }
-            
-            Button(action: {
-              self.showAlert = true
-            }) {
+           NavigationLink(destination: ExerciseView(exerciseName: "", duration: "", equipment: "", intensity: "")) {
                 VStack {
                     Text("START").bold().font(.system(size:15))
                     Text(self.duration).font(.system(size:13)).foregroundColor(Color.black)
                 }
-            }.alert(isPresented: $showAlert) {
-                Alert(title: Text("STARTED"))
-                }.foregroundColor(Color.black).padding().background(Color(red: 1.00, green: 0.5, blue: 0.5)).cornerRadius(25)
+           }.foregroundColor(Color.black).padding().background(Color(red: 1.00, green: 0.5, blue: 0.5)).cornerRadius(25)
+            
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 120, maxHeight: 120)
         .background(color)
