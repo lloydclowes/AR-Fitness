@@ -16,11 +16,19 @@ struct ExerciseDetailView: View {
     
     var body: some View {
         NavigationView {
-            HStack(alignment: .center) {
+            VStack(alignment: .center) {
                 Spacer()
-                ExerciseTileView(text: "Sit ups", color: .red)
+                ExerciseRowView(exercise: "Sit ups",
+                                 intensity: "high",
+                                 equipment: "None",
+                                 duration: "00:15",
+                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
                 Spacer()
-                ExerciseTileView(text: "Crunches", color: .red)
+                ExerciseRowView(exercise: "Crunches",
+                                 intensity: "low",
+                                 equipment: "None",
+                                 duration: "1:30",
+                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
                 Spacer()
             }
             .padding()
