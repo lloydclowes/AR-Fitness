@@ -16,14 +16,12 @@ struct ExerciseDetailView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .center) {
-                Spacer()
+            VStack {
                 ExerciseRowView(exercise: "Sit ups",
                                  intensity: "high",
                                  equipment: "None",
                                  duration: "00:15",
                                  color: Color(red: 1.00, green: 0.98, blue: 0.98))
-                Spacer()
                 ExerciseRowView(exercise: "Crunches",
                                  intensity: "low",
                                  equipment: "None",
