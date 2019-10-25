@@ -15,14 +15,17 @@ struct IconView: View {
     var size: Int
     
     var body: some View {
-        Image(self.iconName)
-            .resizable()
-            .frame(width: CGFloat(self.size), height: CGFloat(self.size))
+        Image(
+            uiImage: UIImage(named: self.iconName)!
+                .withTintColor(.red, renderingMode: .alwaysTemplate)
+        )
+        .resizable()
+        .frame(width: CGFloat(self.size), height: CGFloat(self.size))
     }
 }
 
 struct IconView_Previews: PreviewProvider {
     static var previews: some View {
-        IconView(iconName: "leg-icon", color: .blue, size: 50)
+        IconView(iconName: "leg-icon", color: .red, size: 100)
     }
 }

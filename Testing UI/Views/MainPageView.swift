@@ -9,8 +9,10 @@ import SwiftUI
 
 struct MainPageView: View {
     
+    @State private var searchQuery: String = ""
+    
     private var exercises = ["Legs", "Arms", "Whole Body", "Core"]
-    private var icons = ["leg-icon", "arm-icon", "whole-body-icon", "leg-icon"]
+    private var icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
@@ -42,7 +44,7 @@ struct MainPageView: View {
                                 .fontWeight(.semibold)
                                 .padding()
                             Spacer()
-                            }
+                        }
                     }
                 }
                 .background(Color.white)

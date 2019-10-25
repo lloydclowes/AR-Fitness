@@ -10,27 +10,30 @@ import SwiftUI
 
 struct ExerciseDetailView: View {
     
+    @State private var searchQuery: String = ""
+    
     let title: String
     var muscleGroupFilter: String?
     var intensityFilter: String?
     
     var body: some View {
         NavigationView {
-            VStack {
-                ExerciseRowView(exercise: "Sit ups",
-                                 intensity: "high",
-                                 equipment: "None",
-                                 duration: "00:15",
-                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
-                ExerciseRowView(exercise: "Crunches",
-                                 intensity: "low",
-                                 equipment: "None",
-                                 duration: "1:30",
-                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
+            VStack{
+                SearchBar(text: $searchQuery)
+                List {
+                    ExerciseRowView(exercise: "Sit ups",
+                                     intensity: "high",
+                                     equipment: "None",
+                                     duration: "00:15",
+                                     color: Color(red: 1.00, green: 0.98, blue: 0.98))
+                    ExerciseRowView(exercise: "Crunches",
+                                     intensity: "low",
+                                     equipment: "None",
+                                     duration: "1:30",
+                                     color: Color(red: 1.00, green: 0.98, blue: 0.98))
+                }.background(Color.red)
                 Spacer()
-            }
-            .padding()
-            .navigationBarTitle(Text(self.title))
+            }.navigationBarTitle(Text(self.title))
         }
     }
 }
