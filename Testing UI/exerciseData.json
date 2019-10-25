@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Sit ups",
+        "id": 0001,
+        "muscleGroup": "Core",
+        "intensity": "High",
+        "equipment": ["None"]
+    },
+    {
+        "name": "Crunches",
+        "id": 0002,
+        "muscleGroup": "Core",
+        "intensity": "High",
+        "equipment": ["None"]
+    },
+    {
+        "name": "Squats",
+        "id": 0003,
+        "muscleGroup": "Legs",
+        "intensity": "High",
+        "equipment": ["None"]
+    },
+    {
+        "name": "Lunges",
+        "id": 0004,
+        "muscleGroup": "Legs",
+        "intensity": "Low",
+        "equipment": ["None"]
+    }
+]

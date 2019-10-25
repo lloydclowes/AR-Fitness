@@ -10,22 +10,18 @@ import SwiftUI
 
 struct ExerciseRowView: View {
     
-    var exercise: String
-    var intensity: String
-    var equipment: String
+    var exercise: Exercise
     var duration: String
     var color: Color
     
     @State var showAlert = false
     
-    func getIntensityColor(level: String) -> Color {
-        switch level {
-        case "high":
-            return Color.green
-        case "low":
-            return Color.orange
-        default:
-            return Color.black
+    func getIntensityColor() -> Color {
+        switch exercise.intensity {
+            case .high:
+                return Color.green
+            case .low:
+                return Color.orange
         }
     }
     
@@ -33,17 +29,17 @@ struct ExerciseRowView: View {
         HStack {
             VStack {
                // Intensity label style and text
-                Text(self.intensity.capitalized).foregroundColor(getIntensityColor(level: self.intensity)).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
+                Text(self.exercise.intensity.rawValue.capitalized) .foregroundColor(getIntensityColor()).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
                     .font(.system(size: 15))
        
                // Exercise label style and text
-                Text(self.exercise.uppercased()).foregroundColor(.black).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
+                Text(self.exercise.name.uppercased()).foregroundColor(.black).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
                     .padding(.bottom, 8)
                     .padding(.top, 8)
                 .font(.system(size: 23))
                
                // Equipment label style and text
-                Text("Equipment: " + self.equipment.capitalized).foregroundColor(Color.gray).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
+                Text("Equipment: " + self.exercise.equipment[0].capitalized).foregroundColor(Color.gray).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
                     .font(.system(size: 15))
                 
             }
@@ -64,6 +60,10 @@ struct ExerciseRowView: View {
 
 struct ExerciseRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseRowView(exercise: "Exercise example", intensity: "high", equipment: "None", duration: "00:15", color: Color(red: 1.00, green: 0.98, blue: 0.98)).padding()
+        ExerciseRowView(
+            exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]),
+            duration: "00:15",
+            color: Color(red: 1.00, green: 0.98, blue: 0.98)
+        ).padding()
     }
 }
