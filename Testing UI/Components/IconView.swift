@@ -21,6 +21,7 @@ struct IconView: View {
         )
         .resizable()
         .frame(width: CGFloat(self.size), height: CGFloat(self.size))
+            .foregroundColor(Color.red)
     }
 }
 
