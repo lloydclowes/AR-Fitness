@@ -13,25 +13,17 @@ struct ExerciseDetailView: View {
     @State private var searchQuery: String = ""
     
     let title: String
-    var muscleGroupFilter: String?
-    var intensityFilter: String?
+    var exercises: [Exercise]
     
     var body: some View {
         NavigationView {
             VStack{
                 SearchBar(text: $searchQuery)
-                List {
-                    ExerciseRowView(exercise: "Sit ups",
-                                     intensity: "high",
-                                     equipment: "None",
+                List(self.exercises) { exercise in
+                    ExerciseRowView(exercise: exercise,
                                      duration: "00:15",
                                      color: Color(red: 1.00, green: 0.98, blue: 0.98))
-                    ExerciseRowView(exercise: "Crunches",
-                                     intensity: "low",
-                                     equipment: "None",
-                                     duration: "1:30",
-                                     color: Color(red: 1.00, green: 0.98, blue: 0.98))
-                }.background(Color.red)
+                }
                 Spacer()
             }.navigationBarTitle(Text(self.title))
         }
@@ -40,6 +32,10 @@ struct ExerciseDetailView: View {
 
 struct ExerciseDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseDetailView(title: "Core")
+        ExerciseDetailView(
+            title: "Core",
+            exercises: [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"])]
+        )
     }
 }
+

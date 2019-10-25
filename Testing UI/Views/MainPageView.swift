@@ -11,11 +11,29 @@ struct MainPageView: View {
     
     @State private var searchQuery: String = ""
     
+    var exerciseStructs: [Exercise] = [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"]), Exercise(id: 003, name: "Lunges", intensity: .low, muscleGroup: .legs, equipment: ["None"])]
+    
     private var exercises = ["Legs", "Arms", "Whole Body", "Core"]
     private var icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
+    private var enums: [MuscleGroup] = [.legs, .arms, .wholeBody, .core]
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
+        
+//        var exerciseData: Data = Data()
+//        do {
+//            exerciseData = try Data(contentsOf: URL(fileURLWithPath: "exerciseData.json"), options: .mappedIfSafe)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//
+//        let decoder = JSONDecoder()
+//        exerciseStructs = []
+//        do {
+//            self.exerciseStructs = try decoder.decode([Exercise].self, from: exerciseData)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
     }
     
     var body: some View {
@@ -23,10 +41,26 @@ struct MainPageView: View {
             VStack() {
                 Text("Select your type of workout:")
                     .font(.headline)
-                NavigationLink(destination: ExerciseDetailView(title: "High Intensity", intensityFilter: "High")) {
+                NavigationLink(destination: ExerciseDetailView(
+                    title: "High Intensity",
+                    exercises: self.exerciseStructs.filter {
+                        switch $0.intensity {
+                        case .high: return true
+                            default: return false
+                        }
+                    }
+                )) {
                     IntensityButtonView(text: "High Intensity", color: .orange)
                 }.padding()
-                NavigationLink(destination: ExerciseDetailView(title: "Low Intensity", intensityFilter: "Low")) {
+                NavigationLink(destination: ExerciseDetailView(
+                    title: "Low Intensity",
+                    exercises: self.exerciseStructs.filter {
+                        switch $0.intensity {
+                            case .low: return true
+                                default: return false
+                            }
+                        }
+                    )) {
                     IntensityButtonView(text: "Low Intensity", color: .green)
                 }.padding()
                 HStack {
@@ -37,42 +71,19 @@ struct MainPageView: View {
                     Spacer()
                 }
                 List(0 ..< 4) { item in
-                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[item], muscleGroupFilter: self.exercises[item])) {
-                        HStack {
-                            IconView(iconName: self.icons[item], color: .blue, size: 33)
-                            Text(self.exercises[item])
-                                .fontWeight(.semibold)
-                                .padding()
-                            Spacer()
+                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[item], exercises: self.exerciseStructs.filter {
+                            switch $0.muscleGroup {
+                            case self.enums[item]: return true
+                                default: return false
+                            }
                         }
+                    )) {
+                        MuscleGroupRow(icon: self.icons[item], color: .blue, iconSize: 33, muscleGroup: self.exercises[item])
                     }
                 }
                 .background(Color.white)
                 .cornerRadius(10)
-                
                 Spacer()
-//                HStack(alignment: .center) {
-//                    Spacer()
-//                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[0], muscleGroupFilter: self.exercises[0])) {
-//                        ExerciseTileView(text: self.exercises[0], color: Color(red: 1.00, green: 0.98, blue: 0.98))
-//                    }
-//                    Spacer()
-//                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[1], muscleGroupFilter: self.exercises[1])) {
-//                        ExerciseTileView(text: self.exercises[1], color: Color(red: 1.00, green: 0.98, blue: 0.98))
-//                    }
-//                    Spacer()
-//                }.padding()
-//                HStack(alignment: .center) {
-//                    Spacer()
-//                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[2], muscleGroupFilter: self.exercises[2])) {
-//                        ExerciseTileView(text: self.exercises[2], color: Color(red: 1.00, green: 0.98, blue: 0.98))
-//                    }
-//                    Spacer()
-//                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[3], muscleGroupFilter: self.exercises[3])) {
-//                        ExerciseTileView(text: self.exercises[3], color: Color(red: 1.00, green: 0.98, blue: 0.98))
-//                    }
-//                    Spacer()
-//                }.padding()
             }
             .padding()
             .navigationBarTitle(Text("Exercises"))
