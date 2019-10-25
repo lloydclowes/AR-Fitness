@@ -52,7 +52,7 @@ struct ExerciseRowView: View {
                     Text("START").bold().font(.system(size:15))
                     Text(self.duration).font(.system(size:13)).foregroundColor(Color.black)
                 }
-           }.foregroundColor(Color.black).padding().background(Color(red: 1.00, green: 0.5, blue: 0.5)).cornerRadius(25)
+           }.foregroundColor(Color.black).padding().background(Color(red: 1.00, green: 0.5, blue: 0.5)).cornerRadius(25).frame(minWidth: 0, maxWidth: 100)
             
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 120, maxHeight: 120)
