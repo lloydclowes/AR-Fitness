@@ -11,22 +11,22 @@ import SwiftUI
 struct IconView: View {
     
     var iconName: String
-    var color: Color?
+    var color: UIColor = .black
     var size: Int
     
     var body: some View {
         Image(
             uiImage: UIImage(named: self.iconName)!
-                .withTintColor(.red, renderingMode: .alwaysTemplate)
+                .withTintColor(self.color, renderingMode: .alwaysTemplate)
         )
         .resizable()
         .frame(width: CGFloat(self.size), height: CGFloat(self.size))
-            .foregroundColor(Color.red)
+            .foregroundColor(Color(self.color))
     }
 }
 
 struct IconView_Previews: PreviewProvider {
     static var previews: some View {
-        IconView(iconName: "leg-icon", color: .red, size: 100)
+        IconView(iconName: "leg-icon", color: .purple, size: 100)
     }
 }

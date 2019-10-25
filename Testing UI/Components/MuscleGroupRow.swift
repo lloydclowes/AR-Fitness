@@ -11,7 +11,7 @@ import SwiftUI
 struct MuscleGroupRow: View {
     
     var icon: String
-    var color: Color
+    var color: UIColor
     var iconSize: Int
     var muscleGroup: String
     

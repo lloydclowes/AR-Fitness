@@ -16,6 +16,7 @@ struct MainPageView: View {
     private var exercises = ["Legs", "Arms", "Whole Body", "Core"]
     private var icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
     private var enums: [MuscleGroup] = [.legs, .arms, .wholeBody, .core]
+    private var colors: [UIColor] = [.red, .blue, .purple, .orange]
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
@@ -78,7 +79,7 @@ struct MainPageView: View {
                             }
                         }
                     )) {
-                        MuscleGroupRow(icon: self.icons[item], color: .blue, iconSize: 33, muscleGroup: self.exercises[item])
+                        MuscleGroupRow(icon: self.icons[item], color: self.colors[item], iconSize: 33, muscleGroup: self.exercises[item])
                     }
                 }
                 .background(Color.white)
