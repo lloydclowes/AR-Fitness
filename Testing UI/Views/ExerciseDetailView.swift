@@ -17,10 +17,13 @@ struct ExerciseDetailView: View {
     
     var body: some View {
         VStack{
-            List(self.exercises) { exercise in
+            SearchBar(text: $searchQuery)
+            List {
+                ForEach(exercises.filter{$0.name.hasPrefix(searchQuery) || searchQuery == ""}, id:\.self){ exercise in
                 ExerciseRowView(exercise: exercise,
                                  duration: "00:15",
                                  color: Color(red: 1.00, green: 0.98, blue: 0.98))
+            }
             }
             Spacer()
         }
@@ -51,4 +54,3 @@ struct NavigationConfigurator: UIViewControllerRepresentable {
 
 }
 
-//                SearchBar(text: $searchQuery)
