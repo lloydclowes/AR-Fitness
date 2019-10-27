@@ -16,16 +16,15 @@ struct ExerciseDetailView: View {
     var exercises: [Exercise]
     
     var body: some View {
-        NavigationView {
-            VStack{
-                List(self.exercises) { exercise in
-                    ExerciseRowView(exercise: exercise,
-                                     duration: "00:15",
-                                     color: Color(red: 1.00, green: 0.98, blue: 0.98))
-                }
-                Spacer()
-            }.navigationBarTitle(Text(self.title))
+        VStack{
+            List(self.exercises) { exercise in
+                ExerciseRowView(exercise: exercise,
+                                 duration: "00:15",
+                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
+            }
+            Spacer()
         }
+        .navigationBarTitle(Text(self.title))
     }
 }
 
@@ -36,6 +35,20 @@ struct ExerciseDetailView_Previews: PreviewProvider {
             exercises: [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"])]
         )
     }
+}
+
+struct NavigationConfigurator: UIViewControllerRepresentable {
+    var configure: (UINavigationController) -> Void = { _ in }
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<NavigationConfigurator>) -> UIViewController {
+        UIViewController()
+    }
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<NavigationConfigurator>) {
+        if let nc = uiViewController.navigationController {
+            self.configure(nc)
+        }
+    }
+
 }
 
 //                SearchBar(text: $searchQuery)

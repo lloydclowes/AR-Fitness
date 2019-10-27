@@ -10,18 +10,16 @@ import SwiftUI
 
 struct ExerciseView: View {
     
-    var exerciseName: String
-    var duration: String
-    var equipment: String
-    var intensity: String
+    var exercise: Exercise
     
     var body: some View {
         Text("This is where the arkit stuff goes")
+            .navigationBarTitle(Text(self.exercise.name))
     }
 }
 
 struct ExerciseView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseView(exerciseName: "squats", duration: "00:30", equipment: "None", intensity: "Low")
+        ExerciseView(exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]))
     }
 }

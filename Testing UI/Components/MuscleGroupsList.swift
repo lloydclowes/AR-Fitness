@@ -15,22 +15,26 @@ struct MuscleGroupsList: View {
     private let exerciseNames = ["Legs", "Arms", "Whole Body", "Core"]
     private let icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
     private let enums: [MuscleGroup] = [.legs, .arms, .wholeBody, .core]
-    private let colors: [UIColor] = [.red, .blue, .purple, .orange]
+    private let colors: [UIColor] = [.red, .green, .purple, .orange]
     
     var body: some View {
         List(0 ..< 4) { item in
-            NavigationLink(destination: ExerciseDetailView(title: self.exerciseNames[item], exercises: self.exercises.filter {
-                    switch $0.muscleGroup {
-                        case self.enums[item]: return true
-                            default: return false
-                        }
-                    }
+            NavigationLink(destination: ExerciseDetailView(title: self.exerciseNames[item], exercises: self.filterByMuscleGroup(exercises: self.exercises, muscleGroup: self.enums[item])
             )) {
                 MuscleGroupRow(icon: self.icons[item], color: self.colors[item], iconSize: 33, muscleGroup: self.exerciseNames[item])
             }
         }
         .background(Color.white)
-        .cornerRadius(10)
+        .cornerRadius(10)   
+    }
+    
+    private func filterByMuscleGroup(exercises: [Exercise], muscleGroup: MuscleGroup) -> [Exercise] {
+        return exercises.filter {
+            switch $0.muscleGroup {
+                case muscleGroup: return true
+                default: return false
+            }
+        }
     }
     
 }

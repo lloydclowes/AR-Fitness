@@ -43,7 +43,7 @@ struct ExerciseRowView: View {
                     .font(.system(size: 15))
                 
             }
-           NavigationLink(destination: ExerciseView(exerciseName: "", duration: "", equipment: "", intensity: "")) {
+            NavigationLink(destination: ExerciseView(exercise: self.exercise)) {
                 VStack {
                     Text("START").bold().font(.system(size:15))
                     Text(self.duration).font(.system(size:13)).foregroundColor(Color.black)

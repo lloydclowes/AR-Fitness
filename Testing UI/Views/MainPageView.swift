@@ -11,7 +11,7 @@ struct MainPageView: View {
     
     @State private var searchQuery: String = ""
     
-    var exerciseStructs: [Exercise] = [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"]), Exercise(id: 003, name: "Lunges", intensity: .low, muscleGroup: .legs, equipment: ["None"])]
+    var exercises: [Exercise] = [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"]), Exercise(id: 003, name: "Lunges", intensity: .low, muscleGroup: .legs, equipment: ["None"])]
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
@@ -39,23 +39,13 @@ struct MainPageView: View {
                     .font(.headline)
                 NavigationLink(destination: ExerciseDetailView(
                     title: "High Intensity",
-                    exercises: self.exerciseStructs.filter {
-                        switch $0.intensity {
-                            case .high: return true
-                            default: return false
-                        }
-                    }
+                    exercises: filterByIntensity(exercises: self.exercises, intensity: .high)
                 )) {
                     IntensityButtonView(text: "High Intensity", color: .orange)
                 }.padding()
                 NavigationLink(destination: ExerciseDetailView(
                     title: "Low Intensity",
-                    exercises: self.exerciseStructs.filter {
-                        switch $0.intensity {
-                            case .low: return true
-                            default: return false
-                        }
-                    }
+                    exercises: filterByIntensity(exercises: self.exercises, intensity: .low)
                 )) {
                     IntensityButtonView(text: "Low Intensity", color: .green)
                 }.padding()
@@ -66,16 +56,26 @@ struct MainPageView: View {
                         .multilineTextAlignment(.leading)
                     Spacer()
                 }
-                MuscleGroupsList(exercises: self.exerciseStructs)
+                MuscleGroupsList(exercises: self.exercises)
                     .frame(height: 258)
                 Spacer()
             }
-            .padding()
             .navigationBarTitle(Text("Exercises"))
+            .padding()
             .background(Color(red: 0.95, green: 0.95, blue: 0.95))
             .edgesIgnoringSafeArea(.bottom)
         }
     }
+    
+    private func filterByIntensity(exercises: [Exercise], intensity: Intensity) -> [Exercise] {
+        return exercises.filter {
+            switch $0.intensity {
+                case intensity: return true
+                default: return false
+            }
+        }
+    }
+    
 }
 
 struct MainPageView_Previews: PreviewProvider {
