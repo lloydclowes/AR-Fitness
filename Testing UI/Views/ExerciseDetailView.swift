@@ -14,16 +14,18 @@ struct ExerciseDetailView: View {
     
     let title: String
     var exercises: [Exercise]
-    
+    init(title: String, exercises: [Exercise]) {
+        self.title = title
+        self.exercises = exercises
+        UINavigationBar.appearance().backgroundColor = UIColor(ciColor: .white)
+    }
     var body: some View {
         VStack{
             SearchBar(text: $searchQuery)
-            List {
                 ForEach(exercises.filter{$0.name.hasPrefix(searchQuery) || searchQuery == ""}, id:\.self){ exercise in
                 ExerciseRowView(exercise: exercise,
                                  duration: "00:15",
-                                 color: Color(red: 1.00, green: 0.98, blue: 0.98))
-            }
+                                 color: Color(red: 1.00, green: 0.98, blue: 0.98)).padding()
             }
             Spacer()
         }

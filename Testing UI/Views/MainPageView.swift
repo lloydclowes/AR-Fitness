@@ -15,6 +15,7 @@ struct MainPageView: View {
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
+       
         
 //        var exerciseData: Data = Data()
 //        do {
@@ -61,8 +62,8 @@ struct MainPageView: View {
                 Spacer()
             }.navigationBarTitle(Text("Exercises"))
             .padding()
-            .background(Color(red: 0.95, green: 0.95, blue: 0.95))
-        }.edgesIgnoringSafeArea(.bottom)
+                .background(Color(red: 0.95, green: 0.95, blue: 0.95)).edgesIgnoringSafeArea(.bottom)
+        }
         
     }
     
