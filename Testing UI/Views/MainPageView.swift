@@ -11,7 +11,7 @@ struct MainPageView: View {
     
     @State private var searchQuery: String = ""
     
-    var exercises: [Exercise] = [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"]), Exercise(id: 003, name: "Lunges", intensity: .low, muscleGroup: .legs, equipment: ["None"])]
+    var exercises: [Exercise] = exerciseData
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
