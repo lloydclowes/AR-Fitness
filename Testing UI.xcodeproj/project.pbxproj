@@ -15,6 +15,7 @@
 		6E43804E23624133001A557A /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E43804D23624133001A557A /* IconView.swift */; };
 		6E86FC8A2362EC7F00810FE6 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E86FC892362EC7F00810FE6 /* SearchBar.swift */; };
 		6E86FC8C2362FCC900810FE6 /* MuscleGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E86FC8B2362FCC900810FE6 /* MuscleGroupRow.swift */; };
+		6E86FC8E236332F500810FE6 /* MuscleGroupsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E86FC8D236332F500810FE6 /* MuscleGroupsList.swift */; };
 		6E9004CC2359BCAA0070AECC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004CB2359BCAA0070AECC /* AppDelegate.swift */; };
 		6E9004CE2359BCAA0070AECC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004CD2359BCAA0070AECC /* SceneDelegate.swift */; };
 		6E9004D02359BCAA0070AECC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004CF2359BCAA0070AECC /* ContentView.swift */; };
@@ -35,6 +36,7 @@
 		6E43804D23624133001A557A /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 		6E86FC892362EC7F00810FE6 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		6E86FC8B2362FCC900810FE6 /* MuscleGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleGroupRow.swift; sourceTree = "<group>"; };
+		6E86FC8D236332F500810FE6 /* MuscleGroupsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleGroupsList.swift; sourceTree = "<group>"; };
 		6E9004C82359BCAA0070AECC /* Testing UI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Testing UI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E9004CB2359BCAA0070AECC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E9004CD2359BCAA0070AECC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			children = (
 				6E9004E32359EA220070AECC /* ExerciseTileView.swift */,
 				6E86FC892362EC7F00810FE6 /* SearchBar.swift */,
+				6E86FC8D236332F500810FE6 /* MuscleGroupsList.swift */,
 				6E9004E5235A086E0070AECC /* IntensityButtonView.swift */,
 				6E86FC8B2362FCC900810FE6 /* MuscleGroupRow.swift */,
 				678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */,
@@ -200,6 +203,7 @@
 				6E438043235A197A001A557A /* ExerciseDetailView.swift in Sources */,
 				67FB2C2F235E208600AD0CD2 /* MainPageView.swift in Sources */,
 				6E43804C235A4EE2001A557A /* Exercise.swift in Sources */,
+				6E86FC8E236332F500810FE6 /* MuscleGroupsList.swift in Sources */,
 				6E9004E6235A086E0070AECC /* IntensityButtonView.swift in Sources */,
 				6E86FC8A2362EC7F00810FE6 /* SearchBar.swift in Sources */,
 				6E43804E23624133001A557A /* IconView.swift in Sources */,

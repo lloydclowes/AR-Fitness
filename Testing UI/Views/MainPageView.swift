@@ -13,11 +13,6 @@ struct MainPageView: View {
     
     var exerciseStructs: [Exercise] = [Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]), Exercise(id: 002, name: "Crunches", intensity: .low, muscleGroup: .core, equipment: ["None"]), Exercise(id: 003, name: "Lunges", intensity: .low, muscleGroup: .legs, equipment: ["None"])]
     
-    private var exercises = ["Legs", "Arms", "Whole Body", "Core"]
-    private var icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
-    private var enums: [MuscleGroup] = [.legs, .arms, .wholeBody, .core]
-    private var colors: [UIColor] = [.red, .blue, .purple, .orange]
-    
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
         
@@ -46,7 +41,7 @@ struct MainPageView: View {
                     title: "High Intensity",
                     exercises: self.exerciseStructs.filter {
                         switch $0.intensity {
-                        case .high: return true
+                            case .high: return true
                             default: return false
                         }
                     }
@@ -58,10 +53,10 @@ struct MainPageView: View {
                     exercises: self.exerciseStructs.filter {
                         switch $0.intensity {
                             case .low: return true
-                                default: return false
-                            }
+                            default: return false
                         }
-                    )) {
+                    }
+                )) {
                     IntensityButtonView(text: "Low Intensity", color: .green)
                 }.padding()
                 HStack {
@@ -71,19 +66,8 @@ struct MainPageView: View {
                         .multilineTextAlignment(.leading)
                     Spacer()
                 }
-                List(0 ..< 4) { item in
-                    NavigationLink(destination: ExerciseDetailView(title: self.exercises[item], exercises: self.exerciseStructs.filter {
-                            switch $0.muscleGroup {
-                            case self.enums[item]: return true
-                                default: return false
-                            }
-                        }
-                    )) {
-                        MuscleGroupRow(icon: self.icons[item], color: self.colors[item], iconSize: 33, muscleGroup: self.exercises[item])
-                    }
-                }
-                .background(Color.white)
-                .cornerRadius(10)
+                MuscleGroupsList(exercises: self.exerciseStructs)
+                    .frame(height: 258)
                 Spacer()
             }
             .padding()

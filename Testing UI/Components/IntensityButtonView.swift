@@ -17,7 +17,7 @@ struct IntensityButtonView: View {
         Text(self.text.uppercased())
             .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width * 0.8, minHeight: 80, maxHeight: 80)
             .background(self.color)
-            .foregroundColor(.black)
+            .foregroundColor(.white)
             .font(.system(size: 23))
             .lineLimit(2)
             .cornerRadius(35)

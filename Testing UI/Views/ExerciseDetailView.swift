@@ -18,7 +18,6 @@ struct ExerciseDetailView: View {
     var body: some View {
         NavigationView {
             VStack{
-                SearchBar(text: $searchQuery)
                 List(self.exercises) { exercise in
                     ExerciseRowView(exercise: exercise,
                                      duration: "00:15",
@@ -39,3 +38,4 @@ struct ExerciseDetailView_Previews: PreviewProvider {
     }
 }
 
+//                SearchBar(text: $searchQuery)
