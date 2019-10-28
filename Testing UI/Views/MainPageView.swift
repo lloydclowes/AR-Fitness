@@ -15,7 +15,7 @@ struct MainPageView: View {
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
-        
+       
 //        var exerciseData: Data = Data()
 //        do {
 //            exerciseData = try Data(contentsOf: URL(fileURLWithPath: "exerciseData.json"), options: .mappedIfSafe)
@@ -59,12 +59,11 @@ struct MainPageView: View {
                 MuscleGroupsList(exercises: self.exercises)
                     .frame(height: 258)
                 Spacer()
-            }
-            .navigationBarTitle(Text("Exercises"))
+            }.navigationBarTitle(Text("Exercises"))
             .padding()
-            .background(Color(red: 0.95, green: 0.95, blue: 0.95))
-            .edgesIgnoringSafeArea(.bottom)
+                .background(Color(red: 0.95, green: 0.95, blue: 0.95)).edgesIgnoringSafeArea(.bottom)
         }
+        
     }
     
     private func filterByIntensity(exercises: [Exercise], intensity: Intensity) -> [Exercise] {
@@ -77,6 +76,7 @@ struct MainPageView: View {
     }
     
 }
+
 
 struct MainPageView_Previews: PreviewProvider {
     static var previews: some View {
