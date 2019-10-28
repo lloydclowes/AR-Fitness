@@ -59,7 +59,13 @@ struct MainPageView: View {
                 MuscleGroupsList(exercises: self.exercises)
                     .frame(height: 258)
                 Spacer()
-            }.navigationBarTitle(Text("Exercises"))
+            }
+            .navigationBarTitle(Text("Exercises"))
+//            .navigationBarItems(trailing:
+//                NavigationLink(destination: SettingsView()) {
+//                    Button("Settings")
+//                }
+//            )
             .padding()
                 .background(Color(red: 0.95, green: 0.95, blue: 0.95)).edgesIgnoringSafeArea(.bottom)
         }
