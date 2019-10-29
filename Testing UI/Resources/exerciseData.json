@@ -26,5 +26,12 @@
         "muscleGroup": "Legs",
         "intensity": "Low",
         "equipment": []
+    },
+    {
+        "name": "Lateral Raises",
+        "id": 5,
+        "muscleGroup": "Arms",
+        "intensity": "Low",
+        "equipment": ["Dumbbells"]
     }
 ]
