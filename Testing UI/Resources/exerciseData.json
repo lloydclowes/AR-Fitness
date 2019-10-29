@@ -4,27 +4,27 @@
         "id": 1,
         "muscleGroup": "Core",
         "intensity": "High",
-        "equipment": ["None"]
+        "equipment": []
     },
     {
         "name": "Crunches",
         "id": 2,
         "muscleGroup": "Core",
         "intensity": "High",
-        "equipment": ["None"]
+        "equipment": []
     },
     {
         "name": "Squats",
         "id": 3,
         "muscleGroup": "Legs",
         "intensity": "High",
-        "equipment": ["None"]
+        "equipment": []
     },
     {
         "name": "Lunges",
         "id": 4,
         "muscleGroup": "Legs",
         "intensity": "Low",
-        "equipment": ["None"]
+        "equipment": []
     }
 ]

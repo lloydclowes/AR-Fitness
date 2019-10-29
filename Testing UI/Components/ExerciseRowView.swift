@@ -14,9 +14,7 @@ struct ExerciseRowView: View {
     var duration: String
     var color: Color
     
-    @State var showAlert = false
-    
-    func getIntensityColor() -> Color {
+    private func getIntensityColor() -> Color {
         switch exercise.intensity {
             case .high:
                 return Color.green
@@ -29,26 +27,43 @@ struct ExerciseRowView: View {
         HStack {
             VStack {
                // Intensity label style and text
-                Text(self.exercise.intensity.rawValue.capitalized) .foregroundColor(getIntensityColor()).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
+                Text(self.exercise.intensity.rawValue.capitalized) .foregroundColor(getIntensityColor())
+                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading)
                     .font(.system(size: 15))
        
                // Exercise label style and text
-                Text(self.exercise.name.uppercased()).foregroundColor(.black).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
+                Text(self.exercise.name.uppercased())
+                    .foregroundColor(.black)
+                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading)
                     .padding(.bottom, 8)
                     .padding(.top, 8)
-                .font(.system(size: 23))
+                    .font(.system(size: 23))
                
                // Equipment label style and text
-                Text("Equipment: " + self.exercise.equipment[0].capitalized).foregroundColor(Color.gray).frame(minWidth: 0, maxWidth: .infinity, alignment: .leading).padding(.leading)
+                Text("Equipment: " + (self.exercise.equipment == [] ? "None" : self.exercise.equipment.map {$0.capitalized}.joined(separator: ", ")))
+                    .foregroundColor(Color.gray)
+                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading)
                     .font(.system(size: 15))
                 
             }
             NavigationLink(destination: ExerciseView(exercise: self.exercise)) {
                 VStack {
-                    Text("START").bold().font(.system(size:15))
-                    Text(self.duration).font(.system(size:13)).foregroundColor(Color.black)
+                    Text("START")
+                        .bold()
+                        .font(.system(size:15))
+                    Text(self.duration)
+                        .font(.system(size:13))
+                        .foregroundColor(Color.black)
                 }
-           }.foregroundColor(Color.black).padding().background(Color(red: 1.00, green: 0.5, blue: 0.5)).cornerRadius(25).frame(minWidth: 0, maxWidth: 100)
+            }
+            .foregroundColor(Color.black)
+            .padding()
+            .background(Color(red: 1.00, green: 0.5, blue: 0.5))
+            .cornerRadius(25)
+            .frame(minWidth: 0, maxWidth: 100)
             
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 120, maxHeight: 120)
@@ -61,7 +76,7 @@ struct ExerciseRowView: View {
 struct ExerciseRowView_Previews: PreviewProvider {
     static var previews: some View {
         ExerciseRowView(
-            exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["None"]),
+            exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["foo", "poo"]),
             duration: "00:15",
             color: Color(red: 1.00, green: 0.98, blue: 0.98)
         ).padding()
