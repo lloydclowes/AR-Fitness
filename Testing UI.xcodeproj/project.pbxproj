@@ -24,7 +24,6 @@
 		6E9004D52359BCAD0070AECC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E9004D42359BCAD0070AECC /* Preview Assets.xcassets */; };
 		6E9004D82359BCAD0070AECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E9004D62359BCAD0070AECC /* LaunchScreen.storyboard */; };
 		6E9004E22359E9F20070AECC /* ExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004E12359E9F20070AECC /* ExerciseView.swift */; };
-		6E9004E42359EA220070AECC /* ExerciseTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004E32359EA220070AECC /* ExerciseTileView.swift */; };
 		6E9004E6235A086E0070AECC /* IntensityButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004E5235A086E0070AECC /* IntensityButtonView.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 		6E9004D72359BCAD0070AECC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6E9004D92359BCAD0070AECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6E9004E12359E9F20070AECC /* ExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseView.swift; sourceTree = "<group>"; };
-		6E9004E32359EA220070AECC /* ExerciseTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseTileView.swift; sourceTree = "<group>"; };
 		6E9004E5235A086E0070AECC /* IntensityButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityButtonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,7 +132,6 @@
 		6E9004E7235A14E00070AECC /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				6E9004E32359EA220070AECC /* ExerciseTileView.swift */,
 				6E86FC8D236332F500810FE6 /* MuscleGroupsList.swift */,
 				6E9004E5235A086E0070AECC /* IntensityButtonView.swift */,
 				6E86FC8B2362FCC900810FE6 /* MuscleGroupRow.swift */,
@@ -240,7 +237,6 @@
 				6E9004E22359E9F20070AECC /* ExerciseView.swift in Sources */,
 				6E9004CC2359BCAA0070AECC /* AppDelegate.swift in Sources */,
 				6E9004CE2359BCAA0070AECC /* SceneDelegate.swift in Sources */,
-				6E9004E42359EA220070AECC /* ExerciseTileView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
