@@ -17,9 +17,9 @@ struct ExerciseRowView: View {
     private func getIntensityColor() -> Color {
         switch exercise.intensity {
             case .high:
-                return Color.green
+                return .orange
             case .low:
-                return Color.orange
+                return .green
         }
     }
     
