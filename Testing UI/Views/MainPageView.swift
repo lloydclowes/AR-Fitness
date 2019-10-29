@@ -12,29 +12,18 @@ struct MainPageView: View {
     @State private var searchQuery: String = ""
     
     var exercises: [Exercise] = exerciseData
+    private var searchBarIsActive = false
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
-       
-//        var exerciseData: Data = Data()
-//        do {
-//            exerciseData = try Data(contentsOf: URL(fileURLWithPath: "exerciseData.json"), options: .mappedIfSafe)
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//
-//        let decoder = JSONDecoder()
-//        exerciseStructs = []
-//        do {
-//            self.exerciseStructs = try decoder.decode([Exercise].self, from: exerciseData)
-//        } catch {
-//            print(error.localizedDescription)
-//        }
     }
     
     var body: some View {
         NavigationView {
             VStack() {
+                SearchBar(text: $searchQuery)
+                    .padding([.horizontal], 13)
+                    .padding([.top], -9)
                 Text("Select your type of workout:")
                     .font(.headline)
                 NavigationLink(destination: ExerciseDetailView(
@@ -55,13 +44,20 @@ struct MainPageView: View {
                         .fontWeight(.bold)
                         .multilineTextAlignment(.leading)
                     Spacer()
-                }
+                }.padding([.horizontal])
                 MuscleGroupsList(exercises: self.exercises)
                     .frame(height: 258)
+                    .padding([.horizontal])
                 Spacer()
-            }.navigationBarTitle(Text("Exercises"))
-            .padding()
-                .background(Color(red: 0.95, green: 0.95, blue: 0.95)).edgesIgnoringSafeArea(.bottom)
+            }
+            .navigationBarTitle(Text("Exercises"))
+            .navigationBarItems(trailing:
+                Button("Settings") {
+                    print("Go to Settings")
+                }
+            )
+            .background(Color(red: 0.95, green: 0.95, blue: 0.95))
+            .edgesIgnoringSafeArea(.bottom)
         }
         
     }

@@ -15,7 +15,7 @@ struct MuscleGroupsList: View {
     private let exerciseNames = ["Legs", "Arms", "Whole Body", "Core"]
     private let icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
     private let enums: [MuscleGroup] = [.legs, .arms, .wholeBody, .core]
-    private let colors: [UIColor] = [.red, .green, .purple, .orange]
+    private let colors: [UIColor] = [.red, UIColor(red: 50/255, green: 205/255, blue: 50/255, alpha: 1.0), .purple, .orange]
     
     var body: some View {
         List(0 ..< 4) { item in
