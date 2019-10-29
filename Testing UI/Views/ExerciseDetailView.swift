@@ -20,7 +20,7 @@ struct ExerciseDetailView: View {
             SearchBar(text: $searchQuery)
                 .padding([.horizontal], 13)
                 .padding([.top], -9)
-            ForEach(exercises.filter{$0.name.hasPrefix(searchQuery) || searchQuery == ""}, id:\.self) { exercise in
+            ForEach(exercises.filter{$0.name.lowercased().hasPrefix(searchQuery.lowercased()) || searchQuery == ""}, id:\.self) { exercise in
                 ExerciseRowView(exercise: exercise,
                                  duration: "00:15",
                                  color: Color(red: 1.00, green: 0.98, blue: 0.98)).padding()
