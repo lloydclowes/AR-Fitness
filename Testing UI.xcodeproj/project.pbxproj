@@ -28,6 +28,20 @@
 		6E9004E6235A086E0070AECC /* IntensityButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004E5235A086E0070AECC /* IntensityButtonView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		6E4195D023684C490093FDD1 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = "com.apple.build-tasks.compile-rc-project.xcplugin";
+			fileType = file.rcproject;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# rctool\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXFileReference section */
 		678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRowView.swift; sourceTree = "<group>"; };
 		67FB2C2E235E208600AD0CD2 /* MainPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageView.swift; sourceTree = "<group>"; };
@@ -166,6 +180,7 @@
 				6E9004C62359BCAA0070AECC /* Resources */,
 			);
 			buildRules = (
+				6E4195D023684C490093FDD1 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);

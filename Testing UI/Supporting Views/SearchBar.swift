@@ -23,6 +23,21 @@ struct SearchBar: UIViewRepresentable {
         func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
             text = searchText
         }
+        
+        func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+            searchBar.setShowsCancelButton(true, animated: true)
+        }
+        
+        func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+            searchBar.resignFirstResponder()
+            searchBar.setShowsCancelButton(false, animated: true)
+            text = ""
+        }
+        
+        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+             searchBar.resignFirstResponder()
+             searchBar.setShowsCancelButton(false, animated: true)
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -32,6 +47,9 @@ struct SearchBar: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
         let searchBar = UISearchBar(frame: .zero)
         searchBar.delegate = context.coordinator
+        searchBar.barTintColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: UIBarMetrics.default)
+        searchBar.placeholder = "Search"
         return searchBar
     }
 
