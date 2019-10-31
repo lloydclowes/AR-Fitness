@@ -13,8 +13,7 @@ struct ExerciseView: View {
     var exercise: Exercise
     
     var body: some View {
-        Text("This is where the arkit stuff goes")
-            .navigationBarTitle(Text(self.exercise.name))
+        ContentView()
     }
 }
 
