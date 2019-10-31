@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		678F070D235B935F00CE5AC6 /* ExerciseRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */; };
-		67BBB097236AEC320041D5DD /* robot.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 67BBB096236AEC320041D5DD /* robot.usdz */; };
 		67FB2C2F235E208600AD0CD2 /* MainPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FB2C2E235E208600AD0CD2 /* MainPageView.swift */; };
 		6E30CA85236A2FF200AADAF2 /* ARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CA84236A2FF200AADAF2 /* ARView.swift */; };
 		6E30CA87236A30FF00AADAF2 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CA86236A30FF00AADAF2 /* ARViewController.swift */; };
@@ -34,11 +33,11 @@
 		6E9004E6235A086E0070AECC /* IntensityButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9004E5235A086E0070AECC /* IntensityButtonView.swift */; };
 		6EAF45C1236AE6E500710465 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EAF45C0236AE6E500710465 /* ContentView.swift */; };
 		6EAF45C3236AE8D900710465 /* GetJointAnglesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */; };
+		6EAF45C5236AEE4700710465 /* robot.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 6EAF45C4236AEE4700710465 /* robot.usdz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRowView.swift; sourceTree = "<group>"; };
-		67BBB096236AEC320041D5DD /* robot.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; name = robot.usdz; path = character/robot.usdz; sourceTree = "<group>"; };
 		67FB2C2E235E208600AD0CD2 /* MainPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageView.swift; sourceTree = "<group>"; };
 		6E30CA84236A2FF200AADAF2 /* ARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARView.swift; sourceTree = "<group>"; };
 		6E30CA86236A30FF00AADAF2 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +65,7 @@
 		6E9004E5235A086E0070AECC /* IntensityButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityButtonView.swift; sourceTree = "<group>"; };
 		6EAF45C0236AE6E500710465 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetJointAnglesExtension.swift; sourceTree = "<group>"; };
+		6EAF45C4236AEE4700710465 /* robot.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = robot.usdz; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +84,7 @@
 			children = (
 				6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */,
 				6E30CA8B236A356200AADAF2 /* ActivityState.swift */,
+				6EAF45C4236AEE4700710465 /* robot.usdz */,
 				6E30CA8D236A358800AADAF2 /* Utilities.swift */,
 				6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */,
 				6E30CA91236A35C100AADAF2 /* EulerAngles.swift */,
@@ -136,7 +137,6 @@
 		6E9004CA2359BCAA0070AECC /* Testing UI */ = {
 			isa = PBXGroup;
 			children = (
-				67BBB096236AEC320041D5DD /* robot.usdz */,
 				6E9004CB2359BCAA0070AECC /* AppDelegate.swift */,
 				6E9004CD2359BCAA0070AECC /* SceneDelegate.swift */,
 				6E4195C8236622010093FDD1 /* Models */,
@@ -245,7 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E9004D82359BCAD0070AECC /* LaunchScreen.storyboard in Resources */,
-				67BBB097236AEC320041D5DD /* robot.usdz in Resources */,
+				6EAF45C5236AEE4700710465 /* robot.usdz in Resources */,
 				6E9004D52359BCAD0070AECC /* Preview Assets.xcassets in Resources */,
 				6E9004D22359BCAD0070AECC /* Assets.xcassets in Resources */,
 				6E438047235A1F82001A557A /* exerciseData.json in Resources */,
