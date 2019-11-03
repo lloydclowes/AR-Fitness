@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ARUIView.swift
 //  AR-Sports
 //
 //  Created by Brandon Forbes on 15/10/2019.
@@ -11,7 +11,7 @@ import RealityKit
 import ARKit
 import Combine
 
-struct ContentView : View {
+struct ARUIView : View {
     var body: some View {
         return ARViewContainer()
     }
@@ -33,6 +33,8 @@ struct ARViewContainer: UIViewRepresentable {
         }
         
         let arView = ARView(frame: .zero)
+        
+        arView.session.delegate = context.coordinator
         
         // Run a body tracking configration.
         arView.session.run(ARBodyTrackingConfiguration())
@@ -61,7 +63,7 @@ struct ARViewContainer: UIViewRepresentable {
     
     func updateUIView(_ uiView: ARView, context: Context) {}
     
-    class Coordinator: NSObject {
+    class Coordinator: NSObject, ARSessionDelegate {
         
         var parent: ARViewContainer
         var character: BodyTrackedEntity?
@@ -100,7 +102,7 @@ struct ARViewContainer: UIViewRepresentable {
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ARUIView()
     }
 }
 #endif
