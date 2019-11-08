@@ -13,7 +13,7 @@ struct ExerciseView: View {
     var exercise: Exercise
     
     var body: some View {
-        ARUIView()
+        ARUIView(exercise: self.exercise)
     }
 }
 

@@ -12,8 +12,13 @@ import ARKit
 import Combine
 
 struct ARUIView : View {
+    
+    var exercise: Exercise
+    
     var body: some View {
         return ARViewContainer()
+            .edgesIgnoringSafeArea(.bottom)
+            .navigationBarTitle(exercise.name)
     }
 }
 
@@ -75,25 +80,25 @@ struct ARViewContainer: UIViewRepresentable {
         }
         
         func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-             for anchor in anchors {
-                 guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
+            for anchor in anchors {
+                guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
                  
                 self.parent.characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
-                 // ^ alternatively set .position and .orientation
+                // ^ alternatively set .position and .orientation
                  
 //                if self.lateralRaiseMonitor.checkForStateAdvance(bodyAnchor) {
 //                     timer.invalidate()
 //                 }
         
-                 if let character = character, character.parent == nil {
-                     // Attach the character to its anchor as soon as
-                     // 1. the body anchor was detected and
-                     // 2. the character was loaded.
+                if let character = character, character.parent == nil {
+                    // Attach the character to its anchor as soon as
+                    // 1. the body anchor was detected and
+                    // 2. the character was loaded.
                     self.parent.characterAnchor.addChild(character)
-                 }
+                }
                  
-             }
-         }
+            }
+        }
 
     }
     
@@ -102,7 +107,7 @@ struct ARViewContainer: UIViewRepresentable {
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     static var previews: some View {
-        ARUIView()
+        ARUIView(exercise: exerciseData[0])
     }
 }
 #endif
