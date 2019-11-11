@@ -19,13 +19,37 @@ struct Exercise: Hashable, Codable, Identifiable {
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {
-   case high = "High"
-   case low = "Low"
+    case high = "High"
+    case low = "Low"
 }
 
 enum MuscleGroup: String, CaseIterable, Codable, Hashable {
-   case core = "Core"
-   case legs = "Legs"
-   case arms = "Arms"
-   case wholeBody = "Whole body"
+    
+    case legs = "Legs"
+    case arms = "Arms"
+    case wholeBody = "Whole body"
+    case core = "Core"
+    
+    public static func getIconName(_ muscleGroup: MuscleGroup) -> String {
+        switch muscleGroup {
+            case .legs: return "leg-icon"
+            case .arms: return "arm-icon"
+            case .wholeBody: return "whole-body-icon"
+            case .core: return "core-icon"
+        }
+    }
+    
+    public static func getIconColor(_ muscleGroup: MuscleGroup) -> UIColor {
+        switch muscleGroup {
+            case .legs: return .red
+            case .arms: return UIColor(red: 50/255, green: 205/255, blue: 50/255, alpha: 1.0)
+            case .wholeBody: return .purple
+            case .core: return .orange
+        }
+    }
+    
+    public static var allCases: [MuscleGroup] {
+        return [.legs, .arms, .wholeBody, .core]
+    }
+    
 }
