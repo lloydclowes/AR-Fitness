@@ -18,7 +18,7 @@ struct ExerciseDetailView: View {
     var body: some View {
         VStack{
             SearchBar(text: $searchQuery)
-                .padding([.horizontal], 13)
+                .padding([.horizontal], 12)
                 .padding([.top], -9)
             ForEach(exercises.filter{$0.name.lowercased().hasPrefix(searchQuery.lowercased()) || searchQuery == ""}, id:\.self) { exercise in
                 ExerciseRowView(exercise: exercise,

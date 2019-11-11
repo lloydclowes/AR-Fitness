@@ -15,97 +15,50 @@ struct ARUIView : View {
     
     var exercise: Exercise
     
+    @State var counter: Int = 60
+    
     var body: some View {
-        return ARViewContainer()
-            .edgesIgnoringSafeArea(.bottom)
-            .navigationBarTitle(exercise.name)
+        return ZStack {
+            ARViewControllerContainer($counter)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitle(exercise.name)
+            VStack {
+                Spacer()
+                Text("Timer: \(counter)")
+                    .font(.largeTitle)
+                    .background(Circle()
+                        .fill(Color(red: 0.95, green: 0.95, blue: 0.95))
+                        .frame(width: 150, height: 150)
+                    )
+                    .padding([.bottom], 50)
+            }
+        }
     }
 }
 
-struct ARViewContainer: UIViewRepresentable {
+struct ARViewControllerContainer: UIViewControllerRepresentable {
     
     let characterAnchor = AnchorEntity()
     var character: BodyTrackedEntity?
+    @Binding var counter: Int
     
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+    init(_ counter: Binding<Int>) {
+        _counter = counter
     }
     
-    func makeUIView(context: Context) -> ARView {
-        
-        guard ARBodyTrackingConfiguration.isSupported else {
-            fatalError("This feature is only supported on devices with an A12 chip")
-        }
-        
-        let arView = ARView(frame: .zero)
-        
-        arView.session.delegate = context.coordinator
-        
-        // Run a body tracking configration.
-        arView.session.run(ARBodyTrackingConfiguration())
-        arView.scene.addAnchor(characterAnchor)
-        
-        var cancellable: AnyCancellable? = nil
-        cancellable = Entity.loadBodyTrackedAsync(named: "robot").sink(
-            receiveCompletion: { completion in
-                if case let .failure(error) = completion {
-                    print("Error: Unable to load model: \(error.localizedDescription)")
-                }
-                cancellable?.cancel()
-        }, receiveValue: { (character: Entity) in
-            if let character = character as? BodyTrackedEntity {
-                // Scale the character to human size
-                character.scale = [1.0, 1.0, 1.0]
-                context.coordinator.character = character
-                cancellable?.cancel()
-            } else {
-                print("Error: Unable to load model as BodyTrackedEntity")
-            }
-        })
-        
-        return arView
+    func makeCoordinator() -> Coordinator {}
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        return LatController() //parent: self)
     }
     
-    func updateUIView(_ uiView: ARView, context: Context) {}
-    
-    class Coordinator: NSObject, ARSessionDelegate {
-        
-        var parent: ARViewContainer
-        var character: BodyTrackedEntity?
-        var timer = Timer()
-//        var lateralRaiseMonitor = ActivityMonitor([])?
-
-        init(_ parent: ARViewContainer) {
-            self.parent = parent
-        }
-        
-        func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-            for anchor in anchors {
-                guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
-                 
-                self.parent.characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
-                // ^ alternatively set .position and .orientation
-                 
-//                if self.lateralRaiseMonitor.checkForStateAdvance(bodyAnchor) {
-//                     timer.invalidate()
-//                 }
-        
-                if let character = character, character.parent == nil {
-                    // Attach the character to its anchor as soon as
-                    // 1. the body anchor was detected and
-                    // 2. the character was loaded.
-                    self.parent.characterAnchor.addChild(character)
-                }
-                 
-            }
-        }
-
-    }
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
     
 }
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
+    
     static var previews: some View {
         ARUIView(exercise: exerciseData[0])
     }

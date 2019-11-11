@@ -12,15 +12,13 @@ struct MuscleGroupsList: View {
     
     var exercises: [Exercise]
     
-    private let icons = ["leg-icon", "arm-icon", "whole-body-icon", "core-icon"]
-    private let enums: [MuscleGroup] = [.legs, .arms, .wholeBody, .core]
-    private let colors: [UIColor] = [.red, UIColor(red: 50/255, green: 205/255, blue: 50/255, alpha: 1.0), .purple, .orange]
+    private let muscleGroups: [MuscleGroup] = MuscleGroup.allCases
     
     var body: some View {
-        List(0 ..< 4) { item in
-            NavigationLink(destination: ExerciseDetailView(title: self.enums[item].rawValue, exercises: self.filterByMuscleGroup(exercises: self.exercises, muscleGroup: self.enums[item])
+        List(0 ..< muscleGroups.count) { item in
+            NavigationLink(destination: ExerciseDetailView(title: self.muscleGroups[item].rawValue, exercises: self.filterByMuscleGroup(exercises: self.exercises, muscleGroup: self.muscleGroups[item])
             )) {
-                MuscleGroupRow(icon: self.icons[item], color: self.colors[item], iconSize: 33, muscleGroup: self.enums[item].rawValue)
+                MuscleGroupRow(icon: MuscleGroup.getIconName(self.muscleGroups[item]), color: MuscleGroup.getIconColor(self.muscleGroups[item]), iconSize: 33, muscleGroup: self.muscleGroups[item].rawValue)
             }
         }
         .background(Color.white)
