@@ -15,11 +15,18 @@ struct ARUIView : View {
     
     var exercise: Exercise
     
-    @State var counter: Int = 60
+    var counter: Int
+    var viewControllerContainer = ARViewControllerContainer()
+    
+    init(_ exe: Exercise) {
+        exercise = exe
+        counter = viewControllerContainer.counter
+    }
+    
     
     var body: some View {
         return ZStack {
-            ARViewControllerContainer($counter)
+            viewControllerContainer
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitle(exercise.name)
             VStack {
@@ -40,27 +47,24 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
     
     let characterAnchor = AnchorEntity()
     var character: BodyTrackedEntity?
-    @Binding var counter: Int
-    
-    init(_ counter: Binding<Int>) {
-        _counter = counter
-    }
+    @State var counter = 00
     
     func makeCoordinator() -> Coordinator {}
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return LatController() //parent: self)
+        let viewController = LatController()
+        self.counter = viewController.counter
+        return viewController
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-    
 }
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     
     static var previews: some View {
-        ARUIView(exercise: exerciseData[0])
+        ARUIView(exerciseData[0])
     }
 }
 #endif

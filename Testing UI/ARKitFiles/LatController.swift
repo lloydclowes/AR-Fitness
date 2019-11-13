@@ -28,12 +28,8 @@ class LatController: UIViewController, ARSessionDelegate {
     let speaker = SpeechSynthesizer()
     var started = false
     var startState = ActivityState("START", [:], [:])
-//    var parent2: ARViewControllerContainer
     var timer = Timer()
-    
-//    init(parent: ARViewControllerContainer) {
-//        self.parent2 = parent
-//    }
+    var counter = 60
     
     override func viewDidLoad() {
         setupViews()
@@ -109,10 +105,10 @@ class LatController: UIViewController, ARSessionDelegate {
             if (!started && startState.reachedBy(bodyAnchor)) {
                 speaker.start()
                 started = true
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-//                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//                    RunLoop.current.add(self.timer, forMode: .common)
-//                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+                    RunLoop.current.add(self.timer, forMode: .common)
+                }
             }
             
             // Update the position of the character anchor's position.

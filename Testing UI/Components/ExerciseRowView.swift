@@ -49,7 +49,7 @@ struct ExerciseRowView: View {
                     .font(.system(size: 15))
                 
             }
-            NavigationLink(destination: ARUIView(exercise: self.exercise)) {
+            NavigationLink(destination: ARUIView(self.exercise)) {
                 VStack {
                     Text("START")
                         .bold()
