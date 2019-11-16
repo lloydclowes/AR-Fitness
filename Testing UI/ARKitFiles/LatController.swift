@@ -14,6 +14,7 @@ import SwiftUI
 class LatController: UIViewController, ARSessionDelegate {
 
     var arView = ARView(frame: .zero)
+    //var viewWithCounter : TextView? = nil
     // The 3D character to display.
     var character: BodyTrackedEntity?
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
@@ -29,7 +30,7 @@ class LatController: UIViewController, ARSessionDelegate {
     var started = false
     var startState = ActivityState("START", [:], [:])
     var timer = Timer()
-    var counter = 60
+    @EnvironmentObject var counter: ControlVariable
     
     override func viewDidLoad() {
         setupViews()
@@ -134,11 +135,14 @@ class LatController: UIViewController, ARSessionDelegate {
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
     }
     
     @objc func timerAction() {
-//        parent2.counter -= 1
+        self.counter.counter -= 1
     }
+    
+    
     
 }
 

@@ -10,6 +10,7 @@ import SwiftUI
 struct MainPageView: View {
     
     @State private var searchQuery: String = ""
+    @EnvironmentObject var counter: ControlVariable
     
     var exercises: [Exercise] = exerciseData
     private var searchBarIsActive = false

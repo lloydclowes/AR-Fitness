@@ -11,6 +11,7 @@ import SwiftUI
 struct ExerciseDetailView: View {
     
     @State private var searchQuery: String = ""
+    @EnvironmentObject var counter: ControlVariable
     
     let title: String
     var exercises: [Exercise]
