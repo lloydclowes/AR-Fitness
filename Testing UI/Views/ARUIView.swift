@@ -14,7 +14,6 @@ import Combine
 struct ARUIView : View {
     
     var exercise: Exercise
-    var viewControllerContainer = ARViewControllerContainer()
     
     init(_ exe: Exercise) {
         exercise = exe
@@ -22,7 +21,7 @@ struct ARUIView : View {
     
     
     var body: some View {
-           return viewControllerContainer
+           return ARViewControllerContainer(exercise: exercise)
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitle(exercise.name)
     }
@@ -31,11 +30,17 @@ struct ARUIView : View {
 struct ARViewControllerContainer: UIViewControllerRepresentable {
     let characterAnchor = AnchorEntity()
     var character: BodyTrackedEntity?
-    
+    var exercise: Exercise
     func makeCoordinator() -> Coordinator {}
     
+    
     func makeUIViewController(context: Context) -> UIViewController {
-        let viewController = LatController()
+        var viewController: UIViewController
+        if(self.exercise.name == "Lateral Raises") {
+            viewController = LatController()
+        } else {
+            viewController = ARUIViewController()
+        }
         return viewController
     }
     

@@ -130,6 +130,50 @@ class LatController: UIViewController, ARSessionDelegate {
             // in the world is relative to the body anchor's rotation.
             characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
    
+            if activityMonitor!.checkForStateAdvance(bodyAnchor) {
+                timer.invalidate()
+            }
+            
+            let curTime = Int(Date().timeIntervalSince1970)
+            if (started && curTime - prevTime > 2) {
+                prevTime = curTime
+                let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
+                let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
+
+                let lowerTol: Float = 10.0
+                let upperTol: Float = -10.0
+
+                var left = 0
+                var right = 0
+                if (anglesLeft.y?.sign == .plus && anglesLeft.y! > lowerTol) {
+                    left = -1
+                } else if (anglesLeft.y?.sign == .minus && anglesLeft.y! < upperTol) {
+                    left = 1
+                }
+
+                if (anglesRight.y?.sign == .plus && anglesRight.y! > lowerTol) {
+                    right = -1
+                } else if (anglesRight.y?.sign == .minus &&  anglesRight.y! < upperTol ) {
+                    right = 1
+                }
+
+                var phrase = ""
+                if left != 0 {
+                    phrase = "Please \(left == -1 ? "raise" : "lower") your left arm"
+                }
+                if right != 0 {
+                    let dir = left == -1 ? "raise" : "lower"
+                    if phrase == "" {
+                        phrase = "Please \(dir) your right arm"
+                    } else {
+                        phrase += " and \(dir) your right arm"
+                    }
+                }
+
+                if phrase != "" {
+                    speaker.speak(statement: phrase)
+                }
+            }
             if let character = character, character.parent == nil {
                 // Attach the character to its anchor as soon as
                 // 1. the body anchor was detected and
