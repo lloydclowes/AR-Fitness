@@ -4,34 +4,53 @@
         "id": 1,
         "muscleGroup": "Core",
         "intensity": "High",
-        "equipment": []
+        "equipment": [],
+        "className": "ARUIViewController",
+        "duration": "1:00"
     },
     {
         "name": "Crunches",
         "id": 2,
         "muscleGroup": "Core",
         "intensity": "High",
-        "equipment": []
+        "equipment": [],
+        "className": "ARUIViewController",
+        "duration": "1:00"
     },
     {
         "name": "Squats",
         "id": 3,
         "muscleGroup": "Legs",
         "intensity": "High",
-        "equipment": []
+        "equipment": [],
+        "className": "SquatsController",
+        "duration": "1:00"
     },
     {
         "name": "Lunges",
         "id": 4,
         "muscleGroup": "Legs",
         "intensity": "Low",
-        "equipment": []
+        "equipment": [],
+        "className": "ARUIViewController",
+        "duration": "1:00"
     },
     {
         "name": "Lateral Raises",
         "id": 5,
         "muscleGroup": "Arms",
         "intensity": "Low",
-        "equipment": ["Dumbbells"]
+        "equipment": ["Dumbbells"],
+        "className": "LateralRaiseController",
+        "duration": "1:00"
+    },
+    {
+        "name": "Hundred Ups",
+        "id": 6,
+        "muscleGroup": "Legs",
+        "intensity": "High",
+        "equipment": [],
+        "className": "HundredUpsController",
+        "duration": "1:00"
     }
 ]
