@@ -19,7 +19,6 @@ struct ARUIView : View {
         exercise = exe
     }
     
-    
     var body: some View {
            return ARViewControllerContainer(exercise: exercise)
                 .edgesIgnoringSafeArea(.bottom)
@@ -31,17 +30,20 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
     let characterAnchor = AnchorEntity()
     var character: BodyTrackedEntity?
     var exercise: Exercise
+    
     func makeCoordinator() -> Coordinator {}
     
-    
     func makeUIViewController(context: Context) -> UIViewController {
-        var viewController: UIViewController
-        if(self.exercise.name == "Lateral Raises") {
-            viewController = LatController()
-        } else {
-            viewController = ARUIViewController()
+        switch self.exercise.name {
+        case "Lateral Raises":
+            return LateralRaiseController()
+        case "Squats":
+            return SquatController()
+        case "Hundred Ups":
+            return HundredUpsController()
+        default:
+            return ARUIViewController()
         }
-        return viewController
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

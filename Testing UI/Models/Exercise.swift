@@ -15,6 +15,8 @@ struct Exercise: Hashable, Codable, Identifiable {
     var intensity: Intensity
     var muscleGroup: MuscleGroup
     var equipment: [String]
+    var className: String
+    var duration: String
     
 }
 

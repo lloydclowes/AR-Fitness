@@ -11,7 +11,6 @@ import SwiftUI
 struct ExerciseRowView: View {
     
     var exercise: Exercise
-    var duration: String
     var color: Color
     
     private func getIntensityColor() -> Color {
@@ -54,7 +53,7 @@ struct ExerciseRowView: View {
                     Text("START")
                         .bold()
                         .font(.system(size:15))
-                    Text(self.duration)
+                    Text(self.exercise.duration)
                         .font(.system(size:13))
                         .foregroundColor(Color.black)
                 }
@@ -76,8 +75,7 @@ struct ExerciseRowView: View {
 struct ExerciseRowView_Previews: PreviewProvider {
     static var previews: some View {
         ExerciseRowView(
-            exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["foo", "poo"]),
-            duration: "00:15",
+            exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["foo", "poo"], className: "ARUIViewController", duration: "2:00"),
             color: Color(red: 1.00, green: 0.98, blue: 0.98)
         ).padding()
     }
