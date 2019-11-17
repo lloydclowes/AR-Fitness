@@ -14,8 +14,6 @@ import Combine
 struct ARUIView : View {
     
     var exercise: Exercise
-    
-    @EnvironmentObject var counter: ControlVariable
     var viewControllerContainer = ARViewControllerContainer()
     
     init(_ exe: Exercise) {
@@ -24,27 +22,13 @@ struct ARUIView : View {
     
     
     var body: some View {
-        return ZStack {
-            viewControllerContainer.environmentObject(self.counter)
+           return viewControllerContainer
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitle(exercise.name)
-            VStack {
-                Spacer()
-                Text("Timer: \(self.counter.counter)")
-                    .font(.largeTitle)
-                    .background(Circle()
-                        .fill(Color(red: 0.95, green: 0.95, blue: 0.95))
-                        .frame(width: 150, height: 150)
-                    )
-                    .padding([.bottom], 50)
-            }
-        }
     }
 }
 
 struct ARViewControllerContainer: UIViewControllerRepresentable {
-     @EnvironmentObject var counter: ControlVariable
-    
     let characterAnchor = AnchorEntity()
     var character: BodyTrackedEntity?
     

@@ -10,8 +10,6 @@ import SwiftUI
 
 struct ExerciseRowView: View {
     
-    var counter = ControlVariable()
-    
     var exercise: Exercise
     var duration: String
     var color: Color
@@ -51,7 +49,7 @@ struct ExerciseRowView: View {
                     .font(.system(size: 15))
                 
             }
-            NavigationLink(destination: ARUIView(self.exercise).environmentObject(self.counter)) {
+            NavigationLink(destination: ARUIView(self.exercise)) {
                 VStack {
                     Text("START")
                         .bold()
