@@ -14,53 +14,39 @@ import Combine
 struct ARUIView : View {
     
     var exercise: Exercise
+    var viewControllerContainer = ARViewControllerContainer()
     
-    @State var counter: Int = 60
+    init(_ exe: Exercise) {
+        exercise = exe
+    }
+    
     
     var body: some View {
-        return ZStack {
-            ARViewControllerContainer($counter)
+           return viewControllerContainer
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitle(exercise.name)
-            VStack {
-                Spacer()
-                Text("Timer: \(counter)")
-                    .font(.largeTitle)
-                    .background(Circle()
-                        .fill(Color(red: 0.95, green: 0.95, blue: 0.95))
-                        .frame(width: 150, height: 150)
-                    )
-                    .padding([.bottom], 50)
-            }
-        }
     }
 }
 
 struct ARViewControllerContainer: UIViewControllerRepresentable {
-    
     let characterAnchor = AnchorEntity()
     var character: BodyTrackedEntity?
-    @Binding var counter: Int
-    
-    init(_ counter: Binding<Int>) {
-        _counter = counter
-    }
     
     func makeCoordinator() -> Coordinator {}
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return LatController() //parent: self)
+        let viewController = LatController()
+        return viewController
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-    
 }
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     
     static var previews: some View {
-        ARUIView(exercise: exerciseData[0])
+        ARUIView(exerciseData[0])
     }
 }
 #endif

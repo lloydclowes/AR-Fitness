@@ -28,14 +28,22 @@ class LatController: UIViewController, ARSessionDelegate {
     let speaker = SpeechSynthesizer()
     var started = false
     var startState = ActivityState("START", [:], [:])
-//    var parent2: ARViewControllerContainer
     var timer = Timer()
+    var counter = 60
+    var prevTime = Int(Date().timeIntervalSince1970)
     
-//    init(parent: ARViewControllerContainer) {
-//        self.parent2 = parent
-//    }
+    let infoLabel : UILabel = {
+        let myLabel = UILabel()
+        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        myLabel.textAlignment = NSTextAlignment.center
+        myLabel.adjustsFontSizeToFitWidth = true
+        return myLabel
+        }()
     
     override func viewDidLoad() {
+        infoLabel.text = "Timer: \(counter)"
         setupViews()
     }
     
@@ -109,10 +117,10 @@ class LatController: UIViewController, ARSessionDelegate {
             if (!started && startState.reachedBy(bodyAnchor)) {
                 speaker.start()
                 started = true
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-//                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//                    RunLoop.current.add(self.timer, forMode: .common)
-//                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+                    RunLoop.current.add(self.timer, forMode: .common)
+                }
             }
             
             // Update the position of the character anchor's position.
@@ -132,17 +140,32 @@ class LatController: UIViewController, ARSessionDelegate {
     }
     
     func setupViews() {
+        // adding both views
         view.addSubview(arView)
+        view.addSubview(infoLabel)
+        
+        // label constraints (position, size...)
+        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        
+        // arView constraints
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
     }
     
     @objc func timerAction() {
-//        parent2.counter -= 1
+        counter -= 1
+        infoLabel.text = "Timer: \(self.counter)"
     }
+    
+    
     
 }
 
