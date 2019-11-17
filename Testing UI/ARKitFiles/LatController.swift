@@ -28,14 +28,22 @@ class LatController: UIViewController, ARSessionDelegate {
     let speaker = SpeechSynthesizer()
     var started = false
     var startState = ActivityState("START", [:], [:])
-//    var parent2: ARViewControllerContainer
     var timer = Timer()
+    var counter = 60
+    var prevTime = Int(Date().timeIntervalSince1970)
     
-//    init(parent: ARViewControllerContainer) {
-//        self.parent2 = parent
-//    }
+    let infoLabel : UILabel = {
+        let myLabel = UILabel()
+        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        myLabel.textAlignment = NSTextAlignment.center
+        myLabel.adjustsFontSizeToFitWidth = true
+        return myLabel
+        }()
     
     override func viewDidLoad() {
+        infoLabel.text = "Timer: \(counter)"
         setupViews()
     }
     
@@ -109,10 +117,10 @@ class LatController: UIViewController, ARSessionDelegate {
             if (!started && startState.reachedBy(bodyAnchor)) {
                 speaker.start()
                 started = true
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-//                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//                    RunLoop.current.add(self.timer, forMode: .common)
-//                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+                    RunLoop.current.add(self.timer, forMode: .common)
+                }
             }
             
             // Update the position of the character anchor's position.
@@ -122,6 +130,50 @@ class LatController: UIViewController, ARSessionDelegate {
             // in the world is relative to the body anchor's rotation.
             characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
    
+            if activityMonitor!.checkForStateAdvance(bodyAnchor) {
+                timer.invalidate()
+            }
+            
+            let curTime = Int(Date().timeIntervalSince1970)
+            if (started && curTime - prevTime > 2) {
+                prevTime = curTime
+                let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
+                let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
+
+                let lowerTol: Float = 10.0
+                let upperTol: Float = -10.0
+
+                var left = 0
+                var right = 0
+                if (anglesLeft.y?.sign == .plus && anglesLeft.y! > lowerTol) {
+                    left = -1
+                } else if (anglesLeft.y?.sign == .minus && anglesLeft.y! < upperTol) {
+                    left = 1
+                }
+
+                if (anglesRight.y?.sign == .plus && anglesRight.y! > lowerTol) {
+                    right = -1
+                } else if (anglesRight.y?.sign == .minus &&  anglesRight.y! < upperTol ) {
+                    right = 1
+                }
+
+                var phrase = ""
+                if left != 0 {
+                    phrase = "Please \(left == -1 ? "raise" : "lower") your left arm"
+                }
+                if right != 0 {
+                    let dir = left == -1 ? "raise" : "lower"
+                    if phrase == "" {
+                        phrase = "Please \(dir) your right arm"
+                    } else {
+                        phrase += " and \(dir) your right arm"
+                    }
+                }
+
+                if phrase != "" {
+                    speaker.speak(statement: phrase)
+                }
+            }
             if let character = character, character.parent == nil {
                 // Attach the character to its anchor as soon as
                 // 1. the body anchor was detected and
@@ -132,17 +184,32 @@ class LatController: UIViewController, ARSessionDelegate {
     }
     
     func setupViews() {
+        // adding both views
         view.addSubview(arView)
+        view.addSubview(infoLabel)
+        
+        // label constraints (position, size...)
+        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        
+        // arView constraints
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
     }
     
     @objc func timerAction() {
-//        parent2.counter -= 1
+        counter -= 1
+        infoLabel.text = "Timer: \(self.counter)"
     }
+    
+    
     
 }
 
