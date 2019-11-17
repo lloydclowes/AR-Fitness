@@ -164,8 +164,8 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                 let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
                 let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
 
-                let lowerTol: Float = 10.0
-                let upperTol: Float = -10.0
+                let lowerTol: Float = 7.5
+                let upperTol: Float = -7.5
 
                 var left = 0
                 var right = 0
