@@ -58,7 +58,7 @@
 		6E86FC892362EC7F00810FE6 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		6E86FC8B2362FCC900810FE6 /* MuscleGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleGroupRow.swift; sourceTree = "<group>"; };
 		6E86FC8D236332F500810FE6 /* MuscleGroupsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleGroupsList.swift; sourceTree = "<group>"; };
-		6E9004C82359BCAA0070AECC /* Testing UI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Testing UI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E9004C82359BCAA0070AECC /* AR-Fitness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AR-Fitness.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E9004CB2359BCAA0070AECC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E9004CD2359BCAA0070AECC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		6E9004D12359BCAD0070AECC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -135,7 +135,7 @@
 		6E9004BF2359BCAA0070AECC = {
 			isa = PBXGroup;
 			children = (
-				6E9004CA2359BCAA0070AECC /* Testing UI */,
+				6E9004CA2359BCAA0070AECC /* AR-Fitness */,
 				6E9004C92359BCAA0070AECC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,12 +143,12 @@
 		6E9004C92359BCAA0070AECC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6E9004C82359BCAA0070AECC /* Testing UI.app */,
+				6E9004C82359BCAA0070AECC /* AR-Fitness.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6E9004CA2359BCAA0070AECC /* Testing UI */ = {
+		6E9004CA2359BCAA0070AECC /* AR-Fitness */ = {
 			isa = PBXGroup;
 			children = (
 				6E9004CB2359BCAA0070AECC /* AppDelegate.swift */,
@@ -165,7 +165,7 @@
 				6E9004E8235A14F10070AECC /* Views */,
 				6E9004E7235A14E00070AECC /* Components */,
 			);
-			path = "Testing UI";
+			path = "AR-Fitness";
 			sourceTree = "<group>";
 		};
 		6E9004D32359BCAD0070AECC /* Preview Content */ = {
@@ -203,9 +203,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6E9004C72359BCAA0070AECC /* Testing UI */ = {
+		6E9004C72359BCAA0070AECC /* AR-Fitness */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6E9004DC2359BCAD0070AECC /* Build configuration list for PBXNativeTarget "Testing UI" */;
+			buildConfigurationList = 6E9004DC2359BCAD0070AECC /* Build configuration list for PBXNativeTarget "AR-Fitness" */;
 			buildPhases = (
 				6E9004C42359BCAA0070AECC /* Sources */,
 				6E9004C52359BCAA0070AECC /* Frameworks */,
@@ -215,9 +215,9 @@
 			);
 			dependencies = (
 			);
-			name = "Testing UI";
+			name = "AR-Fitness";
 			productName = "Testing UI";
-			productReference = 6E9004C82359BCAA0070AECC /* Testing UI.app */;
+			productReference = 6E9004C82359BCAA0070AECC /* AR-Fitness.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -235,7 +235,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6E9004C32359BCAA0070AECC /* Build configuration list for PBXProject "Testing UI" */;
+			buildConfigurationList = 6E9004C32359BCAA0070AECC /* Build configuration list for PBXProject "AR-Fitness" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -248,7 +248,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6E9004C72359BCAA0070AECC /* Testing UI */,
+				6E9004C72359BCAA0070AECC /* AR-Fitness */,
 			);
 		};
 /* End PBXProject section */
@@ -433,15 +433,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Testing UI/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"AR-Fitness/Preview Content\"";
 				DEVELOPMENT_TEAM = X6QU5C9KQ5;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Testing UI/Info.plist";
+				INFOPLIST_FILE = "AR-Fitness/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.Testing-UI";
+				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.AR-Fitness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -453,15 +453,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Testing UI/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"AR-Fitness/Preview Content\"";
 				DEVELOPMENT_TEAM = X6QU5C9KQ5;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Testing UI/Info.plist";
+				INFOPLIST_FILE = "AR-Fitness/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.Testing-UI";
+				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.AR-Fitness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -471,7 +471,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6E9004C32359BCAA0070AECC /* Build configuration list for PBXProject "Testing UI" */ = {
+		6E9004C32359BCAA0070AECC /* Build configuration list for PBXProject "AR-Fitness" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E9004DA2359BCAD0070AECC /* Debug */,
@@ -480,7 +480,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6E9004DC2359BCAD0070AECC /* Build configuration list for PBXNativeTarget "Testing UI" */ = {
+		6E9004DC2359BCAD0070AECC /* Build configuration list for PBXNativeTarget "AR-Fitness" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E9004DD2359BCAD0070AECC /* Debug */,
