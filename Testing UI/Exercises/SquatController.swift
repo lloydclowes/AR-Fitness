@@ -124,9 +124,6 @@ class SquatController: UIViewController, ARSessionDelegate {
             characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
    
             if self.activityMonitor!.checkForStateAdvance(bodyAnchor) {
-                    print("REP")
-                    print(initial)
-                    print(reps)
                     self.reps += (self.activityMonitor!.index == 1) ? 1 : 0
                     self.reachedSquat = self.activityMonitor!.index == 0
                      if initial { initial = false }
