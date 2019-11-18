@@ -34,16 +34,21 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator {}
     
     func makeUIViewController(context: Context) -> UIViewController {
-        switch self.exercise.name {
-        case "Lateral Raises":
-            return LateralRaiseController()
-        case "Squats":
-            return SquatController()
-        case "Hundred Ups":
-            return HundredUpsController()
-        default:
-            return ARUIViewController()
-        }
+        
+        let namespace = Bundle.main.infoDictionary!["CFBundleExecutable"] as! String
+        let viewControllerClass = NSClassFromString("\(namespace).\(self.exercise.className)") as! UIViewController.Type
+        return viewControllerClass.init()
+        
+//        switch self.exercise.name {
+//        case "Lateral Raises":
+//            return LateralRaiseController()
+//        case "Squats":
+//            return SquatController()
+//        case "Hundred Ups":
+//            return HundredUpsController()
+//        default:
+//            return ARUIViewController()
+//        }
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

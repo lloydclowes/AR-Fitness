@@ -23,7 +23,7 @@
         "muscleGroup": "Legs",
         "intensity": "High",
         "equipment": [],
-        "className": "SquatsController",
+        "className": "SquatController",
         "duration": "1:00"
     },
     {
