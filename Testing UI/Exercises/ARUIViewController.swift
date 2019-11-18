@@ -22,7 +22,11 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
     // in the scene wherever the user taps.
     var placementRaycast: ARTrackedRaycast?
     var tapPlacementAnchor: AnchorEntity?
-    var numberOfReps = 0
+    
+    var upDirection = false
+    var reps = 0
+    var initial = true
+    var reachedSquat = false
     
     var activityMonitor: ActivityMonitor?
     let infoLabel : UILabel = {
@@ -35,7 +39,7 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
         return myLabel
     }()
     override func viewDidLoad() {
-        infoLabel.text = "Reps: \(numberOfReps)"
+        infoLabel.text = "Reps: \(reps)"
         setupViews()
     }
     
@@ -73,6 +77,39 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
                 print("Error: Unable to load model as BodyTrackedEntity")
             }
         })
+        // 90 * 0.15 = 15% tolerance on 90 degrees of motion
+        let upLegTol = Float(90 * 0.15)
+        // 90 * 0.15 = 15% tolerance on 70 degrees of motion
+        let legTol = Float(70 * 0.15)
+        
+        let uprightState = ["left_upLeg_joint":  EulerAngles(z: Float(-90)),
+                            "right_upLeg_joint": EulerAngles(z: Float(90)),
+                            "left_leg_joint": EulerAngles(z: Float(20)),
+                            "right_leg_joint": EulerAngles(z: Float(20))
+        ]
+        
+        let uprightTolerances = ["left_upLeg_joint": EulerAngles(z: upLegTol),
+                                 "right_upLeg_joint": EulerAngles(z: -upLegTol),
+                                 "left_leg_joint": EulerAngles(z: legTol),
+                                 "right_leg_joint": EulerAngles(z: legTol)
+        ]
+        
+        let squattedState = ["left_upLeg_joint": EulerAngles(z: Float(0)),
+                             "right_upLeg_joint": EulerAngles(z: Float(0)),
+                             "left_leg_joint": EulerAngles(z: Float(90)),
+                             "right_leg_joint": EulerAngles(z: Float(90))
+        ]
+        
+        let squattedTolerances = ["left_upLeg_joint": EulerAngles(z: -upLegTol),
+                                  "right_upLeg_joint": EulerAngles(z: upLegTol),
+                                  "left_leg_joint": EulerAngles(z: -legTol),
+                                  "right_leg_joint": EulerAngles(z: -legTol)
+        ]
+        
+        self.activityMonitor = ActivityMonitor([
+            ActivityState("UP", uprightState, uprightTolerances),
+            ActivityState("DOWN", squattedState, squattedTolerances)
+        ])
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -86,6 +123,14 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
             // in the world is relative to the body anchor's rotation.
             characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
    
+            if self.activityMonitor!.checkForStateAdvance(bodyAnchor) {
+                    self.reps += (self.activityMonitor!.index == 1 && !initial) ? 1 : 0
+                    self.reachedSquat = self.activityMonitor!.index == 0
+                     if initial { initial = false }
+                }
+            
+                self.infoLabel.text = "Reps: \(reps)"
+            
             if let character = character, character.parent == nil {
                 // Attach the character to its anchor as soon as
                 // 1. the body anchor was detected and

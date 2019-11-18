@@ -63,7 +63,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
        
        // Asynchronously load the 3D character.
        var cancellable: AnyCancellable? = nil
-       cancellable = Entity.loadBodyTrackedAsync(named: "character/robot").sink(
+       cancellable = Entity.loadBodyTrackedAsync(named: "robot").sink(
            receiveCompletion: { completion in
                if case let .failure(error) = completion {
                    print("Error: Unable to load model: \(error.localizedDescription)")
@@ -145,6 +145,12 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
                 // ^ or independently set .orientation and .position of characterAnchor
                 
+                if self.activityMonitor!.checkForStateAdvance(bodyAnchor) {
+                    reps += self.activityMonitor!.index == 1 ? 1 : 0
+                }
+                
+                self.infoLabel.text = "Reps: \(reps)"
+                
                 if let character = character, character.parent == nil {
                     characterAnchor.addChild(character)
                 }
@@ -163,11 +169,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     //            initialRep = false
                 
                 
-                if self.activityMonitor!.checkForStateAdvance(bodyAnchor) {
-                    reps += self.activityMonitor!.index == 1 ? 1 : 0
-                }
                 
-                self.infoLabel.text = "Reps: \(reps)"
             }
         }
     
