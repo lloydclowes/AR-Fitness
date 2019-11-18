@@ -28,7 +28,8 @@ class SquatController: UIViewController, ARSessionDelegate {
     var initial = true
     var reachedSquat = false
     
-    var activityMonitor: ActivityMonitor?
+    var activityMonitor = ActivityMonitor()
+    
     let infoLabel : UILabel = {
         let myLabel = UILabel()
         myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
@@ -38,6 +39,24 @@ class SquatController: UIViewController, ARSessionDelegate {
         myLabel.adjustsFontSizeToFitWidth = true
         return myLabel
     }()
+//    let rlzLabel : UILabel = {
+//        let myLabel = UILabel()
+//        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+//        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+//        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
+//        myLabel.textAlignment = NSTextAlignment.center
+//        myLabel.adjustsFontSizeToFitWidth = true
+//        return myLabel
+//    }()
+//    let llzLabel : UILabel = {
+//        let myLabel = UILabel()
+//        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
+//        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+//        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
+//        myLabel.textAlignment = NSTextAlignment.center
+//        myLabel.adjustsFontSizeToFitWidth = true
+//        return myLabel
+//    }()
     override func viewDidLoad() {
         infoLabel.text = "Reps: \(reps)"
         setupViews()
@@ -56,12 +75,11 @@ class SquatController: UIViewController, ARSessionDelegate {
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
         arView.session.run(configuration)
-        
         arView.scene.addAnchor(characterAnchor)
         
         // Asynchronously load the 3D character.
         var cancellable: AnyCancellable? = nil
-        cancellable = Entity.loadBodyTrackedAsync(named: "robot").sink(
+        cancellable = Entity.loadBodyTrackedAsync(named: "character/robot").sink(
             receiveCompletion: { completion in
                 if case let .failure(error) = completion {
                     print("Error: Unable to load model: \(error.localizedDescription)")
@@ -85,20 +103,30 @@ class SquatController: UIViewController, ARSessionDelegate {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
             
-            // Update the position of the character anchor's position.
-            let bodyPosition = simd_make_float3(bodyAnchor.transform.columns.3)
-            characterAnchor.position = bodyPosition + characterOffset
-            // Also copy over the rotation of the body anchor, because the skeleton's pose
-            // in the world is relative to the body anchor's rotation.
-            characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
-   
-            if self.activityMonitor!.checkForStateAdvance(bodyAnchor) {
-                    self.reps += (self.activityMonitor!.index == 1) ? 1 : 0
-                    self.reachedSquat = self.activityMonitor!.index == 0
-                     if initial { initial = false }
-                }
+            characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
+            // ^ or independently set .orientation and .position of characterAnchor
             
-                self.infoLabel.text = "Reps: \(reps)"
+            if let character = character, character.parent == nil {
+                characterAnchor.addChild(character)
+            }
+            
+            let prevState = activityMonitor.index
+            let target = activityMonitor.targetIndex
+            let newState = activityMonitor.updateState(bodyAnchor)
+            if newState != prevState && newState != -1 {
+                if newState == target && newState == 0 {
+                    reps += 1
+                }
+            }
+            
+//            let ruz = bodyAnchor.getLocalJointAngleXYZ("right_upLeg_joint").z
+//            let rlz = bodyAnchor.getLocalJointAngleXYZ("right_leg_joint").z
+//            let luz = bodyAnchor.getLocalJointAngleXYZ("left_upLeg_joint").z
+//            let llz = bodyAnchor.getLocalJointAngleXYZ("left_leg_joint").z
+            
+            self.infoLabel.text = "Reps: \(reps)"
+//            self.rlzLabel.text = "ruz: \(Int(ruz!))  rlz: \(Int(rlz!))"
+//            self.llzLabel.text = "luz: \(Int(luz!))  llz: \(Int(llz!))"
             
             if let character = character, character.parent == nil {
                 // Attach the character to its anchor as soon as
@@ -112,6 +140,8 @@ class SquatController: UIViewController, ARSessionDelegate {
     func setupViews() {
         view.addSubview(arView)
         view.addSubview(infoLabel)
+//        view.addSubview(rlzLabel)
+//        view.addSubview(llzLabel)
         
         // label constraints (position, size...)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -119,6 +149,18 @@ class SquatController: UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        
+//        rlzLabel.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -150))
+//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
+//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
+//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+//
+//        llzLabel.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -225))
+//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
+//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
+//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
         
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
