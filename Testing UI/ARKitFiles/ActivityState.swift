@@ -9,7 +9,7 @@
 import Foundation
 import ARKit
 
-struct ActivityState {
+struct ActivityState: Hashable, Codable {
     let name : String
     let jointAngles : JointAngles
     let tolerances : JointAngles

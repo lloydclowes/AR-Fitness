@@ -79,57 +79,8 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                print("Error: Unable to load model as BodyTrackedEntity")
            }
        })
-       
-       // right:  luz=-90,0.15 llz=20,0.15 ruz=60,0.15 rlz=90,0.15
-       // down:   luz=-90,0.15 llz=20,0.15 ruz=90,0.15 rlz=20,0.15
-       // left:   luz=-60,0.15 llz=90,0.15 ruz=90,0.15 rlz=20,0.15
-       
-       // 90 * 0.15 = 15% tolerance on 90 degrees of motion
-       let upTol = Float(90 * 0.3)
-       let downTol = Float(90 * 0.15) // 13.5
-       
-       let rightUpState = ["left_upLeg_joint": EulerAngles(z: Float(-90)),
-                           "left_leg_joint": EulerAngles(z: Float(20)),
-                           "right_upLeg_joint": EulerAngles(z: Float(55)),
-                           "right_leg_joint": EulerAngles(z: Float(90))
-       ]
-       
-       let rightUpTolerances = ["left_upLeg_joint": EulerAngles(z: downTol),
-                                "left_leg_joint": EulerAngles(z: downTol),
-                                "right_upLeg_joint": EulerAngles(z: upTol),
-                                "right_leg_joint": EulerAngles(z: -upTol)
-       ]
-       
-       let downState = ["left_upLeg_joint":  EulerAngles(z: Float(-90)),
-                        "left_leg_joint": EulerAngles(z: Float(20)),
-                        "right_upLeg_joint": EulerAngles(z: Float(90)),
-                        "right_leg_joint": EulerAngles(z: Float(20))
-       ]
-       
-       let downTolerances = ["left_upLeg_joint": EulerAngles(z: downTol),
-                             "left_leg_joint": EulerAngles(z: downTol),
-                             "right_upLeg_joint": EulerAngles(z: -downTol),
-                             "right_leg_joint": EulerAngles(z: downTol)
-       ]
-       
-       let leftUpState = ["left_upLeg_joint": EulerAngles(z: Float(-50)),
-                          "left_leg_joint": EulerAngles(z: Float(90)),
-                          "right_upLeg_joint": EulerAngles(z: Float(90)),
-                          "right_leg_joint": EulerAngles(z: Float(20))
-       ]
-       
-       let leftUpTolerances = ["left_upLeg_joint": EulerAngles(z: -upTol),
-                               "left_leg_joint": EulerAngles(z: -upTol),
-                               "right_upLeg_joint": EulerAngles(z: -downTol),
-                               "right_leg_joint": EulerAngles(z: downTol)
-       ]
 
-       self.activityMonitor = ActivityMonitor([
-           ActivityState("DOWN", downState, downTolerances),
-           ActivityState("LEFT", leftUpState, leftUpTolerances),
-           ActivityState("DOWN", downState, downTolerances),
-           ActivityState("RIGHT", rightUpState, rightUpTolerances)
-       ])
+        self.activityMonitor = ActivityMonitor(exerciseData[2].states)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {

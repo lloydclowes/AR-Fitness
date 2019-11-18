@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct EulerAngles {
+struct EulerAngles: Codable, Hashable {
     let x : Float?
     let y : Float?
     let z : Float?

@@ -1,21 +1,40 @@
 [
     {
-        "name": "Sit ups",
-        "id": 1,
-        "muscleGroup": "Core",
-        "intensity": "High",
-        "equipment": [],
-        "className": "ARUIViewController",
-        "duration": "1:00"
-    },
-    {
-        "name": "Crunches",
-        "id": 2,
-        "muscleGroup": "Core",
-        "intensity": "High",
-        "equipment": [],
-        "className": "ARUIViewController",
-        "duration": "1:00"
+        "name": "Lateral Raises",
+        "id": 5,
+        "muscleGroup": "Arms",
+        "intensity": "Low",
+        "equipment": ["Dumbbells"],
+        "className": "LateralRaiseController",
+        "duration": "1:00",
+        "states": [
+            {
+                "name": "DOWN",
+                "jointAngles":
+                {
+                    "left_arm_joint": {"y": 50.0},
+                    "right_arm_joint": {"y": 50.0}
+                },
+                "tolerances":
+                {
+                    "left_arm_joint": {"y": -0.75},
+                    "right_arm_joint": {"y": -0.75}
+                }
+            },
+            {
+                "name": "UP",
+                "jointAngles":
+                {
+                    "left_arm_joint": {"y": 0},
+                    "right_arm_joint": {"y": 0}
+                },
+                "tolerances":
+                {
+                    "left_arm_joint": {"y": 0.75},
+                    "right_arm_joint": {"y": 0.75}
+                }
+            }
+        ]
     },
     {
         "name": "Squats",
@@ -24,25 +43,43 @@
         "intensity": "High",
         "equipment": [],
         "className": "SquatController",
-        "duration": "1:00"
-    },
-    {
-        "name": "Lunges",
-        "id": 4,
-        "muscleGroup": "Legs",
-        "intensity": "Low",
-        "equipment": [],
-        "className": "ARUIViewController",
-        "duration": "1:00"
-    },
-    {
-        "name": "Lateral Raises",
-        "id": 5,
-        "muscleGroup": "Arms",
-        "intensity": "Low",
-        "equipment": ["Dumbbells"],
-        "className": "LateralRaiseController",
-        "duration": "1:00"
+        "duration": "1:00",
+        "states": [
+            {
+                "name": "UP",
+                "jointAngles":
+                {
+                    "left_upLeg_joint": {"z": -90},
+                    "right_upLeg_joint": {"z": 90},
+                    "left_leg_joint": {"z": 20},
+                    "right_leg_joint": {"z": 20}
+                },
+                "tolerances":
+                {
+                    "left_upLeg_joint": {"z": 13.5},
+                    "right_upLeg_joint": {"z": -13.5},
+                    "left_leg_joint": {"z": 10.5},
+                    "right_leg_joint": {"z": 10.5}
+                }
+            },
+            {
+                "name": "DOWN",
+                "jointAngles":
+                {
+                    "left_upLeg_joint": {"z": 0},
+                    "right_upLeg_joint": {"z": 0},
+                    "left_leg_joint": {"z": 90},
+                    "right_leg_joint": {"z": 90}
+                },
+                "tolerances":
+                {
+                    "left_upLeg_joint": {"z": -13.5},
+                    "right_upLeg_joint": {"z": 13.5},
+                    "left_leg_joint": {"z": -10.5},
+                    "right_leg_joint": {"z": -10.5}
+                }
+            }
+        ]
     },
     {
         "name": "Hundred Ups",
@@ -51,6 +88,77 @@
         "intensity": "High",
         "equipment": [],
         "className": "HundredUpsController",
-        "duration": "1:00"
+        "duration": "1:00",
+        "states":
+        [
+            {
+                "name": "DOWN",
+                "jointAngles":
+                {
+                    "left_upLeg_joint": {"z": -90},
+                    "right_upLeg_joint": {"z": 20},
+                    "left_leg_joint": {"z": 90},
+                    "right_leg_joint": {"z": 20}
+                },
+                "tolerances":
+                {
+                    "left_upLeg_joint": {"z": 13.5},
+                    "right_upLeg_joint": {"z": 13.5},
+                    "left_leg_joint": {"z": -13.5},
+                    "right_leg_joint": {"z": 13.5}
+                }
+            },
+            {
+                "name": "LEFT",
+                "jointAngles":
+                {
+                    "left_upLeg_joint": {"z": -50},
+                    "right_upLeg_joint": {"z": 90},
+                    "left_leg_joint": {"z": 90},
+                    "right_leg_joint": {"z": 20}
+                },
+                "tolerances":
+                {
+                    "left_upLeg_joint": {"z": -27},
+                    "right_upLeg_joint": {"z": -27},
+                    "left_leg_joint": {"z": -13.5},
+                    "right_leg_joint": {"z": 13.5}
+                }
+            },
+            {
+                "name": "DOWN",
+                "jointAngles":
+                {
+                    "left_upLeg_joint": {"z": -90},
+                    "right_upLeg_joint": {"z": 20},
+                    "left_leg_joint": {"z": 90},
+                    "right_leg_joint": {"z": 20}
+                },
+                "tolerances":
+                {
+                    "left_upLeg_joint": {"z": 13.5},
+                    "right_upLeg_joint": {"z": 13.5},
+                    "left_leg_joint": {"z": -13.5},
+                    "right_leg_joint": {"z": 13.5}
+                }
+            },
+            {
+                "name": "RIGHT",
+                "jointAngles":
+                {
+                    "left_upLeg_joint": {"z": -90},
+                    "right_upLeg_joint": {"z": 20},
+                    "left_leg_joint": {"z": 55},
+                    "right_leg_joint": {"z": 90}
+                },
+                "tolerances":
+                {
+                    "left_upLeg_joint": {"z": 13.5},
+                    "right_upLeg_joint": {"z": 13.5},
+                    "left_leg_joint": {"z": -13.5},
+                    "right_leg_joint": {"z": 13.5}
+                }
+            }
+        ]
     }
 ]

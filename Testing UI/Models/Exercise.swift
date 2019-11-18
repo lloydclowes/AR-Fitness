@@ -17,6 +17,7 @@ struct Exercise: Hashable, Codable, Identifiable {
     var equipment: [String]
     var className: String
     var duration: String
+    var states: [ActivityState]
     
 }
 

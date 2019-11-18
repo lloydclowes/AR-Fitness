@@ -77,39 +77,8 @@ class SquatController: UIViewController, ARSessionDelegate {
                 print("Error: Unable to load model as BodyTrackedEntity")
             }
         })
-        // 90 * 0.15 = 15% tolerance on 90 degrees of motion
-        let upLegTol = Float(90 * 0.15)
-        // 90 * 0.15 = 15% tolerance on 70 degrees of motion
-        let legTol = Float(70 * 0.15)
         
-        let uprightState = ["left_upLeg_joint":  EulerAngles(z: Float(-90)),
-                            "right_upLeg_joint": EulerAngles(z: Float(90)),
-                            "left_leg_joint": EulerAngles(z: Float(20)),
-                            "right_leg_joint": EulerAngles(z: Float(20))
-        ]
-        
-        let uprightTolerances = ["left_upLeg_joint": EulerAngles(z: upLegTol),
-                                 "right_upLeg_joint": EulerAngles(z: -upLegTol),
-                                 "left_leg_joint": EulerAngles(z: legTol),
-                                 "right_leg_joint": EulerAngles(z: legTol)
-        ]
-        
-        let squattedState = ["left_upLeg_joint": EulerAngles(z: Float(0)),
-                             "right_upLeg_joint": EulerAngles(z: Float(0)),
-                             "left_leg_joint": EulerAngles(z: Float(90)),
-                             "right_leg_joint": EulerAngles(z: Float(90))
-        ]
-        
-        let squattedTolerances = ["left_upLeg_joint": EulerAngles(z: -upLegTol),
-                                  "right_upLeg_joint": EulerAngles(z: upLegTol),
-                                  "left_leg_joint": EulerAngles(z: -legTol),
-                                  "right_leg_joint": EulerAngles(z: -legTol)
-        ]
-        
-        self.activityMonitor = ActivityMonitor([
-            ActivityState("UP", uprightState, uprightTolerances),
-            ActivityState("DOWN", squattedState, squattedTolerances)
-        ])
+        self.activityMonitor = ActivityMonitor(exerciseData[1].states)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
