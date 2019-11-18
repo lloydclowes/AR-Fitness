@@ -28,6 +28,8 @@ class SquatController: UIViewController, ARSessionDelegate {
     var initial = true
     var reachedSquat = false
     
+    var showRobot = false
+    
     var activityMonitor = ActivityMonitor()
     
     let infoLabel : UILabel = {
@@ -79,7 +81,7 @@ class SquatController: UIViewController, ARSessionDelegate {
         
         // Asynchronously load the 3D character.
         var cancellable: AnyCancellable? = nil
-        cancellable = Entity.loadBodyTrackedAsync(named: "character/robot").sink(
+        cancellable = Entity.loadBodyTrackedAsync(named: "robot").sink(
             receiveCompletion: { completion in
                 if case let .failure(error) = completion {
                     print("Error: Unable to load model: \(error.localizedDescription)")
@@ -109,12 +111,13 @@ class SquatController: UIViewController, ARSessionDelegate {
             if let character = character, character.parent == nil {
                 characterAnchor.addChild(character)
             }
+            characterAnchor.isEnabled = showRobot
             
             let prevState = activityMonitor.index
             let target = activityMonitor.targetIndex
             let newState = activityMonitor.updateState(bodyAnchor)
             if newState != prevState && newState != -1 {
-                if newState == target && newState == 0 {
+                if newState == target && newState == 0 && activityMonitor.lastSuccess {
                     reps += 1
                 }
             }

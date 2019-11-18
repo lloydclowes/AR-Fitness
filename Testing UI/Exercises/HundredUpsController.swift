@@ -31,6 +31,8 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     var initial = true
     var reachedSquat = false
     
+    var showRobot = false
+    
     let infoLabel : UILabel = {
         let myLabel = UILabel()
         myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
@@ -118,6 +120,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 if let character = character, character.parent == nil {
                     characterAnchor.addChild(character)
                 }
+                characterAnchor.isEnabled = showRobot
                 
 //                if activityMonitor.checkForStateAdvance(bodyAnchor) {
 //                    reps += activityMonitor.index == 1 ? 1 : 0
@@ -127,7 +130,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 let target = activityMonitor.targetIndex
                 let newState = activityMonitor.updateState(bodyAnchor)
                 if newState != prevState && newState != -1 {
-                    if newState == target && newState == 0 {
+                    if newState == target && newState == 0 && activityMonitor.lastSuccess {
                         reps += 1
                     }
                 }

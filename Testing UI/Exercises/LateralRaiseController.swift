@@ -31,6 +31,8 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var counter = 60
     var prevTime = Int(Date().timeIntervalSince1970)
     
+    var showRobot = false
+    
     let infoLabel : UILabel = {
         let myLabel = UILabel()
         myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
@@ -163,12 +165,14 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                     speaker.speak(statement: phrase)
                 }
             }
+            
             if let character = character, character.parent == nil {
                 // Attach the character to its anchor as soon as
                 // 1. the body anchor was detected and
                 // 2. the character was loaded.
                 characterAnchor.addChild(character)
             }
+            characterAnchor.isEnabled = showRobot
         }
     }
     
