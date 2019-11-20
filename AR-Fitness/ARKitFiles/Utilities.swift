@@ -82,3 +82,14 @@ func getRotationXYZ(_ q: simd_quatf) -> EulerAngles {
 
     return EulerAngles(x: radToDeg * roll, y: radToDeg * pitch, z: radToDeg * yaw)
 }
+
+func ema(_ actual : Float, _ ema_prev : Float) -> Float {
+    let alpha = Float(0.25)
+    return actual * alpha + ema_prev * (1.0 - alpha)
+}
+    
+func dema(_ actual : Float, _ prev : Float) -> Float {
+    let smoothed = ema(actual, prev)
+    let double_smoothed = ema(smoothed, prev)
+    return 2 * smoothed - double_smoothed
+}

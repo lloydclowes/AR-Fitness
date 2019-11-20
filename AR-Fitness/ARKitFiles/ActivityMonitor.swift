@@ -11,8 +11,10 @@ import ARKit
 
 class ActivityMonitor {
     
-    let targetStates : [ActivityState]
-    let improvableStates : [ActivityState]
+    let targetStates : [TargetState]
+    var currentState = ActivityState()
+    
+    let improvableStates : [TargetState]
     // let holdingDurations : [Double]
     
     var index = 0
@@ -29,26 +31,35 @@ class ActivityMonitor {
         self.improvableStates = []
     }
     
-    init(_ targetStates : [ActivityState]) {
+    init(_ targetStates : [TargetState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.improvableStates = []
     }
     
-    init(_ targetStates : [ActivityState], improvableStates: [ActivityState]) {
+    init(_ targetStates : [TargetState], improvableStates: [TargetState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.improvableStates = improvableStates
     }
     
+    func retain(_ cur : Float, _ prev : Float) -> Float {
+        return cur
+    }
+    
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
+        
+        let newState = bodyAnchor.getBodyState(Array(currentState.jointAngles.keys))
+        currentState.augment(newState, dema)
+//        currentState.augment(newState, retain)  // Use retain to ignore the previous value completely
+        
         // If the index hasn't changed then ignore
-        if index != -1 && index < targetStates.count && targetStates[index].reachedBy(bodyAnchor) {
+        if index != -1 && index < targetStates.count && currentState.reaches(targetStates[index]) {
             return index
         }
         
         // If the target has been reached, move to the next state
-        if targetStates[targetIndex].reachedBy(bodyAnchor) {
+        if currentState.reaches(targetStates[targetIndex]) {
             index = targetIndex
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
@@ -64,7 +75,7 @@ class ActivityMonitor {
         // Check any following states for matches
         for i in 1..<targetStates.count {
             // If we have reached a future state
-            if targetStates[(targetIndex + i) % targetStates.count].reachedBy(bodyAnchor) {
+            if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variables
                 index = (targetIndex + i) % targetStates.count
                 lastIndex = index
@@ -96,7 +107,11 @@ class ActivityMonitor {
     }
     
     func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        if targetStates[index].reachedBy(bodyAnchor) {
+        let newState = bodyAnchor.getBodyState(Array(currentState.jointAngles.keys))
+        currentState.augment(newState, dema)
+//        currentState.augment(newState, retain)  // Use retain to ignore the previous value completely
+        
+        if currentState.reaches(targetStates[index]) {
             index = (index + 1) % targetStates.count
             return true
         }
