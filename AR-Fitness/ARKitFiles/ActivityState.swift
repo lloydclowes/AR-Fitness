@@ -39,24 +39,36 @@ class ActivityState: Hashable, Codable {
     func augment(_ other : ActivityState, _ augmentation : (Float, Float) -> Float) {
         for (joint, angles) in other.jointAngles {
             // The following behaviour could be a default instead of skipping
-            let currentAngles = jointAngles[joint]!
+            let prevAngles = jointAngles[joint]!
             
             var newX : Float? = nil
-            if let aug = angles.x {
-                let cur = currentAngles.x!
-                newX = augmentation(cur, aug)
+            if let cur = angles.x {
+//                let cur = currentAngles.x!
+                if let prev = prevAngles.x {
+                    newX = augmentation(cur, prev)
+                } else {
+                    newX = cur
+                }
             }
             
             var newY : Float? = nil
-            if let aug = angles.y {
-                let cur = currentAngles.y!
-                newY = augmentation(cur, aug)
+            if let cur = angles.y {
+//                let cur = currentAngles.y!
+                if let prev = prevAngles.y {
+                    newY = augmentation(cur, prev)
+                } else {
+                    newY = cur
+                }
             }
             
             var newZ : Float? = nil
-            if let aug = angles.z {
-                let cur = currentAngles.z!
-                newZ = augmentation(cur, aug)
+            if let cur = angles.z {
+//                let cur = currentAngles.z!
+                if let prev = prevAngles.z {
+                    newZ = augmentation(cur, prev)
+                } else {
+                    newZ = cur
+                }
             }
             
             jointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)

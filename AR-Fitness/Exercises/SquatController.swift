@@ -28,7 +28,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     var initial = true
     var reachedSquat = false
     
-    var showRobot = false
+    var showRobot = true
     
     var activityMonitor = ActivityMonitor()
     
@@ -117,8 +117,10 @@ class SquatController: UIViewController, ARSessionDelegate {
             let target = activityMonitor.targetIndex
             let newState = activityMonitor.updateState(bodyAnchor)
             if newState != prevState && newState != -1 {
-                if newState == target && newState == 0 && activityMonitor.lastSuccess {
-                    reps += 1
+                if newState == target && activityMonitor.lastSuccess {
+                    reps += newState == 0 ? 1 : 0
+                } else {
+                    print("failedIndex: \(activityMonitor.failedIndex) lastSuccessIndexReached: \(activityMonitor.lastIndex)")
                 }
             }
             

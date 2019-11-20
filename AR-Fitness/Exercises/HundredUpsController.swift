@@ -31,7 +31,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     var initial = true
     var reachedSquat = false
     
-    var showRobot = false
+    var showRobot = true
     
     let infoLabel : UILabel = {
         let myLabel = UILabel()
