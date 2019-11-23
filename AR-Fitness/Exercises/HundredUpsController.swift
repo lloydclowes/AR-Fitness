@@ -42,25 +42,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
         myLabel.adjustsFontSizeToFitWidth = true
         return myLabel
     }()
-   
-//    let rlzLabel : UILabel = {
-//        let myLabel = UILabel()
-//        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
-//        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
-//        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
-//        myLabel.textAlignment = NSTextAlignment.center
-//        myLabel.adjustsFontSizeToFitWidth = true
-//        return myLabel
-//    }()
-//    let llzLabel : UILabel = {
-//        let myLabel = UILabel()
-//        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
-//        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
-//        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
-//        myLabel.textAlignment = NSTextAlignment.center
-//        myLabel.adjustsFontSizeToFitWidth = true
-//        return myLabel
-//    }()
     
     override func viewDidLoad() {
         infoLabel.text = "Reps: \(reps)"

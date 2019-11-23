@@ -27,8 +27,11 @@ class SquatController: UIViewController, ARSessionDelegate {
     var reps = 0
     var initial = true
     var reachedSquat = false
+    var timer = Timer()
+    var counter = 0
     
-    var showRobot = false
+    var showRobot = true
+    var showInfo = false
     
     var activityMonitor = ActivityMonitor()
     
@@ -41,27 +44,28 @@ class SquatController: UIViewController, ARSessionDelegate {
         myLabel.adjustsFontSizeToFitWidth = true
         return myLabel
     }()
-//    let rlzLabel : UILabel = {
-//        let myLabel = UILabel()
-//        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
-//        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
-//        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
-//        myLabel.textAlignment = NSTextAlignment.center
-//        myLabel.adjustsFontSizeToFitWidth = true
-//        return myLabel
-//    }()
-//    let llzLabel : UILabel = {
-//        let myLabel = UILabel()
-//        myLabel.textColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
-//        myLabel.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
-//        myLabel.font = UIFont.boldSystemFont(ofSize: 20)
-//        myLabel.textAlignment = NSTextAlignment.center
-//        myLabel.adjustsFontSizeToFitWidth = true
-//        return myLabel
-//    }()
+    
+    func infoButton() -> UIButton {
+        let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
+        button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+        button.setAttributedTitle(NSAttributedString(string: "See info", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20), NSAttributedString.Key.foregroundColor:
+            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
+        button.addTarget(nil, action: #selector(self.showInformation), for: UIControl.Event.touchUpInside)
+        return button
+    }
+    
     override func viewDidLoad() {
         infoLabel.text = "Reps: \(reps)"
         setupViews()
+    }
+    
+    @IBAction func showInformation(sender: UIButton) {
+        showInfo = true
+        let modalViewController = ModalViewController()
+        print(counter)
+        modalViewController.updateReps(reps, timer: counter)
+        modalViewController.modalPresentationStyle = .overCurrentContext
+        present(modalViewController, animated: true, completion: {})
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,6 +109,8 @@ class SquatController: UIViewController, ARSessionDelegate {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
             
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+            RunLoop.current.add(self.timer, forMode: .common)
             characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
             // ^ or independently set .orientation and .position of characterAnchor
             
@@ -122,14 +128,7 @@ class SquatController: UIViewController, ARSessionDelegate {
                 }
             }
             
-//            let ruz = bodyAnchor.getLocalJointAngleXYZ("right_upLeg_joint").z
-//            let rlz = bodyAnchor.getLocalJointAngleXYZ("right_leg_joint").z
-//            let luz = bodyAnchor.getLocalJointAngleXYZ("left_upLeg_joint").z
-//            let llz = bodyAnchor.getLocalJointAngleXYZ("left_leg_joint").z
-            
             self.infoLabel.text = "Reps: \(reps)"
-//            self.rlzLabel.text = "ruz: \(Int(ruz!))  rlz: \(Int(rlz!))"
-//            self.llzLabel.text = "luz: \(Int(luz!))  llz: \(Int(llz!))"
             
             if let character = character, character.parent == nil {
                 // Attach the character to its anchor as soon as
@@ -139,12 +138,16 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
         }
     }
+    @objc func timerAction() {
+        counter += 1
+        
+    }
     
     func setupViews() {
+        let button = infoButton()
         view.addSubview(arView)
         view.addSubview(infoLabel)
-//        view.addSubview(rlzLabel)
-//        view.addSubview(llzLabel)
+        view.addSubview(button)
         
         // label constraints (position, size...)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -152,18 +155,16 @@ class SquatController: UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         
-//        rlzLabel.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -150))
-//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
-//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
-//        self.view.addConstraint(NSLayoutConstraint(item: rlzLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
-//
-//        llzLabel.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -225))
-//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
-//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
-//        self.view.addConstraint(NSLayoutConstraint(item: llzLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        // button constraints
+        button.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: infoLabel, attribute: .trailing, multiplier: 1, constant: 100))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        
         
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
