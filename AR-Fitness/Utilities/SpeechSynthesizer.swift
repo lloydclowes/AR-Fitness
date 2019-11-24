@@ -15,7 +15,7 @@ class SpeechSynthesizer : AVSpeechSynthesizer {
     let speechSynthesizer = AVSpeechSynthesizer()
     let voiceToUse = AVSpeechSynthesisVoice(language: "en-GB")
     var speechUtterance: AVSpeechUtterance = AVSpeechUtterance()
-    var rewards = ["Good job!", "Well done!", "Keep up the good work!"]
+    var rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
     
     func speak(statement: String) {
         speechUtterance = AVSpeechUtterance(string: statement)

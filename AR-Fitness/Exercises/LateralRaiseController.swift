@@ -40,12 +40,32 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         myLabel.font = UIFont.boldSystemFont(ofSize: 20)
         myLabel.textAlignment = NSTextAlignment.center
         myLabel.adjustsFontSizeToFitWidth = true
+        myLabel.clipsToBounds = true
+        myLabel.layer.cornerRadius = 25
         return myLabel
     }()
+    
+    func infoButton() -> UIButton {
+        let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
+        button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+        button.setAttributedTitle(NSAttributedString(string: "See info", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20), NSAttributedString.Key.foregroundColor:
+            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
+        button.addTarget(nil, action: #selector(self.showInformation), for: UIControl.Event.touchUpInside)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 25
+        return button
+    }
     
     override func viewDidLoad() {
         infoLabel.text = "Timer: \(counter)"
         setupViews()
+    }
+    
+    @IBAction func showInformation(sender: UIButton) {
+        let modalViewController = ModalViewController()
+        modalViewController.updateInfo(nil, timer: (60-counter)*60, exerciseName: "Lateral Raises")
+        modalViewController.modalPresentationStyle = .overCurrentContext
+        present(modalViewController, animated: true, completion: {})
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -177,16 +197,26 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     }
     
     func setupViews() {
-        // adding both views
+        let button = infoButton()
         view.addSubview(arView)
         view.addSubview(infoLabel)
+        view.addSubview(button)
         
         // label constraints (position, size...)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
-        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 40))
-        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -40))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 30))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 30))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
+        
+        // button constraints
+        button.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: infoLabel, attribute: .trailing, multiplier: 1, constant: 100))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
         
         // arView constraints
         arView.translatesAutoresizingMaskIntoConstraints = false
@@ -200,6 +230,13 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     @objc func timerAction() {
         counter -= 1
         infoLabel.text = "Timer: \(self.counter)"
+        if(counter == 30) {
+            speaker.speak(statement: "Half way there!")
+        } else if(counter == 5) {
+            speaker.speak(statement: "Only five more seconds!")
+        } else if(counter == 0) {
+            speaker.speak(statement: "Well done! You've completed the challenge")
+        }
     }
     
 }
