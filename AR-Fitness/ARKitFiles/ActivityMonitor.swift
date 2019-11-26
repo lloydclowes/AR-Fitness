@@ -12,7 +12,8 @@ import ARKit
 class ActivityMonitor {
     
     let targetStates : [TargetState]
-    var currentState = ActivityState()
+    var augmentedState = ActivityState()
+    var naturalState = ActivityState()
     
     let improvableStates : [TargetState]
     // let holdingDurations : [Double]
@@ -37,7 +38,8 @@ class ActivityMonitor {
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         if targetStates.count > 0 {
             for key in targetStates[targetIndex].jointAngles.keys {
-                self.currentState.jointAngles[key] = EulerAngles()
+                self.augmentedState.jointAngles[key] = EulerAngles()
+                self.naturalState.jointAngles[key] = EulerAngles()
             }
         }
         self.improvableStates = []
@@ -48,31 +50,32 @@ class ActivityMonitor {
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         if targetStates.count > 0 {
             for key in targetStates[targetIndex].jointAngles.keys {
-                self.currentState.jointAngles[key] = EulerAngles()
+                self.augmentedState.jointAngles[key] = EulerAngles()
+                self.naturalState.jointAngles[key] = EulerAngles()
             }
         }
         self.improvableStates = improvableStates
     }
     
-    // Use retain as augmentation function to ignore the previous value completely
-    func retain(_ cur : Float, _ prev : Float) -> Float {
+    // Use replace as augmentation function to ignore the previous value completely
+    func replace(_ cur : Float, _ prev : Float) -> Float {
         return cur
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
         
-        let newState = bodyAnchor.getBodyState(Array(currentState.jointAngles.keys))
+        let newState = bodyAnchor.getBodyState(Array(augmentedState.jointAngles.keys))
         // TODO: move the augmentation function to member variable passed in to init(...)
-//        currentState.augment(newState, retain)
-        currentState.augment(newState, dema)
+        augmentedState = augmentedState.augment(newState, dema)
+        naturalState = naturalState.augment(newState, replace)
         
         // If the index hasn't changed then ignore
-        if index != -1 && index < targetStates.count && currentState.reaches(targetStates[index]) {
+        if index != -1 && index < targetStates.count && augmentedState.reaches(targetStates[index]) {
             return index
         }
         
         // If the target has been reached, move to the next state
-        if currentState.reaches(targetStates[targetIndex]) {
+        if augmentedState.reaches(targetStates[targetIndex]) {
             index = targetIndex
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
@@ -88,7 +91,7 @@ class ActivityMonitor {
         // Check any following states for matches
         for i in 1..<targetStates.count {
             // If we have reached a future state
-            if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
+            if augmentedState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variables
                 index = (targetIndex + i) % targetStates.count
                 lastIndex = index
@@ -121,11 +124,11 @@ class ActivityMonitor {
     }
     
     func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        let newState = bodyAnchor.getBodyState(Array(currentState.jointAngles.keys))
-        currentState.augment(newState, dema)
-//        currentState.augment(newState, retain)  // Use retain to ignore the previous value completely
+        let newState = bodyAnchor.getBodyState(Array(augmentedState.jointAngles.keys))
+        augmentedState.augment(newState, dema)
+        naturalState.augment(newState, replace)  // Use replace to ignore the previous value completely
         
-        if currentState.reaches(targetStates[index]) {
+        if augmentedState.reaches(targetStates[index]) {
             index = (index + 1) % targetStates.count
             return true
         }

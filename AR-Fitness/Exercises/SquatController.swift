@@ -18,10 +18,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
+    let recordingSession = RecordingSession()
     
     var upDirection = false
     var reps = 0
@@ -99,6 +96,8 @@ class SquatController: UIViewController, ARSessionDelegate {
         })
         
         self.activityMonitor = ActivityMonitor(exerciseData[1].states)
+        
+        self.recordingSession.startRecording()
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -119,6 +118,10 @@ class SquatController: UIViewController, ARSessionDelegate {
             if newState != prevState && newState != -1 {
                 if newState == target && activityMonitor.lastSuccess {
                     reps += newState == 0 ? 1 : 0
+                    if reps > 0 && reps % 10 == 0 {
+                        recordingSession.upload()
+                        recordingSession.startRecording()
+                    }
                 } else {
                     print("failedIndex: \(activityMonitor.failedIndex) lastSuccessIndexReached: \(activityMonitor.lastIndex)")
                 }
@@ -139,6 +142,9 @@ class SquatController: UIViewController, ARSessionDelegate {
                 // 2. the character was loaded.
                 characterAnchor.addChild(character)
             }
+            
+//            print(activityMonitor.augmentedState.jointAngles["left_upLeg_joint"]!.z)
+            self.recordingSession.poll(activityMonitor.augmentedState, activityMonitor.naturalState)
         }
     }
     

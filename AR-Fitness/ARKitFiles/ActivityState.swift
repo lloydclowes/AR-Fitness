@@ -36,7 +36,8 @@ class ActivityState: Hashable, Codable {
         return target.reachedBy(self)
     }
     
-    func augment(_ other : ActivityState, _ augmentation : (Float, Float) -> Float) {
+    func augment(_ other : ActivityState, _ augmentation : (Float, Float) -> Float) -> ActivityState {
+        var newJointAngles = JointAngles()
         for (joint, angles) in other.jointAngles {
             // The following behaviour could be a default instead of skipping
             let prevAngles = jointAngles[joint]!
@@ -71,7 +72,9 @@ class ActivityState: Hashable, Codable {
                 }
             }
             
-            jointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
+            newJointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
         }
+        
+        return ActivityState(newJointAngles)
     }
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		185F1C78238557F8005CF226 /* TargetState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C77238557F8005CF226 /* TargetState.swift */; };
+		185F1C9023857E03005CF226 /* RecordingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C8B23857E03005CF226 /* RecordingSession.swift */; };
+		185F1C9223857E03005CF226 /* JSONDataExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C8D23857E03005CF226 /* JSONDataExporter.swift */; };
+		185F1C9723857F6E005CF226 /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C9623857F6E005CF226 /* StateHistory.swift */; };
 		678F070D235B935F00CE5AC6 /* ExerciseRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */; };
 		67FB2C2F235E208600AD0CD2 /* MainPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FB2C2E235E208600AD0CD2 /* MainPageView.swift */; };
 		6E30CA89236A352A00AADAF2 /* ActivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */; };
@@ -41,6 +44,9 @@
 
 /* Begin PBXFileReference section */
 		185F1C77238557F8005CF226 /* TargetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetState.swift; sourceTree = "<group>"; };
+		185F1C8B23857E03005CF226 /* RecordingSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecordingSession.swift; path = "../AR-Fitness/Recorder/RecordingSession.swift"; sourceTree = "<group>"; };
+		185F1C8D23857E03005CF226 /* JSONDataExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONDataExporter.swift; path = "../AR-Fitness/Recorder/JSONDataExporter.swift"; sourceTree = "<group>"; };
+		185F1C9623857F6E005CF226 /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
 		678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRowView.swift; sourceTree = "<group>"; };
 		67FB2C2E235E208600AD0CD2 /* MainPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageView.swift; sourceTree = "<group>"; };
 		6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitor.swift; sourceTree = "<group>"; };
@@ -85,6 +91,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		185F1C9523857E09005CF226 /* DataRecording */ = {
+			isa = PBXGroup;
+			children = (
+				185F1C8D23857E03005CF226 /* JSONDataExporter.swift */,
+				185F1C8B23857E03005CF226 /* RecordingSession.swift */,
+				185F1C9623857F6E005CF226 /* StateHistory.swift */,
+			);
+			path = DataRecording;
+			sourceTree = "<group>";
+		};
 		6E30CA8A236A353A00AADAF2 /* ARKitFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +154,7 @@
 		6E9004BF2359BCAA0070AECC = {
 			isa = PBXGroup;
 			children = (
+				185F1C9523857E09005CF226 /* DataRecording */,
 				6E9004CA2359BCAA0070AECC /* AR-Fitness */,
 				6E9004C92359BCAA0070AECC /* Products */,
 			);
@@ -292,12 +309,15 @@
 				6EAF45C3236AE8D900710465 /* GetJointAnglesExtension.swift in Sources */,
 				6E43804C235A4EE2001A557A /* Exercise.swift in Sources */,
 				6E86FC8E236332F500810FE6 /* MuscleGroupsList.swift in Sources */,
+				185F1C9023857E03005CF226 /* RecordingSession.swift in Sources */,
+				185F1C9223857E03005CF226 /* JSONDataExporter.swift in Sources */,
 				6E9004E6235A086E0070AECC /* IntensityButtonView.swift in Sources */,
 				6E32773B2379D2F200C700C9 /* LateralRaiseController.swift in Sources */,
 				6E4292DD2381E11C00CE0B38 /* SquatController.swift in Sources */,
 				6E86FC8A2362EC7F00810FE6 /* SearchBar.swift in Sources */,
 				6E30CA8E236A358800AADAF2 /* Utilities.swift in Sources */,
 				6E43804E23624133001A557A /* IconView.swift in Sources */,
+				185F1C9723857F6E005CF226 /* StateHistory.swift in Sources */,
 				6E86FC8C2362FCC900810FE6 /* MuscleGroupRow.swift in Sources */,
 				6E9004CC2359BCAA0070AECC /* AppDelegate.swift in Sources */,
 				6E9004CE2359BCAA0070AECC /* SceneDelegate.swift in Sources */,
