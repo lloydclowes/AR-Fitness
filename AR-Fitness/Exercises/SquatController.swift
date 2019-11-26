@@ -15,7 +15,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     var arView = ARView(frame: .zero)
     // The 3D character to display.
     var character: BodyTrackedEntity?
-    let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
+    let characterOffset: SIMD3<Float> = [0, 0, 0]
     let characterAnchor = AnchorEntity()
     
     let recordingSession = RecordingSession()

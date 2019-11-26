@@ -21,13 +21,13 @@ class TargetState : ActivityState {
     init(_ name : String) {
         self.name = name
         self.tolerances = JointAngles()
-        super.init(JointAngles())
+        super.init(jointAngles: JointAngles())
     }
     
     init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles) {
         self.name = name
         self.tolerances = tolerances
-        super.init(jointAngles)
+        super.init(jointAngles: jointAngles)
     }
     
     required convenience init(from decoder: Decoder) throws {

@@ -99,8 +99,8 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
-            let curState = bodyAnchor.getBodyState(Array(startState.jointAngles.keys))
-            
+            let curAngles = bodyAnchor.getBodyJointAngles(Array(startState.jointAngles.keys))
+            let curState = ActivityState(jointAngles: curAngles)
             if (!started && startState.reachedBy(curState)) {
                 speaker.start()
                 started = true

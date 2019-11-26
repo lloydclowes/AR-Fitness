@@ -12,8 +12,13 @@ import ARKit
 class ActivityMonitor {
     
     let targetStates : [TargetState]
+    
+//    var augmentedHistory : [ActivityState]
+//    var naturalHistory : [ActivityState]
+    
     var augmentedState = ActivityState()
     var naturalState = ActivityState()
+    var prevTime = 0.0
     
     let improvableStates : [TargetState]
     // let holdingDurations : [Double]
@@ -63,11 +68,15 @@ class ActivityMonitor {
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(augmentedState.jointAngles.keys))
         
-        let newState = bodyAnchor.getBodyState(Array(augmentedState.jointAngles.keys))
+        let curTime = Date().timeIntervalSince1970
+        let delta = Float(curTime - prevTime)
+        prevTime = curTime
+        
         // TODO: move the augmentation function to member variable passed in to init(...)
-        augmentedState = augmentedState.augment(newState, dema)
-        naturalState = naturalState.augment(newState, replace)
+        augmentedState = augmentedState.update(newAngles, dema, delta)
+        naturalState = naturalState.update(newAngles, replace, delta)
         
         // If the index hasn't changed then ignore
         if index != -1 && index < targetStates.count && augmentedState.reaches(targetStates[index]) {
@@ -124,9 +133,14 @@ class ActivityMonitor {
     }
     
     func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        let newState = bodyAnchor.getBodyState(Array(augmentedState.jointAngles.keys))
-        augmentedState.augment(newState, dema)
-        naturalState.augment(newState, replace)  // Use replace to ignore the previous value completely
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(augmentedState.jointAngles.keys))
+        
+        let curTime = Date().timeIntervalSince1970
+        let delta = Float(curTime - prevTime)
+        prevTime = curTime
+        
+        augmentedState = augmentedState.update(newAngles, dema, delta)
+        naturalState = naturalState.update(newAngles, replace, delta)  // Use replace to ignore the previous value completely
         
         if augmentedState.reaches(targetStates[index]) {
             index = (index + 1) % targetStates.count
