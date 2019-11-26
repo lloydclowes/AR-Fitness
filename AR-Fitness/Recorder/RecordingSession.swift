@@ -35,12 +35,14 @@ class RecordingSession {
         
         lastPoll = currentTime
         
-        stateHistory.append(TimedState(currentTime, augmentedState, naturalState))
+        let augmentedCopy = ActivityState(copyOf: augmentedState)
+        let naturalCopy = ActivityState(copyOf: naturalState)
+        stateHistory.append(TimedState(currentTime, augmentedCopy, naturalCopy))
         //stateHistory.history.append(thing)
     }
 
     func upload() {
-        let url = URL(string: "https://2f35f5ad.ngrok.io/record")!
+        let url = URL(string: "https://7d5e1f35.ngrok.io/record")!
         
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = "POST"

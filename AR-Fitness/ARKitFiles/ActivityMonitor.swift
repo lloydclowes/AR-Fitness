@@ -13,8 +13,9 @@ class ActivityMonitor {
     
     let targetStates : [TargetState]
     
-//    var augmentedHistory : [ActivityState]
-//    var naturalHistory : [ActivityState]
+    let maxHistorySize = 1000
+    var augmentedHistory = [ActivityState]()
+    var naturalHistory = [ActivityState]()
     
     var augmentedState = ActivityState()
     var naturalState = ActivityState()
@@ -74,9 +75,18 @@ class ActivityMonitor {
         let delta = Float(curTime - prevTime)
         prevTime = curTime
         
+        augmentedHistory.append(augmentedState)
+        if (augmentedHistory.count > maxHistorySize) {
+            augmentedHistory.remove(at: 0)
+        }
+        naturalHistory.append(naturalState)
+        if (naturalHistory.count > maxHistorySize) {
+            naturalHistory.remove(at: 0)
+        }
+        
         // TODO: move the augmentation function to member variable passed in to init(...)
-        augmentedState = augmentedState.update(newAngles, dema, delta)
-        naturalState = naturalState.update(newAngles, replace, delta)
+        augmentedState.update(newAngles, dema, 1.0)
+        naturalState.update(newAngles, replace, 1.0)
         
         // If the index hasn't changed then ignore
         if index != -1 && index < targetStates.count && augmentedState.reaches(targetStates[index]) {
@@ -133,19 +143,28 @@ class ActivityMonitor {
     }
     
     func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        let newAngles = bodyAnchor.getBodyJointAngles(Array(augmentedState.jointAngles.keys))
+        augmentedHistory.append(ActivityState(copyOf: augmentedState))
+        if (augmentedHistory.count > maxHistorySize) {
+            augmentedHistory.remove(at: 0)
+        }
+        naturalHistory.append(ActivityState(copyOf: naturalState))
+        if (naturalHistory.count > maxHistorySize) {
+            naturalHistory.remove(at: 0)
+        }
         
         let curTime = Date().timeIntervalSince1970
         let delta = Float(curTime - prevTime)
         prevTime = curTime
         
-        augmentedState = augmentedState.update(newAngles, dema, delta)
-        naturalState = naturalState.update(newAngles, replace, delta)  // Use replace to ignore the previous value completely
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(augmentedState.jointAngles.keys))
+        augmentedState.update(newAngles, dema, 1.0)
+        naturalState.update(newAngles, replace, 1.0)
         
         if augmentedState.reaches(targetStates[index]) {
             index = (index + 1) % targetStates.count
             return true
         }
+        
         return false
     }
 }

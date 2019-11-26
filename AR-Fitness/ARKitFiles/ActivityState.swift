@@ -45,6 +45,13 @@ class ActivityState: Hashable, Codable {
         }
     }
     
+    init(copyOf: ActivityState) {
+        self.joints = copyOf.joints
+        self.jointAngles = copyOf.jointAngles
+        self.jointVelocities = copyOf.jointVelocities
+        self.jointAccelerations = copyOf.jointAccelerations
+    }
+    
     init(_ jointAngles : JointAngles, _ jointVelocities : JointAngles, _ jointAccelerations : JointAngles) {
         self.joints = Array(jointAngles.keys)
         self.jointAngles = jointAngles
@@ -72,133 +79,54 @@ class ActivityState: Hashable, Codable {
         return target.reachedBy(self)
     }
     
-    func augment(_ newAngles : JointAngles, _ augmentation : (Float, Float) -> Float) -> JointAngles {
-        var newJointAngles = JointAngles()
+    func update(_ newAngles : JointAngles, _ augmentation : (Float, Float) -> Float, _ delta : Float) {
         for (joint, angles) in newAngles {
-            // The following behaviour could be a default instead of skipping
-            let prevAngles = jointAngles[joint]!
+            let prevAngles = jointAngles[joint] ?? EulerAngles()
+            let prevVelocities = jointAngles[joint] ?? EulerAngles()
             
-            var newX : Float? = nil
+            var newX : Float? = nil, newY : Float? = nil, newZ : Float? = nil
+            var vX : Float? = nil, vY : Float? = nil, vZ : Float? = nil
+            var aX : Float? = nil, aY : Float? = nil, aZ : Float? = nil
+            
             if let cur = angles.x {
-//                let cur = currentAngles.x!
-                if let prev = prevAngles.x {
+                if let prev = prevAngles.x, let prevV = prevVelocities.x {
                     newX = augmentation(cur, prev)
+                    vX = (newX! - prev) / delta
+                    aX = (vX! - prevV) / delta
                 } else {
                     newX = cur
+                    vX = newX
+                    aX = vX
                 }
             }
             
-            var newY : Float? = nil
             if let cur = angles.y {
-//                let cur = currentAngles.y!
-                if let prev = prevAngles.y {
+                if let prev = prevAngles.y, let prevV = prevVelocities.y {
                     newY = augmentation(cur, prev)
+                    vY = (newY! - prev) / delta
+                    aY = (vY! - prevV) / delta
                 } else {
                     newY = cur
+                    vY = newY
+                    aY = vY
                 }
             }
             
-            var newZ : Float? = nil
             if let cur = angles.z {
-//                let cur = currentAngles.z!
-                if let prev = prevAngles.z {
+                if let prev = prevAngles.z, let prevV = prevVelocities.z {
                     newZ = augmentation(cur, prev)
+                    vZ = (newZ! - prev) / delta
+                    aZ = (vZ! - prevV) / delta
                 } else {
                     newZ = cur
+                    vZ = newZ
+                    aZ = vZ
                 }
             }
             
-            newJointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
+            jointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
+            jointVelocities[joint] = EulerAngles(x: vX, y: vY, z: vZ)
+            jointAccelerations[joint] = EulerAngles(x: aX, y: aY, z: aZ)
         }
-        return newJointAngles
-    }
-    
-    func updateVelocities(_ newAngles : JointAngles, _ augmentation : (Float, Float) -> Float, _ delta : Float) -> JointAngles {
-        var newJointVelocities = JointAngles()
-        for (joint, angles) in newAngles {
-            // The following behaviour could be a default instead of skipping
-            let prevAngles = jointAngles[joint]!
-            
-            var newX : Float? = nil
-            if let cur = angles.x {
-//                let cur = currentAngles.x!
-                if let prev = prevAngles.x {
-                    newX = augmentation((cur - prev) / delta, prev)
-                } else {
-                    newX = cur
-                }
-            }
-            
-            var newY : Float? = nil
-            if let cur = angles.y {
-//                let cur = currentAngles.y!
-                if let prev = prevAngles.y {
-                    newY = augmentation((cur - prev) / delta, prev)
-                } else {
-                    newY = cur
-                }
-            }
-            
-            var newZ : Float? = nil
-            if let cur = angles.z {
-//                let cur = currentAngles.z!
-                if let prev = prevAngles.z {
-                    newZ = augmentation((cur - prev) / delta, prev)
-                } else {
-                    newZ = cur
-                }
-            }
-            
-            newJointVelocities[joint] = EulerAngles(x: newX, y: newY, z: newZ)
-        }
-        return newJointVelocities
-    }
-    
-    func updateAccelerations(_ newVelocities : JointAngles, _ augmentation : (Float, Float) -> Float, _ delta : Float) -> JointAngles {
-        var newJointAccelerations = JointAngles()
-        for (joint, angles) in newVelocities {
-            // The following behaviour could be a default instead of skipping
-            if let prevVelocities = jointVelocities[joint] {
-                var newX : Float? = nil
-                if let cur = angles.x {
-    //                let cur = currentAngles.x!
-                    if let prev = prevVelocities.x {
-                        newX = augmentation((cur - prev) / delta, prev)
-                    } else {
-                        newX = cur
-                    }
-                }
-                
-                var newY : Float? = nil
-                if let cur = angles.y {
-    //                let cur = currentAngles.y!
-                    if let prev = prevVelocities.y {
-                        newY = augmentation((cur - prev) / delta, prev)
-                    } else {
-                        newY = cur
-                    }
-                }
-                
-                var newZ : Float? = nil
-                if let cur = angles.z {
-    //                let cur = currentAngles.z!
-                    if let prev = prevVelocities.z {
-                        newZ = augmentation((cur - prev) / delta, prev)
-                    } else {
-                        newZ = cur
-                    }
-                }
-                
-                newJointAccelerations[joint] = EulerAngles(x: newX, y: newY, z: newZ)
-            }
-        }
-        return newJointAccelerations
-    }
-    
-    func update(_ newAngles : JointAngles, _ augmentation : (Float, Float) -> Float, _ delta : Float) -> ActivityState {
-        let augmentedAngles = augment(newAngles, augmentation)
-        let newJointVelocities = updateVelocities(augmentedAngles, augmentation, delta)
-        let newJointAccelerations = updateAccelerations(newJointVelocities, augmentation, delta)
-        return ActivityState(augmentedAngles, newJointVelocities, newJointAccelerations)
     }
 }
