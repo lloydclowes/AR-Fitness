@@ -18,15 +18,10 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
-    
     var activityMonitor: ActivityMonitor?
     let speaker = SpeechSynthesizer()
     var started = false
-    var startState = ActivityState("START", [:], [:])
+    var startState = TargetState("Start")
     var timer = Timer()
     var counter = 60
     var prevTime = Int(Date().timeIntervalSince1970)
@@ -62,10 +57,10 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     }
     
     @IBAction func showInformation(sender: UIButton) {
-        let modalViewController = ModalViewController()
-        modalViewController.updateInfo(nil, timer: (60-counter)*60, exerciseName: "Lateral Raises")
-        modalViewController.modalPresentationStyle = .overCurrentContext
-        present(modalViewController, animated: true, completion: {})
+       // let modalViewController = ModalViewController()
+       // modalViewController.updateInfo(nil, timer: (60-counter)*60, exerciseName: "Lateral Raises")
+       // modalViewController.modalPresentationStyle = .overCurrentContext
+       // present(modalViewController, animated: true, completion: {})
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -116,7 +111,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                        "right_arm_joint": EulerAngles(y: lateralTolerance)
         ]
     
-        startState = ActivityState("START", lateralRaiseState, lateralRaiseTolerances)
+        startState = TargetState("START", lateralRaiseState, lateralRaiseTolerances)
        
         self.activityMonitor = ActivityMonitor(exerciseData[0].states)
     }
@@ -124,8 +119,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
+            let curState = bodyAnchor.getBodyState(Array(startState.jointAngles.keys))
             
-            if (!started && startState.reachedBy(bodyAnchor)) {
+            if (!started && startState.reachedBy(curState)) {
                 speaker.start()
                 started = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3){

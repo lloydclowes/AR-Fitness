@@ -18,11 +18,6 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
-    
     var upDirection = false
     var reps = 0
     var initial = true
@@ -107,8 +102,8 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
         ]
         
         self.activityMonitor = ActivityMonitor([
-            ActivityState("UP", uprightState, uprightTolerances),
-            ActivityState("DOWN", squattedState, squattedTolerances)
+            TargetState("UP", uprightState, uprightTolerances),
+            TargetState("DOWN", squattedState, squattedTolerances)
         ])
     }
     

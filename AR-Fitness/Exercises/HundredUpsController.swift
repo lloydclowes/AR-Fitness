@@ -18,11 +18,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
-    
     var activityMonitor = ActivityMonitor()
     let speaker = SpeechSynthesizer()
 
@@ -34,7 +29,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     var timer = Timer()
     var counter = 0
     
-    var showRobot = false
+    var showRobot = true
     
     let infoLabel : UILabel = {
         let myLabel = UILabel()
@@ -65,10 +60,10 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     }
     
     @IBAction func showInformation(sender: UIButton) {
-        let modalViewController = ModalViewController()
-        modalViewController.updateInfo(reps, timer: counter, exerciseName: "Hundred Ups")
-        modalViewController.modalPresentationStyle = .overCurrentContext
-        present(modalViewController, animated: true, completion: {})
+       // let modalViewController = ModalViewController()
+       // modalViewController.updateInfo(reps, timer: counter, exerciseName: "Hundred Ups")
+       // modalViewController.modalPresentationStyle = .overCurrentContext
+       // present(modalViewController, animated: true, completion: {})
     }
     
     override func viewDidAppear(_ animated: Bool) {

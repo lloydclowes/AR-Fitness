@@ -33,4 +33,12 @@ extension ARBodyAnchor {
         }
         return Transform(matrix: self.skeleton.jointModelTransforms[ind]).translation
     }
+    
+    func getBodyState(_ joints : [String]) -> ActivityState {
+        var angles = JointAngles()
+        for joint in joints {
+            angles[joint] = getLocalJointAngleXYZ(joint)
+        }
+        return ActivityState(angles)
+    }
 }

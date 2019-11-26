@@ -9,49 +9,72 @@
 import Foundation
 import ARKit
 
-struct ActivityState: Hashable, Codable {
-    let name : String
-    let jointAngles : JointAngles
-    let tolerances : JointAngles
-        
-    init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles) {
-        self.name = name
+class ActivityState: Hashable, Codable {
+    var jointAngles : JointAngles
+    
+    init() {
+        self.jointAngles = JointAngles()
+    }
+    
+    init(_ jointAngles : JointAngles) {
         self.jointAngles = jointAngles
-        self.tolerances = tolerances
+    }
+    
+    static func == (lhs: ActivityState, rhs: ActivityState) -> Bool {
+        return lhs.jointAngles == rhs.jointAngles
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(jointAngles)
     }
     
     func valueNotReached(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
         return tol <= 0.0 && curr < targ + tol || tol >= 0.0 && curr > targ + tol
     }
     
-    // TODO: invert and place into body anchor extension
-    func reachedBy(_ bodyAnchor: ARBodyAnchor) -> Bool {
-        for (joint, targetAngles) in jointAngles {
-            let angles = bodyAnchor.getLocalJointAngleXYZ(joint)
-            guard let tolerances = tolerances[joint] else { return false }
+    func reaches(_ target : TargetState) -> Bool {
+        return target.reachedBy(self)
+    }
+    
+    func augment(_ other : ActivityState, _ augmentation : (Float, Float) -> Float) -> ActivityState {
+        var newJointAngles = JointAngles()
+        for (joint, angles) in other.jointAngles {
+            // The following behaviour could be a default instead of skipping
+            let prevAngles = jointAngles[joint]!
             
-            if let tol = tolerances.x, let targ = targetAngles.x {
-                guard let curr = angles.x else { return false }
-                if valueNotReached(current: curr, target: targ, tolerance: tol) {
-                    return false
+            var newX : Float? = nil
+            if let cur = angles.x {
+//                let cur = currentAngles.x!
+                if let prev = prevAngles.x {
+                    newX = augmentation(cur, prev)
+                } else {
+                    newX = cur
                 }
             }
             
-            if let tol = tolerances.y, let targ = targetAngles.y {
-                guard let curr = angles.y else { return false }
-                if valueNotReached(current: curr, target: targ, tolerance: tol) {
-                    return false
+            var newY : Float? = nil
+            if let cur = angles.y {
+//                let cur = currentAngles.y!
+                if let prev = prevAngles.y {
+                    newY = augmentation(cur, prev)
+                } else {
+                    newY = cur
                 }
             }
             
-            if let tol = tolerances.z, let targ = targetAngles.z {
-                guard let curr = angles.z else { return false }
-                if valueNotReached(current: curr, target: targ, tolerance: tol) {
-                    return false
+            var newZ : Float? = nil
+            if let cur = angles.z {
+//                let cur = currentAngles.z!
+                if let prev = prevAngles.z {
+                    newZ = augmentation(cur, prev)
+                } else {
+                    newZ = cur
                 }
             }
+            
+            newJointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
         }
         
-        return true
+        return ActivityState(newJointAngles)
     }
 }

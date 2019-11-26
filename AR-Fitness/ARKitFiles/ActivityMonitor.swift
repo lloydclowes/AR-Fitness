@@ -11,8 +11,11 @@ import ARKit
 
 class ActivityMonitor {
     
-    let targetStates : [ActivityState]
-    let improvableStates : [ActivityState]
+    let targetStates : [TargetState]
+    var augmentedState = ActivityState()
+    var naturalState = ActivityState()
+    
+    let improvableStates : [TargetState]
     // let holdingDurations : [Double]
     
     var index = 0
@@ -21,7 +24,8 @@ class ActivityMonitor {
     
     var lastIndex = 0
     var targetIndex = 0
-    var lastSuccess = false
+    var failedIndex = -1
+    var lastSuccess = true
     var success = true
     
     init() {
@@ -29,33 +33,56 @@ class ActivityMonitor {
         self.improvableStates = []
     }
     
-    init(_ targetStates : [ActivityState]) {
+    init(_ targetStates : [TargetState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
+        if targetStates.count > 0 {
+            for key in targetStates[targetIndex].jointAngles.keys {
+                self.augmentedState.jointAngles[key] = EulerAngles()
+                self.naturalState.jointAngles[key] = EulerAngles()
+            }
+        }
         self.improvableStates = []
     }
     
-    init(_ targetStates : [ActivityState], improvableStates: [ActivityState]) {
+    init(_ targetStates : [TargetState], improvableStates: [TargetState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
+        if targetStates.count > 0 {
+            for key in targetStates[targetIndex].jointAngles.keys {
+                self.augmentedState.jointAngles[key] = EulerAngles()
+                self.naturalState.jointAngles[key] = EulerAngles()
+            }
+        }
         self.improvableStates = improvableStates
     }
     
+    // Use replace as augmentation function to ignore the previous value completely
+    func replace(_ cur : Float, _ prev : Float) -> Float {
+        return cur
+    }
+    
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
+        
+        let newState = bodyAnchor.getBodyState(Array(augmentedState.jointAngles.keys))
+        // TODO: move the augmentation function to member variable passed in to init(...)
+        augmentedState = augmentedState.augment(newState, dema)
+        naturalState = naturalState.augment(newState, replace)
+        
         // If the index hasn't changed then ignore
-        if index != -1 && index < targetStates.count && targetStates[index].reachedBy(bodyAnchor) {
+        if index != -1 && index < targetStates.count && augmentedState.reaches(targetStates[index]) {
             return index
         }
         
         // If the target has been reached, move to the next state
-        if targetStates[targetIndex].reachedBy(bodyAnchor) {
+        if augmentedState.reaches(targetStates[targetIndex]) {
             index = targetIndex
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
             
-            // If we got back to 0, reset success and assign the lastSuccess param ready for next rep
+            // If we got back to 0, reset success
             if index == 0 {
-                lastSuccess = true
+                lastSuccess = success
                 success = true
             }
             return index
@@ -64,10 +91,11 @@ class ActivityMonitor {
         // Check any following states for matches
         for i in 1..<targetStates.count {
             // If we have reached a future state
-            if targetStates[(targetIndex + i) % targetStates.count].reachedBy(bodyAnchor) {
+            if augmentedState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variables
                 index = (targetIndex + i) % targetStates.count
                 lastIndex = index
+                failedIndex = targetIndex
                 targetIndex = (index + 1) % targetStates.count
                 
                 // The rep was not completed fully since we must have skipped a state
@@ -96,7 +124,11 @@ class ActivityMonitor {
     }
     
     func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        if targetStates[index].reachedBy(bodyAnchor) {
+        let newState = bodyAnchor.getBodyState(Array(augmentedState.jointAngles.keys))
+        augmentedState.augment(newState, dema)
+        naturalState.augment(newState, replace)  // Use replace to ignore the previous value completely
+        
+        if augmentedState.reaches(targetStates[index]) {
             index = (index + 1) % targetStates.count
             return true
         }
