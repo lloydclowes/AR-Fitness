@@ -27,7 +27,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     var reps = 0
     var initial = true
     var reachedSquat = false
-    var timer : Timer?
+    var timer = Timer()
     var counter = 0
     let speaker = SpeechSynthesizer()
     var rewarded = false
@@ -61,6 +61,9 @@ class SquatController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: \(reps)"
         setupViews()
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer, forMode: .common)
+
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -111,9 +114,7 @@ class SquatController: UIViewController, ARSessionDelegate {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
             
-            let atimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-            RunLoop.current.add(atimer, forMode: .common)
-            self.timer = atimer
+            //self.timer = atimer
             characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
             // ^ or independently set .orientation and .position of characterAnchor
             
@@ -150,6 +151,7 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
         }
     }
+    
     @objc func timerAction() {
         counter += 1
     }

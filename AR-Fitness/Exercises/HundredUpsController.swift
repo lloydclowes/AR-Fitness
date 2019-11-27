@@ -62,6 +62,8 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: \(reps)"
         setupViews()
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer, forMode: .common)
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -112,9 +114,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
         
             for anchor in anchors {
                 guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
-                
-                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-                RunLoop.current.add(self.timer, forMode: .common)
                 
                 characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
                 // ^ or independently set .orientation and .position of characterAnchor
