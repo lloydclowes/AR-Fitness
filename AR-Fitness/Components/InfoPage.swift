@@ -64,8 +64,8 @@ class ModalViewController: UIViewController {
     }
     
     private func getTimeString() -> String {
-        var secs : Int = time/60
-        let mins : Int = secs/60
+        var secs : Int = time
+        let mins : Int = time/60
         secs -= (mins*60)
         var timeStr : String = ""
         if(mins < 10) {
