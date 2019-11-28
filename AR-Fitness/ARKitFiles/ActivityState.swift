@@ -13,7 +13,7 @@ struct ActivityState: Hashable, Codable {
     let name : String
     let jointAngles : JointAngles
     let tolerances : JointAngles
-    let goalDuration : Float
+    var goalDuration = Float(0)
 
         
     init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles,  _ goalDuration : Float) {

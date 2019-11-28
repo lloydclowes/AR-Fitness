@@ -48,6 +48,26 @@ class ActivityMonitor {
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
+        
+        print("is about to check duration")
+        for i in 0 ..< durations.count {
+            let actualDur = durations[i]
+            let goalDur = targetStates[index].goalDuration
+            print("is checking the duration")
+            if (actualDur < goalDur) {
+                print("Did not stay in the state long enough")
+                print(actualDur)
+                print(goalDur)
+                print("index is")
+                print(i)
+                speaker.speak(statement: "You did not stay in the last state long enough!")
+            }
+        }
+        
+        // loop through durations and set all to 0
+        for i in 0 ..< durations.count {
+            durations[i] = 0;
+        }
         // If the index hasn't changed then ignore
         if index != -1 && index < targetStates.count && targetStates[index].reachedBy(bodyAnchor) {
             return index
@@ -106,20 +126,6 @@ class ActivityMonitor {
             index = (index + 1) % targetStates.count
             return true
         }
-        
-        for i in 0 ..< durations.count {
-            let actualDur = durations[i]
-            let goalDur = targetStates[index].goalDuration
-            if (actualDur < goalDur) {
-                speaker.speak(statement: "You did not stay in the last state long enough!")
-            }
-        }
-        
-        // loop through durations and set all to 0
-        for i in 0 ..< durations.count {
-            durations[i] = 0;
-        }
-        
         return false
     }
 }
