@@ -24,21 +24,27 @@ class ActivityMonitor {
     var lastSuccess = false
     var success = true
     
+    var durations : [Float]
+
+    
     init() {
         self.targetStates = []
         self.improvableStates = []
+        self.durations = []
     }
     
     init(_ targetStates : [ActivityState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.improvableStates = []
+        self.durations = []
     }
     
     init(_ targetStates : [ActivityState], improvableStates: [ActivityState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.improvableStates = improvableStates
+        self.durations = []
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
@@ -100,6 +106,20 @@ class ActivityMonitor {
             index = (index + 1) % targetStates.count
             return true
         }
+        
+        for i in 0 ..< durations.count {
+            let actualDur = durations[i]
+            let goalDur = targetStates[index].goalDuration
+            if (actualDur < goalDur) {
+                speaker.speak(statement: "You did not stay in the last state long enough!")
+            }
+        }
+        
+        // loop through durations and set all to 0
+        for i in 0 ..< durations.count {
+            durations[i] = 0;
+        }
+        
         return false
     }
 }

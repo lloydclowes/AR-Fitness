@@ -13,11 +13,14 @@ struct ActivityState: Hashable, Codable {
     let name : String
     let jointAngles : JointAngles
     let tolerances : JointAngles
+    let goalDuration : Float
+
         
-    init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles) {
+    init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles,  _ goalDuration : Float) {
         self.name = name
         self.jointAngles = jointAngles
         self.tolerances = tolerances
+        self.goalDuration = goalDuration
     }
     
     func valueNotReached(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
