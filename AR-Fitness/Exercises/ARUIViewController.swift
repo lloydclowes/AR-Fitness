@@ -107,8 +107,8 @@ class ARUIViewController: UIViewController, ARSessionDelegate {
         ]
         
         self.activityMonitor = ActivityMonitor([
-            ActivityState("UP", uprightState, uprightTolerances),
-            ActivityState("DOWN", squattedState, squattedTolerances)
+            ActivityState("UP", uprightState, uprightTolerances, 2),
+            ActivityState("DOWN", squattedState, squattedTolerances, 2)
         ])
     }
     

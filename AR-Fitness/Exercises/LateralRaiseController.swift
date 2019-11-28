@@ -26,7 +26,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var activityMonitor: ActivityMonitor?
     let speaker = SpeechSynthesizer()
     var started = false
-    var startState = ActivityState("START", [:], [:])
+    var startState = ActivityState("START", [:], [:], 2)
     var timer = Timer()
     var counter = 60
     var prevTime = Int(Date().timeIntervalSince1970)
@@ -116,7 +116,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                        "right_arm_joint": EulerAngles(y: lateralTolerance)
         ]
     
-        startState = ActivityState("START", lateralRaiseState, lateralRaiseTolerances)
+        startState = ActivityState("START", lateralRaiseState, lateralRaiseTolerances, 2)
        
         self.activityMonitor = ActivityMonitor(exerciseData[0].states)
     }
