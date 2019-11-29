@@ -10,16 +10,55 @@ import Foundation
 
 final class PeakFinder {
     
-    static var relHeight = 0.5
+    static var relHeight = Float(0.5)
     
     // Peak finder:
-    // data - input array of Double values to analyze
+    // data - input array of Float values to analyze
     // minimumHeight, maximumHeight - threshold of the peak values to eliminate high peaks
     // distance - minimum distance between two peaks
     // minWidth - minimum width of the peak measured at the relHeight of its prominence (default value is 0.5 so it's measured at half the prominence height)
     // return -> array of touples. First value is the index of the given array where peak was found. Second value is the height of the peak at this point
     
-    static func findPeaks(data: [Double], minimumHeight:Double?, maximumHeight: Double?, distance: Int?, minWidth: Int?) -> [(Int,Double)] {
+//    static func findAnglePeaks(joints: [String], useX: Bool = false, useY: Bool = false, useZ: Bool = false, data: [ActivityState], minimumHeight: Float?, maximumHeight: Float?, distance: Int?, minWidth: Int?) -> [(Int, Float)] {
+//        
+//        for joint in joints {
+//            var xs = [Float](), ys = [Float](), zs = [Float]()
+//            
+//            var peakArrays = [[(Int, Float)]]()
+//            if useX {
+//                for state in data {
+//                    xs.append(state.jointAngles[joint]!.x!)
+//                }
+//                peakArrays.append(findPeaks(data: xs, minimumHeight: minimumHeight, maximumHeight: maximumHeight, distance: distance, minWidth: minWidth))
+//            }
+//            if useY {
+//                for state in data {
+//                    ys.append(state.jointAngles[joint]!.y!)
+//                }
+//                peakArrays.append(findPeaks(data: xs, minimumHeight: minimumHeight, maximumHeight: maximumHeight, distance: distance, minWidth: minWidth))
+//            }
+//            if useZ {
+//                for state in data {
+//                    zs.append(state.jointAngles[joint]!.z!)
+//                }
+//                peakArrays.append(findPeaks(data: zs, minimumHeight: minimumHeight, maximumHeight: maximumHeight, distance: distance, minWidth: minWidth))
+//            }
+//            
+//            var n = peakArrays[0].count
+//            for peakArray in peakArrays {
+//                n = min(peakArray.count, n)
+//            }
+//            
+//            var 
+//            for i in 0..n {
+//                for peakArray in peakArrays {
+//                    
+//                }
+//            }
+//        }
+//    }
+    
+    static func findPeaks(data: [Float], minimumHeight:Float?, maximumHeight: Float?, distance: Int?, minWidth: Int?) -> [(Int, Float)] {
 
         var result = findLocalMaxima(data: data)
         if minimumHeight != nil || maximumHeight != nil {
@@ -37,13 +76,13 @@ final class PeakFinder {
         return result
     }
     
-    private static func findLocalMaxima(data: [Double]) -> [(Int,Double)] {
+    private static func findLocalMaxima(data: [Float]) -> [(Int,Float)] {
 
         var midpoints: [Int] = []
         var leftEdges: [Int] = []
         var rightEdges: [Int] = []
         var m = 0
-        var result = Array<(Int,Double)>()
+        var result = Array<(Int,Float)>()
         var index = 1
         let maxIndex = data.endIndex-2
         
@@ -73,7 +112,7 @@ final class PeakFinder {
         return result
     }
     
-    static private func peaksByHeight(peaks: [(Int,Double)], minimumHeight: Double?, maximumHeight: Double?) -> [(Int,Double)] {
+    static private func peaksByHeight(peaks: [(Int,Float)], minimumHeight: Float?, maximumHeight: Float?) -> [(Int,Float)] {
         var result = peaks
         var keepFlags: [Int] = Array(repeating: 1, count: peaks.count)
         for index in peaks.indices {
@@ -98,7 +137,7 @@ final class PeakFinder {
         return result
     }
     
-    static private func peaksByDistance(peaks: [(Int,Double)], distance: Int) -> [(Int,Double)] {
+    static private func peaksByDistance(peaks: [(Int,Float)], distance: Int) -> [(Int,Float)] {
         var peaks = peaks
         var keepFlags: [Int] = Array(repeating: 1, count: peaks.count)
 
@@ -134,15 +173,15 @@ final class PeakFinder {
         return peaks
     }
     
-    static private func peakProminences(data: [Double], peaks: [(Int,Double)], prominencesWindowLength: Int) -> ([Double],[Int],[Int]) {
+    static private func peakProminences(data: [Float], peaks: [(Int,Float)], prominencesWindowLength: Int) -> ([Float],[Int],[Int]) {
 
-        var prominences = [Double](repeating: 0, count: peaks.count)
+        var prominences = [Float](repeating: 0, count: peaks.count)
         
         var leftBases = [Int](repeating: 0, count: peaks.count),
             rightBases = [Int](repeating: 0, count: peaks.count)
         
-        var leftMin = 0.0,
-            rightMin = 0.0
+        var leftMin = Float(0.0),
+            rightMin = Float(0.0)
         
         var peak = 0,
             iMin = 0,
@@ -184,7 +223,7 @@ final class PeakFinder {
                 }
                 index += 1
             }
-            prominences[peakNumber] = data[peak] - max(leftMin, rightMin)
+            prominences[peakNumber] = data[peak] - Float(max(leftMin, rightMin))
             if prominences[peakNumber] == 0 {
                     showWarning = true
             }
@@ -196,14 +235,14 @@ final class PeakFinder {
         return (prominences,leftBases,rightBases)
     }
     
-    static private func peakWidths(data: [Double], peaks: [(Int,Double)], relHeight: Double, prominences: [Double], leftBases: [Int], rightBases: [Int], minWidth: Int) -> [(Int,Double)] {
+    static private func peakWidths(data: [Float], peaks: [(Int,Float)], relHeight: Float, prominences: [Float], leftBases: [Int], rightBases: [Int], minWidth: Int) -> [(Int,Float)] {
 
         var peaks = peaks
-        var widths = [Double](repeating: 0, count: peaks.count),
-            widthHeights = [Double](repeating: 0, count: peaks.count),
-            leftIps = [Double](repeating: 0, count: peaks.count),
-            rightIps = [Double](repeating: 0, count: peaks.count)
-        var height, leftIp, rightIp: Double
+        var widths = [Float](repeating: 0, count: peaks.count),
+            widthHeights = [Float](repeating: 0, count: peaks.count),
+            leftIps = [Float](repeating: 0, count: peaks.count),
+            rightIps = [Float](repeating: 0, count: peaks.count)
+        var height, leftIp, rightIp: Float
         var peak, index, iMax, iMin: Int
         var showWarning = false
         
@@ -234,7 +273,7 @@ final class PeakFinder {
             while iMin < index && height < data[index] {
                 index -= 1
             }
-            leftIp = Double(index)
+            leftIp = Float(index)
             if data[index] < height {
                 leftIp += (height - data[index]) / (data[index + 1] - data[index])
             }
@@ -244,7 +283,7 @@ final class PeakFinder {
                 index += 1
             }
             
-            rightIp = Double(index)
+            rightIp = Float(index)
             
             if  data[index] < height{
                 rightIp -= (height - data[index]) / (data[index - 1] - data[index])
@@ -263,7 +302,7 @@ final class PeakFinder {
         }
         
         for index in widths.indices {
-            if widths[index] < Double(minWidth) {
+            if widths[index] < Float(minWidth) {
                 keepFlags[index] = 0
             }
         }

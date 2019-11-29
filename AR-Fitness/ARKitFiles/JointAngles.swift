@@ -1,0 +1,62 @@
+//
+//  JointAngles.swift
+//  AR-Fitness
+//
+//  Created by Brandon Forbes on 29/11/2019.
+//  Copyright © 2019 SE Project Group 8. All rights reserved.
+//
+
+import Foundation
+
+struct JointAngles : Hashable, Codable, Sequence {
+    var jointAngles : Dictionary<String, EulerAngles> = [:]
+    
+    public var keys : Dictionary<String, EulerAngles>.Keys {
+        get { return jointAngles.keys }
+    }
+    
+    init() {}
+    
+    init(joints: [String]) {
+        for joint in joints {
+            jointAngles[joint] = EulerAngles()
+        }
+    }
+    
+    init(jointAngles: Dictionary<String, EulerAngles>) {
+        self.jointAngles = jointAngles
+    }
+    
+    subscript(index: String) -> EulerAngles? {
+        get {
+            return jointAngles[index]
+        }
+        set(newValue) {
+            jointAngles[index] = newValue
+        }
+    }
+    
+    static func == (lhs: JointAngles, rhs: JointAngles) -> Bool {
+        return lhs.jointAngles == rhs.jointAngles
+    }
+    
+    func makeIterator() -> Dictionary<String, EulerAngles>.Iterator {
+        return jointAngles.makeIterator()
+    }
+    
+    func difference(_ other : JointAngles) -> JointAngles {
+        var diff = JointAngles()
+        for (joint, angles) in jointAngles {
+            let otherAngles = other.jointAngles[joint] ?? EulerAngles()
+            diff[joint] = angles.difference(otherAngles)
+        }
+        
+        for (joint, otherAngles) in other.jointAngles {
+            if !jointAngles.keys.contains(joint) {
+                diff[joint] = otherAngles
+            }
+        }
+        return diff
+    }
+    
+}

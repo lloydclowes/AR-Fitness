@@ -91,7 +91,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                        "right_arm_joint": EulerAngles(y: lateralTolerance)
         ]
     
-        startState = TargetState("START", lateralRaiseState, lateralRaiseTolerances)
+        startState = TargetState("START", JointAngles(jointAngles: lateralRaiseState), JointAngles(jointAngles: lateralRaiseTolerances))
        
         self.activityMonitor = ActivityMonitor(exerciseData[0].states)
     }

@@ -20,6 +20,6 @@ struct TimedState : Codable {
     }
 }
 
-struct StateHistory : Codable {
+struct TimedStateHistory : Codable {
     var history : [TimedState]
 }

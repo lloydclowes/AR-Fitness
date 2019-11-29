@@ -8,7 +8,7 @@ import Foundation
 
 class JSONDataExporter {
     
-    static func encodeJSON(from data: StateHistory) -> String? {
+    static func encodeJSON(from data: TimedStateHistory) -> String? {
         let jsonEncoder = JSONEncoder()
         do {
             let jsonData = try jsonEncoder.encode(data)

@@ -42,7 +42,7 @@ class RecordingSession {
     }
 
     func upload() {
-        let url = URL(string: "https://7d5e1f35.ngrok.io/record")!
+        let url = URL(string: "https://425d9b5f.ngrok.io/record")!
         
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -50,7 +50,7 @@ class RecordingSession {
         request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Accept")
         
-        guard let data = JSONDataExporter.encodeJSON(from: StateHistory(history: stateHistory)) else {
+        guard let data = JSONDataExporter.encodeJSON(from: TimedStateHistory(history: stateHistory)) else {
             return
         }
         

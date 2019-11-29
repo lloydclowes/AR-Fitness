@@ -11,26 +11,35 @@ import ARKit
 
 class ActivityState: Hashable, Codable {
     let joints : [String]
+    var initial = false
     var jointAngles : JointAngles
     var jointVelocities : JointAngles
-    var jointAccelerations : JointAngles
+    
+    // TODO: Tune this (as low as possible)
+    let turningPointTolerance = Float(0.5)
+    
+    public var description : String {
+        var str = ""
+        str = "State {\n"
+        for joint in jointAngles.keys {
+            str += joint + ": " + jointAngles[joint]!.description + "\n"
+        }
+        return str + "}\n"
+    }
     
     init() {
         self.joints = []
         self.jointAngles = JointAngles()
         self.jointVelocities = JointAngles()
-        self.jointAccelerations = JointAngles()
     }
     
     init(joints : [String]) {
         self.joints = joints
         self.jointAngles = JointAngles()
         self.jointVelocities = JointAngles()
-        self.jointAccelerations = JointAngles()
         for joint in joints {
             jointAngles[joint] = EulerAngles()
-            jointVelocities[joint] = EulerAngles(x: 0, y: 0, z: 0)
-            jointAccelerations[joint] = EulerAngles(x: 0, y: 0, z: 0)
+            jointVelocities[joint] = EulerAngles()
         }
     }
     
@@ -38,10 +47,11 @@ class ActivityState: Hashable, Codable {
         self.joints = Array(jointAngles.keys)
         self.jointAngles = jointAngles
         self.jointVelocities = JointAngles()
-        self.jointAccelerations = JointAngles()
-        for (joint, _) in jointAngles {
-            self.jointVelocities[joint] = EulerAngles(x: 0, y: 0, z: 0)
-            self.jointAccelerations[joint] = EulerAngles(x: 0, y: 0, z: 0)
+        for (joint, angles) in jointAngles {
+            let x : Float? = angles.x != nil ? Float(0) : nil
+            let y : Float? = angles.y != nil ? Float(0) : nil
+            let z : Float? = angles.z != nil ? Float(0) : nil
+            self.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
         }
     }
     
@@ -49,17 +59,14 @@ class ActivityState: Hashable, Codable {
         self.joints = copyOf.joints
         self.jointAngles = copyOf.jointAngles
         self.jointVelocities = copyOf.jointVelocities
-        self.jointAccelerations = copyOf.jointAccelerations
     }
     
     init(_ jointAngles : JointAngles, _ jointVelocities : JointAngles, _ jointAccelerations : JointAngles) {
         self.joints = Array(jointAngles.keys)
         self.jointAngles = jointAngles
         self.jointVelocities = JointAngles()
-        self.jointAccelerations = JointAngles()
         for (joint, _) in jointAngles {
             self.jointVelocities[joint] = jointVelocities[joint]
-            self.jointAccelerations[joint] = jointAccelerations[joint]
         }
     }
     
@@ -71,62 +78,82 @@ class ActivityState: Hashable, Codable {
         hasher.combine(jointAngles)
     }
     
+    func valueBelowTarget(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
+        return tol <= 0.0 && curr < targ + tol
+    }
+    
+    func valueAboveTarget(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
+        return tol >= 0.0 && curr > targ + tol
+    }
+    
     func valueNotReached(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
-        return tol <= 0.0 && curr < targ + tol || tol >= 0.0 && curr > targ + tol
+        return valueBelowTarget(current: curr, target: targ, tolerance: tol) || valueAboveTarget(current: curr, target: targ, tolerance: tol)
     }
     
     func reaches(_ target : TargetState) -> Bool {
         return target.reachedBy(self)
     }
     
+    func isTurningPoint() -> Bool {
+        if initial {
+            return false
+        }
+        
+        for (_, velocities) in jointVelocities {
+            if let x = velocities.x, abs(x) > turningPointTolerance {
+                return false
+            }
+            if let y = velocities.y, abs(y) > turningPointTolerance {
+                return false
+            }
+            if let z = velocities.z, abs(z) > turningPointTolerance {
+                return false
+            }
+        }
+        return true
+    }
+    
     func update(_ newAngles : JointAngles, _ augmentation : (Float, Float) -> Float, _ delta : Float) {
+        // TODO: Try apply augmentation twice to velocity and three/four times to acceleration
         for (joint, angles) in newAngles {
             let prevAngles = jointAngles[joint] ?? EulerAngles()
-            let prevVelocities = jointAngles[joint] ?? EulerAngles()
+            let prevVelocities = jointVelocities[joint] ?? EulerAngles()
             
             var newX : Float? = nil, newY : Float? = nil, newZ : Float? = nil
             var vX : Float? = nil, vY : Float? = nil, vZ : Float? = nil
-            var aX : Float? = nil, aY : Float? = nil, aZ : Float? = nil
             
-            if let cur = angles.x {
-                if let prev = prevAngles.x, let prevV = prevVelocities.x {
+            if let prev = prevAngles.x {
+                if let cur = angles.x, let prevV = prevVelocities.x {
                     newX = augmentation(cur, prev)
-                    vX = (newX! - prev) / delta
-                    aX = (vX! - prevV) / delta
+                    vX = augmentation((newX! - prev) / delta, prevV)
                 } else {
-                    newX = cur
-                    vX = newX
-                    aX = vX
+                    newX = prev
+                    vX = 0
                 }
             }
             
-            if let cur = angles.y {
-                if let prev = prevAngles.y, let prevV = prevVelocities.y {
+            if let prev = prevAngles.y {
+                if let cur = angles.y, let prevV = prevVelocities.y {
                     newY = augmentation(cur, prev)
-                    vY = (newY! - prev) / delta
-                    aY = (vY! - prevV) / delta
+                    vY = augmentation((newY! - prev) / delta, prevV)
                 } else {
-                    newY = cur
-                    vY = newY
-                    aY = vY
+                    newY = prev
+                    vY = 0
                 }
             }
             
-            if let cur = angles.z {
-                if let prev = prevAngles.z, let prevV = prevVelocities.z {
+            if let prev = prevAngles.z {
+                if let cur = angles.z, let prevV = prevVelocities.z {
                     newZ = augmentation(cur, prev)
-                    vZ = (newZ! - prev) / delta
-                    aZ = (vZ! - prevV) / delta
+                    vZ = augmentation((newZ! - prev) / delta, prevV)
                 } else {
-                    newZ = cur
-                    vZ = newZ
-                    aZ = vZ
+                    newZ = prev
+                    vZ = 0
                 }
             }
             
             jointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
             jointVelocities[joint] = EulerAngles(x: vX, y: vY, z: vZ)
-            jointAccelerations[joint] = EulerAngles(x: aX, y: aY, z: aZ)
         }
     }
 }

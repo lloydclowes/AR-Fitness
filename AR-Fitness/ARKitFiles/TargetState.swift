@@ -79,4 +79,31 @@ class TargetState : ActivityState {
         return true
     }
     
+//    func getFeedback(_ activityState: ActivityState) -> [String] {
+//        for (joint, targetAngles) in jointAngles {
+//            guard let angles = activityState.jointAngles[joint] else { return false }
+//
+//            let jointTols = tolerances[joint]!
+//            if let tol = jointTols.x, let targ = targetAngles.x {
+//                guard let curr = angles.x else { return false }
+//                if valueNotReached(current: curr, target: targ, tolerance: tol) {
+//                    return []
+//                }
+//            }
+//
+//            if let tol = jointTols.y, let targ = targetAngles.y {
+//                guard let curr = angles.y else { return false }
+//                if valueNotReached(current: curr, target: targ, tolerance: tol) {
+//                    return []
+//                }
+//            }
+//
+//            if let tol = jointTols.z, let targ = targetAngles.z {
+//                guard let curr = angles.z else { return false }
+//                if valueNotReached(current: curr, target: targ, tolerance: tol) {
+//                    return []
+//                }
+//            }
+//        }
+//    }
 }

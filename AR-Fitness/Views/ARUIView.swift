@@ -43,7 +43,7 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
         case "Hundred Ups":
             return HundredUpsController()
         default:
-            return ARUIViewController()
+            return SquatController()
         }
     }
     

@@ -18,10 +18,11 @@ class SquatController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0]
     let characterAnchor = AnchorEntity()
     
+    var uploaded = false
     let recordingSession = RecordingSession()
     
-    var upDirection = false
-    var reps = 0
+//    var upDirection = false
+//    var reps = 0
     var initial = true
     var reachedSquat = false
     
@@ -57,7 +58,7 @@ class SquatController: UIViewController, ARSessionDelegate {
 //        return myLabel
 //    }()
     override func viewDidLoad() {
-        infoLabel.text = "Reps: \(reps)"
+        infoLabel.text = "Reps: 0"
         setupViews()
     }
     
@@ -95,7 +96,7 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
         })
         
-        self.activityMonitor = ActivityMonitor(exerciseData[1].states)
+        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true)
         
         self.recordingSession.startRecording()
     }
@@ -112,39 +113,18 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
             characterAnchor.isEnabled = showRobot
             
-            let prevState = activityMonitor.index
-            let target = activityMonitor.targetIndex
-            let newState = activityMonitor.updateState(bodyAnchor)
-            if newState != prevState && newState != -1 {
-                if newState == target && activityMonitor.lastSuccess {
-                    reps += newState == 0 ? 1 : 0
-                    if reps > 0 && reps % 10 == 0 {
-                        recordingSession.upload()
-                        recordingSession.startRecording()
-                    }
-                } else {
-                    print("failedIndex: \(activityMonitor.failedIndex) lastSuccessIndexReached: \(activityMonitor.lastIndex)")
-                }
-            }
+            activityMonitor.updateState(bodyAnchor)
+            self.infoLabel.text = "Reps: \(activityMonitor.repCount)"
             
 //            let ruz = bodyAnchor.getLocalJointAngleXYZ("right_upLeg_joint").z
 //            let rlz = bodyAnchor.getLocalJointAngleXYZ("right_leg_joint").z
 //            let luz = bodyAnchor.getLocalJointAngleXYZ("left_upLeg_joint").z
 //            let llz = bodyAnchor.getLocalJointAngleXYZ("left_leg_joint").z
             
-            self.infoLabel.text = "Reps: \(reps)"
 //            self.rlzLabel.text = "ruz: \(Int(ruz!))  rlz: \(Int(rlz!))"
 //            self.llzLabel.text = "luz: \(Int(luz!))  llz: \(Int(llz!))"
             
-            if let character = character, character.parent == nil {
-                // Attach the character to its anchor as soon as
-                // 1. the body anchor was detected and
-                // 2. the character was loaded.
-                characterAnchor.addChild(character)
-            }
-            
-//            print(activityMonitor.augmentedState.jointAngles["left_upLeg_joint"]!.z)
-            self.recordingSession.poll(activityMonitor.augmentedState, activityMonitor.naturalState)
+//            self.recordingSession.poll(activityMonitor.currentState, ActivityState())
         }
     }
     

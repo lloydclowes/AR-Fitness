@@ -20,11 +20,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     
     var activityMonitor = ActivityMonitor()
     let speaker = SpeechSynthesizer()
-
-    var upDirection = false
-    var reps = 0
-    var initial = true
-    var reachedSquat = false
     
     var showRobot = true
     
@@ -58,7 +53,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
 //    }()
     
     override func viewDidLoad() {
-        infoLabel.text = "Reps: \(reps)"
+        infoLabel.text = "Reps: 0"
         setupViews()
     }
     
@@ -100,12 +95,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-    //        let leftLegUpImprState = ["left_upLeg_joint": EulerAngles(y: Float(-70))]
-    //        let rightLegUpImprState = ["right_upLeg_joint": EulerAngles(y: Float(-70))]
-    //        let downTol = Float(70 * 0.15)
-    //        let leftLegUpImprTolerances = ["left_upLeg_joint": EulerAngles(y: downTol)]
-    //        let rightLegUpImprTolerances = ["right_upLeg_joint": EulerAngles(y: downTol)]
-            
             for anchor in anchors {
                 guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
                 
@@ -117,25 +106,14 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 }
                 characterAnchor.isEnabled = showRobot
                 
-//                if activityMonitor.checkForStateAdvance(bodyAnchor) {
-//                    reps += activityMonitor.index == 1 ? 1 : 0
-//                }
-                
-                let prevState = activityMonitor.index
-                let target = activityMonitor.targetIndex
-                let newState = activityMonitor.updateState(bodyAnchor)
-                if newState != prevState && newState != -1 {
-                    if newState == target && newState == 0 && activityMonitor.lastSuccess {
-                        reps += 1
-                    }
-                }
+                activityMonitor.updateState(bodyAnchor)
+                self.infoLabel.text = "Reps: \(activityMonitor.repCount)"
 
 //                let ruz = bodyAnchor.getLocalJointAngleXYZ("right_upLeg_joint").z
 //                let rlz = bodyAnchor.getLocalJointAngleXYZ("right_leg_joint").z
 //                let luz = bodyAnchor.getLocalJointAngleXYZ("left_upLeg_joint").z
 //                let llz = bodyAnchor.getLocalJointAngleXYZ("left_leg_joint").z
                 
-                self.infoLabel.text = "Reps: \(reps)"
 //                self.rlzLabel.text = "ruz: \(Int(ruz!))  rlz: \(Int(rlz!))"
 //                self.llzLabel.text = "luz: \(Int(luz!))  llz: \(Int(llz!))"
             }
@@ -173,10 +151,5 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
-    
-    func resetRepCount(_ sender: UIButton) {
-        self.reps = 0
-        self.infoLabel.text = "Reps: \(reps)"
     }
 }

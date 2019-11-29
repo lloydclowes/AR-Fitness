@@ -11,18 +11,10 @@ import ARKit
 
 class ActivityMonitor {
     
+    let useTurningPoints : Bool
+    
     let targetStates : [TargetState]
-    
-    let maxHistorySize = 1000
-    var augmentedHistory = [ActivityState]()
-    var naturalHistory = [ActivityState]()
-    
-    var augmentedState = ActivityState()
-    var naturalState = ActivityState()
-    var prevTime = 0.0
-    
-    let improvableStates : [TargetState]
-    // let holdingDurations : [Double]
+    var currentState = ActivityState()
     
     var index = 0
     var improvableIndex = 0
@@ -30,137 +22,119 @@ class ActivityMonitor {
     
     var lastIndex = 0
     var targetIndex = 0
-    var failedIndex = -1
-    var lastSuccess = true
+    var feedback = [String]()
     var success = true
+    
+    var repCount = 0
     
     init() {
         self.targetStates = []
-        self.improvableStates = []
+        self.useTurningPoints = false
     }
     
-    init(_ targetStates : [TargetState]) {
+    init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
+        self.useTurningPoints = useTurningPoints
         if targetStates.count > 0 {
-            for key in targetStates[targetIndex].jointAngles.keys {
-                self.augmentedState.jointAngles[key] = EulerAngles()
-                self.naturalState.jointAngles[key] = EulerAngles()
+            for (joint, angles) in targetStates[targetIndex].jointAngles {
+                let x : Float? = angles.x != nil ? Float(0) : nil
+                let y : Float? = angles.y != nil ? Float(0) : nil
+                let z : Float? = angles.z != nil ? Float(0) : nil
+                // TODO: addAnchor can set the initial angles
+                self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             }
         }
-        self.improvableStates = []
     }
     
-    init(_ targetStates : [TargetState], improvableStates: [TargetState]) {
-        self.targetStates = targetStates
-        self.targetIndex = targetStates.count > 1 ? 1 : 0
-        if targetStates.count > 0 {
-            for key in targetStates[targetIndex].jointAngles.keys {
-                self.augmentedState.jointAngles[key] = EulerAngles()
-                self.naturalState.jointAngles[key] = EulerAngles()
+    func completeRep() {
+        if success {
+            print("GOOD WORK!")
+            repCount += 1
+        } else {
+            if feedback.count == 0 {
+                // The state changed to -1 but returned to the current state immediately afterwards
+                print("Okay, but a bit wobbly.")
+            } else {
+                print("NOT QUITE: \(feedback)")
             }
+            feedback = []
         }
-        self.improvableStates = improvableStates
+        success = true
     }
     
-    // Use replace as augmentation function to ignore the previous value completely
-    func replace(_ cur : Float, _ prev : Float) -> Float {
-        return cur
-    }
-    
-    func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
-        let newAngles = bodyAnchor.getBodyJointAngles(Array(augmentedState.jointAngles.keys))
-        
-        let curTime = Date().timeIntervalSince1970
-        let delta = Float(curTime - prevTime)
-        prevTime = curTime
-        
-        augmentedHistory.append(augmentedState)
-        if (augmentedHistory.count > maxHistorySize) {
-            augmentedHistory.remove(at: 0)
-        }
-        naturalHistory.append(naturalState)
-        if (naturalHistory.count > maxHistorySize) {
-            naturalHistory.remove(at: 0)
-        }
-        
-        // TODO: move the augmentation function to member variable passed in to init(...)
-        augmentedState.update(newAngles, dema, 1.0)
-        naturalState.update(newAngles, replace, 1.0)
+    func updateState(_ bodyAnchor : ARBodyAnchor) {
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
+        currentState.update(newAngles, dema, 1.0)
         
         // If the index hasn't changed then ignore
-        if index != -1 && index < targetStates.count && augmentedState.reaches(targetStates[index]) {
-            return index
+        if index != -1 && index < targetStates.count && currentState.reaches(targetStates[index]) {
+            return
         }
         
-        // If the target has been reached, move to the next state
-        if augmentedState.reaches(targetStates[targetIndex]) {
+        // If we are using turning points, only check if we are at a turning point
+        if useTurningPoints && !currentState.isTurningPoint() {
+            index = -1
+            return
+        }
+        
+        // If we have reached the target, update state accordingly
+        if currentState.reaches(targetStates[targetIndex]) {
             index = targetIndex
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
-            
-            // If we got back to 0, reset success
             if index == 0 {
-                lastSuccess = success
-                success = true
+                completeRep()
             }
-            return index
+            print("Keep it up... done: \(targetStates[index].name) target: \(targetStates[targetIndex].name)")
+            return
         }
         
         // Check any following states for matches
         for i in 1..<targetStates.count {
             // If we have reached a future state
-            if augmentedState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
+            if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variables
                 index = (targetIndex + i) % targetStates.count
-                lastIndex = index
-                failedIndex = targetIndex
-                targetIndex = (index + 1) % targetStates.count
                 
+                // If we did not arrive back at the last state we reached, add feedback for the missed states
+                if index != lastIndex {
+                    var missed = "Missed: \(targetStates[targetIndex].name)"
+                    for j in 1..<i {
+                        missed += " and " + targetStates[(targetIndex + j) % targetStates.count].name
+                    }
+                    feedback.append(missed)
+                    print(missed)
+                }
+                
+                lastIndex = index
+                targetIndex = (index + 1) % targetStates.count
+
                 // The rep was not completed fully since we must have skipped a state
                 success = false
                 
-                // If we got back to 0, reset success and assign the lastSuccess param ready for next rep
                 if index == 0 {
-                    lastSuccess = false
-                    success = true
+                    completeRep()
                 }
-                
-                return index
+                return
             }
         }
         
+        // TODO: Live feedback goes here -> turning point and not in any state => "Get lower!" or something
+        
         index = -1
-        return -1
+        return
     }
     
     func getStateName() -> String {
         return targetStates[targetIndex].name
     }
     
-    func getImprovementName() -> String {
-        return improvableStates[improvableIndex].name
-    }
-    
     func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        augmentedHistory.append(ActivityState(copyOf: augmentedState))
-        if (augmentedHistory.count > maxHistorySize) {
-            augmentedHistory.remove(at: 0)
-        }
-        naturalHistory.append(ActivityState(copyOf: naturalState))
-        if (naturalHistory.count > maxHistorySize) {
-            naturalHistory.remove(at: 0)
-        }
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
+        currentState.update(newAngles, dema, 1.0)
         
-        let curTime = Date().timeIntervalSince1970
-        let delta = Float(curTime - prevTime)
-        prevTime = curTime
-        
-        let newAngles = bodyAnchor.getBodyJointAngles(Array(augmentedState.jointAngles.keys))
-        augmentedState.update(newAngles, dema, 1.0)
-        naturalState.update(newAngles, replace, 1.0)
-        
-        if augmentedState.reaches(targetStates[index]) {
+        if currentState.reaches(targetStates[index]) {
             index = (index + 1) % targetStates.count
             return true
         }

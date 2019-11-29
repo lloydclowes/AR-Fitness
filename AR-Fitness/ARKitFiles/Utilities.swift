@@ -9,8 +9,6 @@ import Foundation
 import RealityKit
 import ARKit
 
-typealias JointAngles = Dictionary<String, EulerAngles>
-
 let radToDeg = 180 / Float.pi
 
 extension MeshResource {
@@ -46,19 +44,13 @@ extension MeshResource {
 }
 
 // Converts a column major simd_float4x4 into its 3 rotations about the X, Y, Z axes respectively.
-func getRotationXYZ(_ transform: simd_float4x4) -> EulerAngles {
-//    let rows = transform.transpose.columns
-//    let angleX = radToDeg * atan(rows.2[1] / rows.2[2])
-//    let angleY = radToDeg * atan(-rows.2[0] / sqrt(pow(rows.2[1], 2) + pow(rows.2[2], 2)))
-//    let angleZ = radToDeg * atan(rows.1[0] / rows.0[0])
-//    return EulerAngles(x: angleX, y: angleY, z: angleZ)
-    let t = Transform(matrix: transform)
-    return getRotationXYZ(t.rotation)
+func getRotationXYZ(matrix: simd_float4x4) -> EulerAngles {
+    return getRotationXYZ(quatf: Transform(matrix: matrix).rotation)
 }
 
-
-func getRotationXYZ(_ q: simd_quatf) -> EulerAngles {
-    let qvec = q.vector
+// Converts a quaternion to its 3 rotations about the X, Y, Z axes respectively.
+func getRotationXYZ(quatf: simd_quatf) -> EulerAngles {
+    let qvec = quatf.vector
 
     // roll (x-axis rotation)
     let sinr_cosp = 2 * (qvec.w * qvec.x + qvec.y * qvec.z)
@@ -83,11 +75,21 @@ func getRotationXYZ(_ q: simd_quatf) -> EulerAngles {
     return EulerAngles(x: radToDeg * roll, y: radToDeg * pitch, z: radToDeg * yaw)
 }
 
+
+// AUGMENTATION FUNCTIONS:
+
+// Use replace as augmentation function to ignore the previous value completely
+func replace(_ cur : Float, _ prev : Float) -> Float {
+    return cur
+}
+
+// Single exponential moving average
 func ema(_ actual : Float, _ ema_prev : Float) -> Float {
     let alpha = Float(0.25)
     return actual * alpha + ema_prev * (1.0 - alpha)
 }
-    
+ 
+// Double exponential moving average
 func dema(_ actual : Float, _ prev : Float) -> Float {
     let smoothed = ema(actual, prev)
     let double_smoothed = ema(smoothed, prev)
