@@ -22,9 +22,17 @@ struct ARUIView : View {
     var body: some View {
            return ARViewControllerContainer(exercise: exercise)
                 .edgesIgnoringSafeArea(.bottom)
-                .navigationBarTitle(exercise.name)
+            .navigationBarTitle(exercise.name)
+        .navigationBarItems(trailing:
+            NavigationLink(destination: ExerciseInstructionsView(exercise: exercise.name)) {
+                Text(
+                "Instructions")
+            }
+        )
     }
 }
+
+
 
 struct ARViewControllerContainer: UIViewControllerRepresentable {
     let characterAnchor = AnchorEntity()
@@ -34,7 +42,6 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator {}
     
     func makeUIViewController(context: Context) -> UIViewController {
-        
         switch self.exercise.name {
         case "Lateral Raises":
             return LateralRaiseController()

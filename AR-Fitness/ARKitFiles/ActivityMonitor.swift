@@ -23,6 +23,8 @@ class ActivityMonitor {
     var targetIndex = 0
     var lastSuccess = false
     var success = true
+    var timer = Timer()
+    var counter = 0
     
     init() {
         self.targetStates = []
@@ -33,15 +35,20 @@ class ActivityMonitor {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.improvableStates = []
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer, forMode: .common)
     }
     
     init(_ targetStates : [ActivityState], improvableStates: [ActivityState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.improvableStates = improvableStates
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer, forMode: .common)
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) -> Int {
+        print("\((targetStates[targetIndex]).name) :  \(counter)")
         // If the index hasn't changed then ignore
         if index != -1 && index < targetStates.count && targetStates[index].reachedBy(bodyAnchor) {
             return index
@@ -49,6 +56,11 @@ class ActivityMonitor {
         
         // If the target has been reached, move to the next state
         if targetStates[targetIndex].reachedBy(bodyAnchor) {
+            let expectedDuration = (targetStates[(targetIndex + 1) % targetStates.count]).duration
+            if(Float(counter) < expectedDuration && lastIndex != targetIndex) {
+                speaker.speak(statement: "stay \((targetStates[(targetIndex + 1) % targetStates.count]).name) longer")
+            }
+            counter = 0
             index = targetIndex
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
@@ -102,4 +114,10 @@ class ActivityMonitor {
         }
         return false
     }
+    
+    @objc func timerAction() {
+        counter += 1
+    }
+    
+    
 }
