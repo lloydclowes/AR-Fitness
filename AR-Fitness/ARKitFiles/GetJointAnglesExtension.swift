@@ -16,7 +16,7 @@ extension ARBodyAnchor {
         guard let ind : Int = ARSkeletonDefinition.defaultBody3D.jointNames.firstIndex(of: name) else {
             return EulerAngles()
         }
-        return getRotationXYZ(self.skeleton.jointLocalTransforms[ind])
+        return getRotationXYZ(matrix: self.skeleton.jointLocalTransforms[ind])
     }
     
     // Returns the angle of rotation about the X, Y and Z axes respectively of a joint relative to the hips
@@ -24,7 +24,7 @@ extension ARBodyAnchor {
         guard let ind : Int = ARSkeletonDefinition.defaultBody3D.jointNames.firstIndex(of: name) else {
             return EulerAngles()
         }
-        return getRotationXYZ(self.skeleton.jointModelTransforms[ind])
+        return getRotationXYZ(matrix: self.skeleton.jointModelTransforms[ind])
     }
     
     func getModelJointPosXYZ(_ name: String) -> simd_float3 {
@@ -32,5 +32,13 @@ extension ARBodyAnchor {
             return simd_float3()
         }
         return Transform(matrix: self.skeleton.jointModelTransforms[ind]).translation
+    }
+    
+    func getBodyJointAngles(_ joints : [String]) -> JointAngles {
+        var angles = JointAngles()
+        for joint in joints {
+            angles[joint] = getLocalJointAngleXYZ(joint)
+        }
+        return angles
     }
 }

@@ -18,11 +18,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
-    
     var activityMonitor = ActivityMonitor()
     let speaker = SpeechSynthesizer()
 
@@ -34,7 +29,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     var timer = Timer()
     var counter = 0
     
-    var showRobot = false
+    var showRobot = true
     
     let infoLabel : UILabel = {
         let myLabel = UILabel()
@@ -60,7 +55,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     }
     
     override func viewDidLoad() {
-        infoLabel.text = "Reps: \(reps)"
+        infoLabel.text = "Reps: 0"
         setupViews()
         self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
         RunLoop.current.add(self.timer, forMode: .common)
@@ -111,7 +106,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        
             for anchor in anchors {
                 guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
                 
@@ -123,15 +117,9 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 }
                 characterAnchor.isEnabled = showRobot
                 
-                let prevState = activityMonitor.index
-                let target = activityMonitor.targetIndex
-                let newState = activityMonitor.updateState(bodyAnchor)
-                if newState != prevState && newState != -1 {
-                    if newState == target && newState == 0 && activityMonitor.lastSuccess {
-                        reps += 1
-                    }
-                }
-           
+                activityMonitor.updateState(bodyAnchor)
+                
+                let reps = activityMonitor.repCount
                 self.infoLabel.text = "Reps: \(reps)"
                 if (reps != 0 && reps.isMultiple(of: 10) && !rewarded) {
                     rewarded = true
@@ -174,10 +162,5 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
-    
-    func resetRepCount(_ sender: UIButton) {
-        self.reps = 0
-        self.infoLabel.text = "Reps: \(reps)"
     }
 }

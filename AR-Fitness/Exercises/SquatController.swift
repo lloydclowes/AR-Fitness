@@ -15,22 +15,21 @@ class SquatController: UIViewController, ARSessionDelegate {
     var arView = ARView(frame: .zero)
     // The 3D character to display.
     var character: BodyTrackedEntity?
-    let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
+    let characterOffset: SIMD3<Float> = [0, 0, 0]
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
+    var uploaded = false
+    let recordingSession = RecordingSession()
     
-    var upDirection = false
-    var reps = 0
+//    var upDirection = false
+//    var reps = 0
     var initial = true
     var reachedSquat = false
     var timer = Timer()
     var counter = 0
     let speaker = SpeechSynthesizer()
     var rewarded = false
+
     var showRobot = true
     
     var activityMonitor = ActivityMonitor()
@@ -59,7 +58,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     }
     
     override func viewDidLoad() {
-        infoLabel.text = "Reps: \(reps)"
+        infoLabel.text = "Reps: 0"
         setupViews()
         self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
         RunLoop.current.add(self.timer, forMode: .common)
@@ -68,7 +67,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     
     @IBAction func showInformation(sender: UIButton) {
         let modalViewController = ModalViewController()
-        modalViewController.updateInfo(reps, timer: counter, exerciseName: "Squats")
+        modalViewController.updateInfo(activityMonitor.repCount, timer: counter, exerciseName: "Squats")
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
     }
@@ -107,7 +106,9 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
         })
         
-        self.activityMonitor = ActivityMonitor(exerciseData[1].states)
+        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true)
+        
+        self.recordingSession.startRecording()
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -123,14 +124,9 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
             characterAnchor.isEnabled = showRobot
             
-            let prevState = activityMonitor.index
-            let target = activityMonitor.targetIndex
-            let newState = activityMonitor.updateState(bodyAnchor)
-            if newState != prevState && newState != -1 {
-                if newState == target && newState == 0 && activityMonitor.lastSuccess {
-                    reps += 1
-                }
-            }
+            activityMonitor.updateState(bodyAnchor)
+            
+            let reps = activityMonitor.repCount
             
             self.infoLabel.text = "Reps: \(reps)"
             if (reps != 0 && reps.isMultiple(of: 5) && !rewarded) {
@@ -143,12 +139,7 @@ class SquatController: UIViewController, ARSessionDelegate {
                 rewarded = false
             }
             
-            if let character = character, character.parent == nil {
-                // Attach the character to its anchor as soon as
-                // 1. the body anchor was detected and
-                // 2. the character was loaded.
-                characterAnchor.addChild(character)
-            }
+//            self.recordingSession.poll(activityMonitor.currentState, ActivityState())
         }
     }
     

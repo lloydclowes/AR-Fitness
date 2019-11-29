@@ -18,15 +18,10 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
     
-    // A tracked raycast which is used to place the character accurately
-    // in the scene wherever the user taps.
-    var placementRaycast: ARTrackedRaycast?
-    var tapPlacementAnchor: AnchorEntity?
-    
     var activityMonitor: ActivityMonitor?
     let speaker = SpeechSynthesizer()
     var started = false
-    var startState = ActivityState("START", [:], [:], 2)
+    var startState = TargetState("Start")
     var timer = Timer()
     var counter = 60
     var prevTime = Int(Date().timeIntervalSince1970)
@@ -116,7 +111,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                        "right_arm_joint": EulerAngles(y: lateralTolerance)
         ]
     
-        startState = ActivityState("START", lateralRaiseState, lateralRaiseTolerances, 2)
+        startState = TargetState("START", JointAngles(jointAngles: lateralRaiseState), JointAngles(jointAngles: lateralRaiseTolerances), 0.0)
        
         self.activityMonitor = ActivityMonitor(exerciseData[0].states)
     }
@@ -124,8 +119,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
-            
-            if (!started && startState.reachedBy(bodyAnchor)) {
+            let curAngles = bodyAnchor.getBodyJointAngles(Array(startState.jointAngles.keys))
+            let curState = ActivityState(jointAngles: curAngles)
+            if (!started && startState.reachedBy(curState)) {
                 speaker.start()
                 started = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3){

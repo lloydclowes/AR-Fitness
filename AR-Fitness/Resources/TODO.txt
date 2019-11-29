@@ -1,0 +1,37 @@
+CODE TODO:
+Move rep counts into ActivityMonitor
+Tolerances have an enum to describe whether it is +ve, -ve or absolute
+i.e. whether it allows you to be above the target, below it or around it
+Incorporate tolerances into the EulerAngles or JointAngles classes
+Move the augmentation function of states to member variable passed in to init(...)
+Change isTurningPoint to check if the sign of velocity has changed or abs(v) = approx. 0
+Create the ViewController classes for RepCountController, HoldPositionController etc.
+Make all exercises have a start state with countdown
+Incorporate the start state into the json file maybe with a startStateName field? (then we don't need extra state data)
+Do we need the extension to MeshResource in utilities?
+'See Info' should update live
+
+
+FEATURES:
+A new slower exercise with 3+ states
+Tune all the tolerances
+
+RETROSPECTIVE:   (WORKOUT MODE - heavier weight, faster movement)
+joint didn't reach the state
+joint exceeded the state
+
+joint didn't stay in the state for long enough   for hold exercises
+joint stayed in the state for too long           for non-hold exercises
+
+joints didn't reach the state at the same time
+
+moved too quickly/slowly between states (current or average velocity too low/high)
+
+
+LIVE:  (COACH MODE:  light or no weight, slower movement)
+lower/raise specific limb
+slow down / speed up
+hold ... hold ... and up
+
+
+
