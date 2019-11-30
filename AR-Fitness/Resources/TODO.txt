@@ -1,5 +1,4 @@
 CODE TODO:
-Move rep counts into ActivityMonitor
 Tolerances have an enum to describe whether it is +ve, -ve or absolute
 i.e. whether it allows you to be above the target, below it or around it
 Incorporate tolerances into the EulerAngles or JointAngles classes
@@ -10,6 +9,7 @@ Make all exercises have a start state with countdown
 Incorporate the start state into the json file maybe with a startStateName field? (then we don't need extra state data)
 Do we need the extension to MeshResource in utilities?
 'See Info' should update live
+Find a nice voice for the speech synthesizer
 
 
 FEATURES:

@@ -21,13 +21,11 @@ class SquatController: UIViewController, ARSessionDelegate {
     var uploaded = false
     let recordingSession = RecordingSession()
     
-//    var upDirection = false
-//    var reps = 0
     var initial = true
     var reachedSquat = false
     var timer = Timer()
     var counter = 0
-    let speaker = SpeechSynthesizer()
+    let speaker = SpeechSynthesizer.globalSpeaker
     var rewarded = false
 
     var showRobot = true
@@ -127,13 +125,11 @@ class SquatController: UIViewController, ARSessionDelegate {
             activityMonitor.updateState(bodyAnchor)
             
             let reps = activityMonitor.repCount
-            
             self.infoLabel.text = "Reps: \(reps)"
             if (reps != 0 && reps.isMultiple(of: 5) && !rewarded) {
                 rewarded = true
-                let randomReward = speaker.rewards.randomElement() ?? "Nice!"
+                let randomReward = speaker.rewards.randomElement()!
                 speaker.speak(statement: randomReward)
-                
             }
             if(!reps.isMultiple(of: 5)) {
                 rewarded = false

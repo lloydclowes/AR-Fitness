@@ -19,7 +19,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     let characterAnchor = AnchorEntity()
     
     var activityMonitor: ActivityMonitor?
-    let speaker = SpeechSynthesizer()
+    let speaker = SpeechSynthesizer.globalSpeaker
     var started = false
     var startState = TargetState("Start")
     var timer = Timer()
@@ -122,7 +122,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             let curAngles = bodyAnchor.getBodyJointAngles(Array(startState.jointAngles.keys))
             let curState = ActivityState(jointAngles: curAngles)
             if (!started && startState.reachedBy(curState)) {
-                speaker.start()
+                speaker.countdown()
                 started = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3){
                     self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)

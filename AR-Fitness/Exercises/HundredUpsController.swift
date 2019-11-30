@@ -19,7 +19,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     let characterAnchor = AnchorEntity()
     
     var activityMonitor = ActivityMonitor()
-    let speaker = SpeechSynthesizer()
+    let speaker = SpeechSynthesizer.globalSpeaker
 
     var upDirection = false
     var reps = 0
@@ -123,7 +123,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 self.infoLabel.text = "Reps: \(reps)"
                 if (reps != 0 && reps.isMultiple(of: 10) && !rewarded) {
                     rewarded = true
-                    let randomReward = speaker.rewards.randomElement() ?? "Nice!"
+                    let randomReward = speaker.rewards.randomElement()!
                     speaker.speak(statement: randomReward)
                 }
                 if(!reps.isMultiple(of: 10)) {

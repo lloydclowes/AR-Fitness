@@ -34,11 +34,10 @@ class TargetState : ActivityState {
     }
     
     required convenience init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: MyStructKeys.self)
-      let name = try container.decode(String.self, forKey: .name)
-      let jointAngles = try container.decode(JointAngles.self, forKey: .jointAngles)
-      let tolerances = try container.decode(JointAngles.self, forKey: .tolerances)
-
+        let container = try decoder.container(keyedBy: MyStructKeys.self)
+        let name = try container.decode(String.self, forKey: .name)
+        let jointAngles = try container.decode(JointAngles.self, forKey: .jointAngles)
+        let tolerances = try container.decode(JointAngles.self, forKey: .tolerances)
         self.init(name, jointAngles, tolerances, 0.0)
     }
     

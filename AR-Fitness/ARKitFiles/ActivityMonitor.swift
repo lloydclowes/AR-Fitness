@@ -18,7 +18,7 @@ class ActivityMonitor {
     
     var index = 0
     var improvableIndex = 0
-    let speaker = SpeechSynthesizer()
+    let speaker = SpeechSynthesizer.globalSpeaker
     
     var lastIndex = 0
     var targetIndex = 0
@@ -54,14 +54,14 @@ class ActivityMonitor {
     
     func completeRep() {
         if success {
-            print("GOOD WORK!")
+            speaker.speak(statement: "GOOD WORK!")
             repCount += 1
         } else {
             if feedback.count == 0 {
                 // The state changed to -1 but returned to the current state immediately afterwards
-                print("Okay, but a bit wobbly.")
+                speaker.speak(statement: "Okay, but a bit wobbly.")
             } else {
-                print("NOT QUITE: \(feedback)")
+                speaker.speak(statement: "NOT QUITE: \(feedback)")
             }
             feedback = []
         }
@@ -91,8 +91,7 @@ class ActivityMonitor {
 //            }
             let expectedDuration = targetStates[lastIndex].duration
             if counter < expectedDuration {
-//                speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
-                print("Stay in \(targetStates[lastIndex].name) state longer")
+                speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
             }
             counter = 0
             
@@ -103,7 +102,7 @@ class ActivityMonitor {
             if index == 0 {
                 completeRep()
             }
-            print("Keep it up... done: \(targetStates[index].name) target: \(targetStates[targetIndex].name)")
+            speaker.speak(statement: "Keep it up... done: \(targetStates[index].name) target: \(targetStates[targetIndex].name)")
             return
         }
         
@@ -121,15 +120,13 @@ class ActivityMonitor {
                         missed += " and " + targetStates[(targetIndex + j) % targetStates.count].name
                     }
                     feedback.append(missed)
-                    print(missed)
                     
                     // TODO: I think we need the below here as well
-//                    let expectedDuration = targetStates[lastIndex].duration
-//                    if counter < expectedDuration {
-//        //                speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
-//                        print("Stay in \(targetStates[lastIndex].name) state longer")
-//                    }
-//                    counter = 0
+                    let expectedDuration = targetStates[lastIndex].duration
+                    if counter < expectedDuration {
+                        speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
+                    }
+                    counter = 0
                 }
                 
                 lastIndex = index
@@ -155,21 +152,7 @@ class ActivityMonitor {
         return targetStates[targetIndex].name
     }
     
-    func checkForStateAdvance(_ bodyAnchor : ARBodyAnchor) -> Bool {
-        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
-        currentState.update(newAngles, dema, 1.0)
-        
-        if currentState.reaches(targetStates[index]) {
-            index = (index + 1) % targetStates.count
-            return true
-        }
-        
-        return false
-    }
-    
     @objc func timerAction() {
         counter += 1
     }
-    
-    
 }
