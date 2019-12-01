@@ -9,6 +9,7 @@
     ],
     "className": "LateralRaiseController",
     "duration": "1:00",
+    "startState": "UP",
     "states": [
       {
         "name": "DOWN",
@@ -66,6 +67,7 @@
     "equipment": [],
     "className": "SquatController",
     "duration": "1:00",
+    "startState": "UP",
     "states": [
       {
         "name": "UP",
@@ -147,6 +149,7 @@
     "equipment": [],
     "className": "HundredUpsController",
     "duration": "1:00",
+    "startState": "DOWN-1",
     "states": [
       {
         "name": "DOWN-1",

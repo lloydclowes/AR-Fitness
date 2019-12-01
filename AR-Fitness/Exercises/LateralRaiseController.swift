@@ -98,22 +98,11 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             }
         })
         
-        let lateralRaiseState = [
-            "left_arm_joint": EulerAngles(y: Float(0)),
-            "right_arm_joint": EulerAngles(y: Float(0))
-        ]
+        let exercise = exerciseData[0]
     
-        
-        // 90 * 0.15 = 15% tolerance on 90 degrees of motion
-        let lateralTolerance = Float(50*0.15)
-
-        let lateralRaiseTolerances = ["left_arm_joint": EulerAngles(y: lateralTolerance),
-                       "right_arm_joint": EulerAngles(y: lateralTolerance)
-        ]
-    
-        startState = TargetState("START", JointAngles(jointAngles: lateralRaiseState), JointAngles(jointAngles: lateralRaiseTolerances), 0.0)
+        startState = exercise.getStartState()
        
-        self.activityMonitor = ActivityMonitor(exerciseData[0].states)
+        self.activityMonitor = ActivityMonitor(exercise.states)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {

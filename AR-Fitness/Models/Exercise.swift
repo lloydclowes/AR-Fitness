@@ -17,7 +17,17 @@ struct Exercise: Hashable, Codable, Identifiable {
     var equipment: [String]
     var className: String
     var duration: String
+    var startState: String
     var states: [TargetState]
+    
+    public func getStartState() -> TargetState {
+        
+        let startState = self.states.filter {
+            $0.name == self.startState
+        }[0]
+        
+        return TargetState("START", JointAngles(jointAngles: startState.jointAngles.jointAngles), JointAngles(jointAngles: startState.tolerances.jointAngles), 0.0)
+    }
     
 }
 
