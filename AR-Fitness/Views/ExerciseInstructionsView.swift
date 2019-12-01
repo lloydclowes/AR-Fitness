@@ -7,13 +7,41 @@
 //
 
 import SwiftUI
+import RealityKit
+import ARKit
+import Combine
 
 struct ExerciseInstructionsView: View {
     var exercise : String
     
     var body: some View {
-        Text("Exercise: \(exercise). Instructions of how to perform this exercise accurately will go here")
+        return ExerciseInstructionControllerContainer(exercise: exercise)
+                .edgesIgnoringSafeArea(.bottom)
+            .navigationBarTitle("\(exercise) guide")
     }
+}
+
+struct ExerciseInstructionControllerContainer: UIViewControllerRepresentable {
+    let characterAnchor = AnchorEntity()
+    var character: BodyTrackedEntity?
+    var exercise: String
+    
+    func makeCoordinator() -> Coordinator {}
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        switch self.exercise {
+        case "Lateral Raises":
+            return LateralRaiseController()
+        case "Squats":
+            return SlowSquatController()
+        case "Hundred Ups":
+            return HundredUpsController()
+        default:
+            return SquatController()
+        }
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
 
 struct ExerciseInstructionsView_Previews: PreviewProvider {

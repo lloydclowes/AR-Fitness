@@ -137,9 +137,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             // in the world is relative to the body anchor's rotation.
             characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
    
-            if activityMonitor!.checkForStateAdvance(bodyAnchor) {
-                timer.invalidate()
-            }
+//            if activityMonitor!.checkForStateAdvance(bodyAnchor) {
+//                timer.invalidate()
+//            }
             
             let curTime = Int(Date().timeIntervalSince1970)
             if (started && curTime - prevTime > 2) {

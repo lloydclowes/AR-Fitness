@@ -36,7 +36,7 @@ class ModalViewController: UIViewController {
         } else {
             isTimeBased = true
         }
-        time = timer
+        time = timer/2 
         exercise = exerciseName
         infoLabel.text! += "Activity time: \(time)"
     }

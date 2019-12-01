@@ -19,6 +19,7 @@
 		6739F178238FC4A5000F6B18 /* InfoPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6739F177238FC4A5000F6B18 /* InfoPage.swift */; };
 		6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6739F179238FDF50000F6B18 /* ExerciseInstructionsView.swift */; };
 		678F070D235B935F00CE5AC6 /* ExerciseRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */; };
+		67CF915623940BAB0088DA8F /* SlowSquatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CF915523940BAB0088DA8F /* SlowSquatController.swift */; };
 		67FB2C2F235E208600AD0CD2 /* MainPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FB2C2E235E208600AD0CD2 /* MainPageView.swift */; };
 		6E30CA89236A352A00AADAF2 /* ActivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */; };
 		6E30CA8C236A356200AADAF2 /* ActivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CA8B236A356200AADAF2 /* ActivityState.swift */; };
@@ -61,6 +62,7 @@
 		6739F177238FC4A5000F6B18 /* InfoPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoPage.swift; sourceTree = "<group>"; };
 		6739F179238FDF50000F6B18 /* ExerciseInstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseInstructionsView.swift; sourceTree = "<group>"; };
 		678F070C235B935F00CE5AC6 /* ExerciseRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRowView.swift; sourceTree = "<group>"; };
+		67CF915523940BAB0088DA8F /* SlowSquatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlowSquatController.swift; sourceTree = "<group>"; };
 		67FB2C2E235E208600AD0CD2 /* MainPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageView.swift; sourceTree = "<group>"; };
 		6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitor.swift; sourceTree = "<group>"; };
 		6E30CA8B236A356200AADAF2 /* ActivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityState.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				6E32773A2379D2F200C700C9 /* LateralRaiseController.swift */,
 				6E4292DC2381E11C00CE0B38 /* SquatController.swift */,
 				6E4292DE2381FF4600CE0B38 /* HundredUpsController.swift */,
+				67CF915523940BAB0088DA8F /* SlowSquatController.swift */,
 			);
 			path = Exercises;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */,
 				18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */,
 				6E30CA89236A352A00AADAF2 /* ActivityMonitor.swift in Sources */,
+				67CF915623940BAB0088DA8F /* SlowSquatController.swift in Sources */,
 				6E30CA8C236A356200AADAF2 /* ActivityState.swift in Sources */,
 				6E4195CC236622D20093FDD1 /* Data.swift in Sources */,
 				6E30CA92236A35C100AADAF2 /* EulerAngles.swift in Sources */,
@@ -490,14 +494,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AR-Fitness/Preview Content\"";
-				DEVELOPMENT_TEAM = X6QU5C9KQ5;
+				DEVELOPMENT_TEAM = 8D9PAKRRB8;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "AR-Fitness/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.AR-Fitness";
+				PRODUCT_BUNDLE_IDENTIFIER = "blancatebar.AR-Fitness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -510,14 +514,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AR-Fitness/Preview Content\"";
-				DEVELOPMENT_TEAM = X6QU5C9KQ5;
+				DEVELOPMENT_TEAM = 8D9PAKRRB8;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "AR-Fitness/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.AR-Fitness";
+				PRODUCT_BUNDLE_IDENTIFIER = "blancatebar.AR-Fitness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

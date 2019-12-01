@@ -12,6 +12,7 @@ import ARKit
 class ActivityMonitor {
     
     let useTurningPoints : Bool
+    let inCoachingMode : Bool
     
     let targetStates : [TargetState]
     var currentState = ActivityState()
@@ -32,12 +33,14 @@ class ActivityMonitor {
     init() {
         self.targetStates = []
         self.useTurningPoints = false
+        self.inCoachingMode = false
     }
     
-    init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
+    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.useTurningPoints = useTurningPoints
+        self.inCoachingMode = coachingMode
         if targetStates.count > 0 {
             for (joint, angles) in targetStates[targetIndex].jointAngles {
                 let x : Float? = angles.x != nil ? Float(0) : nil
@@ -54,7 +57,7 @@ class ActivityMonitor {
     
     func completeRep() {
         if success {
-            speaker.speak(statement: "GOOD WORK!")
+            speaker.speak(statement: "GOOD WORK!") // Isn't it too much to repeat it for every rep?
             repCount += 1
         } else {
             if feedback.count == 0 {
@@ -66,6 +69,11 @@ class ActivityMonitor {
             feedback = []
         }
         success = true
+    }
+    
+    func coachingMode() {
+        // Add instructions to exerciseData to be said outloud when reaching a state, so for
+        // the target state.
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) {
@@ -81,6 +89,10 @@ class ActivityMonitor {
         if useTurningPoints && !currentState.isTurningPoint() {
             index = -1
             return
+        }
+        
+        if (self.inCoachingMode) {
+            self.coachingMode()
         }
         
         // If we have reached the target, update state accordingly
@@ -143,6 +155,8 @@ class ActivityMonitor {
         }
         
         // TODO: Live feedback goes here -> turning point and not in any state => "Get lower!" or something
+        
+        
         
         index = -1
         return
