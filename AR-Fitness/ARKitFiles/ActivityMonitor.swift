@@ -14,6 +14,7 @@ class ActivityMonitor {
     let useTurningPoints : Bool
     
     let targetStates : [TargetState]
+    var durations : [Double]
     var currentState = ActivityState()
     
     var index = 0
@@ -32,6 +33,7 @@ class ActivityMonitor {
     init() {
         self.targetStates = []
         self.useTurningPoints = false
+        self.durations = []
     }
     
     init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
@@ -46,6 +48,10 @@ class ActivityMonitor {
                 // TODO: addAnchor can set the initial angles
                 self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             }
+        }
+        self.durations = []
+        for _ in 0..<targetStates.count {
+            self.durations.append(0)
         }
         
         self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
@@ -69,11 +75,16 @@ class ActivityMonitor {
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) {
+        updateState(bodyAnchor, 0.0)
+    }
+    
+    func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
         let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
         currentState.update(newAngles, dema, 1.0)
         
         // If the index hasn't changed then ignore
-        if index != -1 && index < targetStates.count && currentState.reaches(targetStates[index]) {
+        if index != -1 && currentState.reaches(targetStates[index]) {
+            durations[index] += delta
             return
         }
         
@@ -85,17 +96,16 @@ class ActivityMonitor {
         
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
-//            let expectedDuration = targetStates[(targetIndex + 1) % targetStates.count].duration
-//            if counter < expectedDuration && lastIndex != targetIndex {
-//                speaker.speak(statement: "stay \((targetStates[(targetIndex + 1) % targetStates.count]).name) longer")
-//            }
-            let expectedDuration = targetStates[lastIndex].duration
-            if counter < expectedDuration {
-                speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
-            }
             counter = 0
             
             index = targetIndex
+            durations[index] = delta
+
+            let expectedDuration = targetStates[lastIndex].duration
+            if durations[lastIndex] < expectedDuration {
+                speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
+            }
+            
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
             
@@ -112,6 +122,7 @@ class ActivityMonitor {
             if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variables
                 index = (targetIndex + i) % targetStates.count
+                durations[index] = delta
                 
                 // If we did not arrive back at the last state we reached, add feedback for the missed states
                 if index != lastIndex {
@@ -123,7 +134,7 @@ class ActivityMonitor {
                     
                     // TODO: I think we need the below here as well
                     let expectedDuration = targetStates[lastIndex].duration
-                    if counter < expectedDuration {
+                    if durations[lastIndex] < expectedDuration {
                         speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
                     }
                     counter = 0

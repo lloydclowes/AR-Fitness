@@ -13,6 +13,7 @@
     "states": [
       {
         "name": "DOWN",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
@@ -36,6 +37,7 @@
       },
       {
         "name": "UP",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
@@ -71,6 +73,7 @@
     "states": [
       {
         "name": "UP",
+        "duration": 5,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -106,6 +109,7 @@
       },
       {
         "name": "DOWN",
+        "duration": 5,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -153,6 +157,7 @@
     "states": [
       {
         "name": "DOWN-1",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -188,6 +193,7 @@
       },
       {
         "name": "LEFT",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -223,6 +229,7 @@
       },
       {
         "name": "DOWN-2",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -258,6 +265,7 @@
       },
       {
         "name": "RIGHT",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {

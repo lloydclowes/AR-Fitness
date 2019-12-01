@@ -17,14 +17,16 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var character: BodyTrackedEntity?
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
-    
-    var activityMonitor: ActivityMonitor?
     let speaker = SpeechSynthesizer.globalSpeaker
+    
+    var activityMonitor = ActivityMonitor()
+    
     var started = false
     var startState = TargetState("Start")
     var timer = Timer()
     var counter = 60
-    var prevTime = Int(Date().timeIntervalSince1970)
+    
+    var prevTime = TimeInterval()
     
     var showRobot = false
     
@@ -99,18 +101,33 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         })
         
         let exercise = exerciseData[0]
-    
         startState = exercise.getStartState()
-       
         self.activityMonitor = ActivityMonitor(exercise.states)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
-            let curAngles = bodyAnchor.getBodyJointAngles(Array(startState.jointAngles.keys))
-            let curState = ActivityState(jointAngles: curAngles)
-            if (!started && startState.reachedBy(curState)) {
+            
+            characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
+            // ^ or independently set .orientation and .position of characterAnchor
+            
+            if let character = character, character.parent == nil {
+                characterAnchor.addChild(character)
+            }
+            characterAnchor.isEnabled = showRobot
+            
+            let curTime = Date().timeIntervalSince1970
+            let delta = curTime - prevTime
+            prevTime = curTime
+            activityMonitor.updateState(bodyAnchor, delta)
+            
+            // TODO: swap 1 for startIndex
+            if activityMonitor.index != 1 {
+                timer.invalidate()
+            }
+            
+            if (!started && startState.reachedBy(activityMonitor.currentState)) {
                 speaker.countdown()
                 started = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3){
@@ -119,19 +136,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                 }
             }
             
-            // Update the position of the character anchor's position.
-            let bodyPosition = simd_make_float3(bodyAnchor.transform.columns.3)
-            characterAnchor.position = bodyPosition + characterOffset
-            // Also copy over the rotation of the body anchor, because the skeleton's pose
-            // in the world is relative to the body anchor's rotation.
-            characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
-   
-            if activityMonitor!.checkForStateAdvance(bodyAnchor) {
-                timer.invalidate()
-            }
-            
-            let curTime = Int(Date().timeIntervalSince1970)
-            if (started && curTime - prevTime > 2) {
+            if (started && delta > 2.0) {
                 prevTime = curTime
                 let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
                 let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
@@ -170,14 +175,6 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                     speaker.speak(statement: phrase)
                 }
             }
-            
-            if let character = character, character.parent == nil {
-                // Attach the character to its anchor as soon as
-                // 1. the body anchor was detected and
-                // 2. the character was loaded.
-                characterAnchor.addChild(character)
-            }
-            characterAnchor.isEnabled = showRobot
         }
     }
     
@@ -214,6 +211,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     
     @objc func timerAction() {
         counter -= 1
+        print(counter)
         infoLabel.text = "Timer: \(self.counter)"
         if(counter == 30) {
             speaker.speak(statement: "Half way there!")

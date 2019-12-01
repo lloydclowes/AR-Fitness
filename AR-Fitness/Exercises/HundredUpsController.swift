@@ -20,14 +20,16 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     
     var activityMonitor = ActivityMonitor()
     let speaker = SpeechSynthesizer.globalSpeaker
-
+    
     var upDirection = false
     var reps = 0
     var initial = true
     var reachedSquat = false
     var rewarded = false
-    var timer = Timer()
+//    var timer = Timer()
     var counter = 0
+    
+    var prevTime = TimeInterval()
     
     var showRobot = true
     
@@ -57,8 +59,8 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()
-        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer, forMode: .common)
+//        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+//        RunLoop.current.add(self.timer, forMode: .common)
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -106,30 +108,33 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-            for anchor in anchors {
-                guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
-                
-                characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
-                // ^ or independently set .orientation and .position of characterAnchor
-                
-                if let character = character, character.parent == nil {
-                    characterAnchor.addChild(character)
-                }
-                characterAnchor.isEnabled = showRobot
-                
-                activityMonitor.updateState(bodyAnchor)
-                
-                let reps = activityMonitor.repCount
-                self.infoLabel.text = "Reps: \(reps)"
-                if (reps != 0 && reps.isMultiple(of: 10) && !rewarded) {
-                    rewarded = true
-                    let randomReward = speaker.rewards.randomElement()!
-                    speaker.speak(statement: randomReward)
-                }
-                if(!reps.isMultiple(of: 10)) {
-                    rewarded = false
-                }
+        for anchor in anchors {
+            guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
+            
+            characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
+            // ^ or independently set .orientation and .position of characterAnchor
+            
+            if let character = character, character.parent == nil {
+                characterAnchor.addChild(character)
             }
+            characterAnchor.isEnabled = showRobot
+            
+            let curTime = Date().timeIntervalSince1970
+            let delta = curTime - prevTime
+            prevTime = curTime
+            activityMonitor.updateState(bodyAnchor, delta)
+            
+            let reps = activityMonitor.repCount
+            self.infoLabel.text = "Reps: \(reps)"
+            if (reps != 0 && reps.isMultiple(of: 10) && !rewarded) {
+                rewarded = true
+                let randomReward = speaker.rewards.randomElement()!
+                speaker.speak(statement: randomReward)
+            }
+            if(!reps.isMultiple(of: 10)) {
+                rewarded = false
+            }
+        }
         }
     @objc func timerAction() {
         counter += 1

@@ -11,22 +11,23 @@ import Foundation
 class TargetState : ActivityState {
     let name : String
     let tolerances : JointAngles
-    let duration : Float
-        
-    enum MyStructKeys: String, CodingKey {
-      case name = "name"
-      case jointAngles = "jointAngles"
-      case tolerances = "tolerances"
+    let duration : Double
+    
+    enum TargetStateKeys: String, CodingKey {
+        case name = "name"
+        case jointAngles = "jointAngles"
+        case tolerances = "tolerances"
+        case duration = "duration"
     }
     
     init(_ name : String) {
         self.name = name
         self.tolerances = JointAngles()
-        self.duration = Float(0)
+        self.duration = 0
         super.init(jointAngles: JointAngles())
     }
     
-    init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles, _ duration : Float) {
+    init(_ name : String, _ jointAngles : JointAngles, _ tolerances : JointAngles, _ duration : Double) {
         self.name = name
         self.tolerances = tolerances
         self.duration = duration
@@ -34,11 +35,12 @@ class TargetState : ActivityState {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: MyStructKeys.self)
+        let container = try decoder.container(keyedBy: TargetStateKeys.self)
         let name = try container.decode(String.self, forKey: .name)
         let jointAngles = try container.decode(JointAngles.self, forKey: .jointAngles)
         let tolerances = try container.decode(JointAngles.self, forKey: .tolerances)
-        self.init(name, jointAngles, tolerances, 0.0)
+        let duration = try container.decode(Double.self, forKey: .duration)
+        self.init(name, jointAngles, tolerances, duration)
     }
     
     static func == (lhs: TargetState, rhs: TargetState) -> Bool {
