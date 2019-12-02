@@ -12,32 +12,8 @@
     "startState": "UP",
     "states": [
       {
-        "name": "DOWN",
-        "duration": 0.0,
-        "jointAngles": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": 50
-            },
-            "right_arm_joint": {
-              "y": 50
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": -0.75
-            },
-            "right_arm_joint": {
-              "y": -0.75
-            }
-          }
-        }
-      },
-      {
         "name": "UP",
-        "duration": 0.0,
+        "duration": 60.0,
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
@@ -73,7 +49,7 @@
     "states": [
       {
         "name": "UP",
-        "duration": 5,
+        "duration": 1,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -109,7 +85,7 @@
       },
       {
         "name": "DOWN",
-        "duration": 5,
+        "duration": 1,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {

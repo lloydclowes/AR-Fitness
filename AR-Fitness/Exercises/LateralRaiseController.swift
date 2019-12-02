@@ -22,10 +22,15 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var activityMonitor = ActivityMonitor()
     
     var started = false
-    var startState = TargetState("Start")
-    var timer = Timer()
-    var counter = 60
+    var halfReward = false
+    var fiveReward = false
+    var completed = false
     
+    var startState = TargetState("Start")
+//    var timer = Timer()
+//    var counter = 60
+    
+    var startTime = TimeInterval()
     var prevTime = TimeInterval()
     
     var showRobot = false
@@ -54,13 +59,19 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     }
     
     override func viewDidLoad() {
-        infoLabel.text = "Timer: \(counter)"
+        prevTime = Date().timeIntervalSince1970
+        
+        let exercise = exerciseData[0]
+        startState = exercise.getStartState()
+        activityMonitor = ActivityMonitor(exercise.states)
+        infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+        
         setupViews()
     }
     
     @IBAction func showInformation(sender: UIButton) {
         let modalViewController = ModalViewController()
-        modalViewController.updateInfo(nil, timer: (60-counter)*60, exerciseName: "Lateral Raises")
+        modalViewController.updateInfo(nil, timer: (60-Int(round(activityMonitor.remainingDuration)))*60, exerciseName: "Lateral Raises")
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
     }
@@ -99,10 +110,6 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                 print("Error: Unable to load model as BodyTrackedEntity")
             }
         })
-        
-        let exercise = exerciseData[0]
-        startState = exercise.getStartState()
-        self.activityMonitor = ActivityMonitor(exercise.states)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -117,66 +124,89 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             }
             characterAnchor.isEnabled = showRobot
             
+            if (!started && startState.reachedBy(activityMonitor.currentState)) {
+                speaker.countdown()
+                startTime = Date().timeIntervalSince1970
+                started = true
+            }
+            
             let curTime = Date().timeIntervalSince1970
             let delta = curTime - prevTime
             prevTime = curTime
-            activityMonitor.updateState(bodyAnchor, delta)
-            
-            // TODO: swap 1 for startIndex
-            if activityMonitor.index != 1 {
-                timer.invalidate()
-            }
-            
-            if (!started && startState.reachedBy(activityMonitor.currentState)) {
-                speaker.countdown()
-                started = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-                    RunLoop.current.add(self.timer, forMode: .common)
-                }
-            }
-            
-            if (started && delta > 2.0) {
-                prevTime = curTime
-                let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
-                let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
-
-                let lowerTol: Float = 10.0
-                let upperTol: Float = -10.0
-
-                var left = 0
-                var right = 0
-                if (anglesLeft.y?.sign == .plus && anglesLeft.y! > lowerTol) {
-                    left = -1
-                } else if (anglesLeft.y?.sign == .minus && anglesLeft.y! < upperTol) {
-                    left = 1
-                }
-
-                if (anglesRight.y?.sign == .plus && anglesRight.y! > lowerTol) {
-                    right = -1
-                } else if (anglesRight.y?.sign == .minus &&  anglesRight.y! < upperTol ) {
-                    right = 1
-                }
-
-                var phrase = ""
-                if left != 0 {
-                    phrase = "Please \(left == -1 ? "raise" : "lower") your left arm"
-                }
-                if right != 0 {
-                    let dir = left == -1 ? "raise" : "lower"
-                    if phrase == "" {
-                        phrase = "Please \(dir) your right arm"
-                    } else {
-                        phrase += " and \(dir) your right arm"
-                    }
-                }
-
-                if phrase != "" {
-                    speaker.speak(statement: phrase)
+            if curTime - startTime > 3 {
+                activityMonitor.updateState(bodyAnchor, delta)
+                
+                infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+                if !halfReward && round(activityMonitor.remainingDuration) <= 30 {
+                    halfReward = true
+                    speaker.speak(statement: "Half way there!")
+                } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {
+                    fiveReward = true
+                    speaker.speak(statement: "Only five more seconds!")
+                } else if !completed && round(activityMonitor.remainingDuration) <= 0 {
+                    speaker.speak(statement: "Well done! You've completed the challenge")
+                    completed = true
+    //                activityMonitor.reset()
+    //                started = false
+    //                halfReward = false
+    //                fiveReward = false
                 }
             }
         }
     }
+            
+            // TODO: swap 1 for startIndex
+//            if activityMonitor.index != 1 {
+//                timer.invalidate()
+//            }
+//
+//            if (!started && startState.reachedBy(activityMonitor.currentState)) {
+//                speaker.countdown()
+//                started = true
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+//                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+//                    RunLoop.current.add(self.timer, forMode: .common)
+//                }
+//            }
+//
+//            if (started && delta > 2.0) {
+//                prevTime = curTime
+//                let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
+//                let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
+//
+//                let lowerTol: Float = 10.0
+//                let upperTol: Float = -10.0
+//
+//                var left = 0
+//                var right = 0
+//                if (anglesLeft.y?.sign == .plus && anglesLeft.y! > lowerTol) {
+//                    left = -1
+//                } else if (anglesLeft.y?.sign == .minus && anglesLeft.y! < upperTol) {
+//                    left = 1
+//                }
+//
+//                if (anglesRight.y?.sign == .plus && anglesRight.y! > lowerTol) {
+//                    right = -1
+//                } else if (anglesRight.y?.sign == .minus &&  anglesRight.y! < upperTol ) {
+//                    right = 1
+//                }
+//
+//                var phrase = ""
+//                if left != 0 {
+//                    phrase = "Please \(left == -1 ? "raise" : "lower") your left arm"
+//                }
+//                if right != 0 {
+//                    let dir = left == -1 ? "raise" : "lower"
+//                    if phrase == "" {
+//                        phrase = "Please \(dir) your right arm"
+//                    } else {
+//                        phrase += " and \(dir) your right arm"
+//                    }
+//                }
+//
+//                if phrase != "" {
+//                    speaker.speak(statement: phrase)
+//                }
     
     func setupViews() {
         let button = infoButton()
@@ -209,19 +239,21 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         
     }
     
-    @objc func timerAction() {
-        counter -= 1
-        print(counter)
-        infoLabel.text = "Timer: \(self.counter)"
-        if(counter == 30) {
-            speaker.speak(statement: "Half way there!")
-        } else if(counter == 5) {
-            speaker.speak(statement: "Only five more seconds!")
-        } else if(counter == 0) {
-            speaker.speak(statement: "Well done! You've completed the challenge")
-        }
+    @objc func startActivity() {
+        started = true
     }
-    
+//    @objc func timerAction() {
+//        counter -= 1
+//        print(counter)
+//        infoLabel.text = "Timer: \(self.counter)"
+//        if(counter == 30) {
+//            speaker.speak(statement: "Half way there!")
+//        } else if(counter == 5) {
+//            speaker.speak(statement: "Only five more seconds!")
+//        } else if(counter == 0) {
+//            speaker.speak(statement: "Well done! You've completed the challenge")
+//        }
+//    }
 }
 
 

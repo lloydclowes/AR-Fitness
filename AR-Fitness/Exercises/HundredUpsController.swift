@@ -135,7 +135,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 rewarded = false
             }
         }
-        }
+    }
     @objc func timerAction() {
         counter += 1
     }

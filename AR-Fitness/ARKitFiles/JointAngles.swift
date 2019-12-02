@@ -44,19 +44,24 @@ struct JointAngles : Hashable, Codable, Sequence {
         return jointAngles.makeIterator()
     }
     
-    func difference(_ other : JointAngles) -> JointAngles {
+    func difference(_ other : JointAngles, _ tolerances : JointAngles) -> JointAngles {
         var diff = JointAngles()
         for (joint, angles) in jointAngles {
             let otherAngles = other.jointAngles[joint] ?? EulerAngles()
-            diff[joint] = angles.difference(otherAngles)
-        }
-        
-        for (joint, otherAngles) in other.jointAngles {
-            if !jointAngles.keys.contains(joint) {
-                diff[joint] = otherAngles
+            let jointDiff = angles.difference(otherAngles, tolerances[joint]!)
+            if jointDiff != EulerAngles() {
+                diff[joint] = jointDiff
             }
         }
+        
+//        for (joint, otherAngles) in other.jointAngles {
+//            if !jointAngles.keys.contains(joint) {
+//                let jointDiff = otherAngles.difference(EulerAngles(), tolerances[joint]!)
+//                if jointDiff != EulerAngles() {
+//                    diff[joint] = jointDiff
+//                }
+//            }
+//        }
         return diff
     }
-    
 }

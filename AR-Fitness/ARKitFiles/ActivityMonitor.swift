@@ -14,26 +14,44 @@ class ActivityMonitor {
     let useTurningPoints : Bool
     
     let targetStates : [TargetState]
-    var durations : [Double]
     var currentState = ActivityState()
+    
+    var success = true
+    var feedback : [String]
+    var durations : [Double]
     
     var index = 0
     var improvableIndex = 0
-    let speaker = SpeechSynthesizer.globalSpeaker
-    
     var lastIndex = 0
     var targetIndex = 0
-    var feedback = [String]()
-    var success = true
-    var timer = Timer()
-    var counter = Float(0)
-    
     var repCount = 0
+    
+    let speaker = SpeechSynthesizer.globalSpeaker
+    
+    var lastFeedback : TimeInterval
+    
+    var targetStateName : String {
+        get { return targetStates[targetIndex].name }
+    }
+    
+    var lastStateName : String {
+        get { return targetStates[lastIndex].name }
+    }
+    
+    var currentStateName : String {
+        get { return index != -1 ? targetStates[index].name : "None" }
+    }
+    
+    var remainingDuration : Double {
+        get { return max(0, targetStates[lastIndex].duration - durations[lastIndex]) }
+    }
     
     init() {
         self.targetStates = []
         self.useTurningPoints = false
         self.durations = []
+        self.feedback = []
+        self.lastFeedback = Date().timeIntervalSince1970
     }
     
     init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
@@ -53,23 +71,38 @@ class ActivityMonitor {
         for _ in 0..<targetStates.count {
             self.durations.append(0)
         }
-        
-        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer, forMode: .common)
+        self.feedback = []
+        self.lastFeedback = Date().timeIntervalSince1970
+    }
+    
+    func reset() {
+        index = 0
+        improvableIndex = 0
+        lastIndex = 0
+        targetIndex = 0
+        for i in 0..<durations.count {
+            durations[i] = 0
+        }
+        feedback = []
+        lastFeedback = Date().timeIntervalSince1970
+        repCount += 1
     }
     
     func completeRep() {
         if success {
-            speaker.speak(statement: "GOOD WORK!")
+            speaker.speak(statement: speaker.rewards.randomElement()!)
             repCount += 1
         } else {
             if feedback.count == 0 {
                 // The state changed to -1 but returned to the current state immediately afterwards
                 speaker.speak(statement: "Okay, but a bit wobbly.")
             } else {
-                speaker.speak(statement: "NOT QUITE: \(feedback)")
+                speaker.speak(statement: "Not quite. Next time try to")
+                for statement in feedback {
+                    speaker.speak(statement: statement)
+                }
+                feedback = []
             }
-            feedback = []
         }
         success = true
     }
@@ -94,16 +127,23 @@ class ActivityMonitor {
             return
         }
         
+        // If we returned to the same state as before, resume
+        if index == -1 && currentState.reaches(targetStates[lastIndex]) {
+            index = lastIndex
+//            durations[index] += delta
+            success = false
+            return
+        }
+        
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
-            counter = 0
-            
             index = targetIndex
-            durations[index] = delta
+            durations[index] = 0 // or delta
 
             let expectedDuration = targetStates[lastIndex].duration
             if durations[lastIndex] < expectedDuration {
-                speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
+                success = false
+                feedback.append("Stay in \(targetStates[lastIndex].name) state longer")
             }
             
             lastIndex = index
@@ -112,7 +152,7 @@ class ActivityMonitor {
             if index == 0 {
                 completeRep()
             }
-            speaker.speak(statement: "Keep it up... done: \(targetStates[index].name) target: \(targetStates[targetIndex].name)")
+            print("Successful state change")
             return
         }
         
@@ -120,24 +160,25 @@ class ActivityMonitor {
         for i in 1..<targetStates.count {
             // If we have reached a future state
             if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
-                // Update index variables
+                // Update index variable
                 index = (targetIndex + i) % targetStates.count
-                durations[index] = delta
                 
                 // If we did not arrive back at the last state we reached, add feedback for the missed states
                 if index != lastIndex {
+                    durations[index] = delta
+
                     var missed = "Missed: \(targetStates[targetIndex].name)"
                     for j in 1..<i {
                         missed += " and " + targetStates[(targetIndex + j) % targetStates.count].name
                     }
                     feedback.append(missed)
                     
-                    // TODO: I think we need the below here as well
                     let expectedDuration = targetStates[lastIndex].duration
                     if durations[lastIndex] < expectedDuration {
-                        speaker.speak(statement: "Stay in \(targetStates[lastIndex].name) state longer")
+                        feedback.append("You should stay in the \(targetStates[lastIndex].name) state longer.")
                     }
-                    counter = 0
+                } else {
+                    durations[index] += delta
                 }
                 
                 lastIndex = index
@@ -153,17 +194,38 @@ class ActivityMonitor {
             }
         }
         
-        // TODO: Live feedback goes here -> turning point and not in any state => "Get lower!" or something
+        if Date().timeIntervalSince1970 - lastFeedback > 3 {
+            lastFeedback = Date().timeIntervalSince1970
+            let currentTarget = targetStates[targetIndex]
+            let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+            for (joint, angles) in difference {
+                if let dx = angles.x {
+                    if dx > 0 {
+                        speaker.speak(statement: "Increase x for joint: \(joint)")
+                    } else {
+                        speaker.speak(statement: "Decrease x for joint: \(joint)")
+                    }
+                }
+                
+                if let dy = angles.y {
+                    if dy > 0 {
+                        speaker.speak(statement: "Increase y for joint: \(joint)")
+                    } else {
+                        speaker.speak(statement: "Decrease y for joint: \(joint)")
+                    }
+                }
+                
+                if let dz = angles.z {
+                    if dz > 0 {
+                        speaker.speak(statement: "Increase z for joint: \(joint)")
+                    } else {
+                        speaker.speak(statement: "Decrease z for joint: \(joint)")
+                    }
+                }
+            }
+        }
         
         index = -1
         return
-    }
-    
-    func getStateName() -> String {
-        return targetStates[targetIndex].name
-    }
-    
-    @objc func timerAction() {
-        counter += 1
     }
 }
