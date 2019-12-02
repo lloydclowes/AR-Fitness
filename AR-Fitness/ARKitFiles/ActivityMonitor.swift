@@ -12,6 +12,8 @@ import ARKit
 class ActivityMonitor {
     
     let useTurningPoints : Bool
+    let inCoachingMode : Bool
+    let coachingInfo : CoachModeDetail?
     
     let targetStates : [TargetState]
     var currentState = ActivityState()
@@ -49,15 +51,19 @@ class ActivityMonitor {
     init() {
         self.targetStates = []
         self.useTurningPoints = false
+        self.inCoachingMode = false
+        self.coachingInfo = nil
         self.durations = []
         self.feedback = []
         self.lastFeedback = Date().timeIntervalSince1970
     }
     
-    init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
+    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.useTurningPoints = useTurningPoints
+        self.inCoachingMode = coachingMode
+        self.coachingInfo = coachingInfo
         if targetStates.count > 0 {
             for (joint, angles) in targetStates[targetIndex].jointAngles {
                 let x : Float? = angles.x != nil ? Float(0) : nil
@@ -90,6 +96,7 @@ class ActivityMonitor {
     
     func completeRep() {
         if success {
+       // Isn't it too much to repeat it for every rep?
             speaker.speak(statement: speaker.rewards.randomElement()!)
             repCount += 1
         } else {
@@ -105,6 +112,31 @@ class ActivityMonitor {
             }
         }
         success = true
+    }
+    
+    func coachingMode() {
+        // Add instructions to exerciseData to be said outloud when reaching a state, so for
+        // the target state.
+        if currentState.reaches(targetStates[targetIndex]) {
+        let expectedTransitionDuration = coachingInfo!.transitionDuration
+        if Int(counter) < expectedTransitionDuration {
+                speaker.speak(statement: speaker.speedFocusedStatements.randomElement()!)
+        }
+        counter = 0
+        
+        index = targetIndex
+        lastIndex = index
+        targetIndex = (targetIndex + 1) % targetStates.count
+        
+        if index == 0 {
+            //completeRep()
+        }
+            speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
+        }
+//        } else if !currentState.isTurningPoint() {
+//            speaker.speak(statement: "You need to move to state \(targetStates[targetIndex].name)")
+//        }
+        return
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) {
@@ -126,12 +158,17 @@ class ActivityMonitor {
             index = -1
             return
         }
-        
+
         // If we returned to the same state as before, resume
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
 //            durations[index] += delta
             success = false
+            return
+        }
+      
+        if (self.inCoachingMode) {
+            self.coachingMode()
             return
         }
         
@@ -224,6 +261,8 @@ class ActivityMonitor {
                 }
             }
         }
+        
+        
         
         index = -1
         return
