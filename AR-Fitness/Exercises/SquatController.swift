@@ -23,11 +23,13 @@ class SquatController: UIViewController, ARSessionDelegate {
     
     var initial = true
     var reachedSquat = false
-    var timer = Timer()
+//    var timer = Timer()
     var counter = 0
     let speaker = SpeechSynthesizer.globalSpeaker
     var rewarded = false
-
+    
+    var prevTime = TimeInterval()
+    
     var showRobot = true
     
     var activityMonitor = ActivityMonitor()
@@ -58,8 +60,8 @@ class SquatController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()
-        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer, forMode: .common)
+//        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+//        RunLoop.current.add(self.timer, forMode: .common)
 
     }
     
@@ -107,6 +109,7 @@ class SquatController: UIViewController, ARSessionDelegate {
         self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true)
         
         self.recordingSession.startRecording()
+        self.prevTime = Date().timeIntervalSince1970
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -122,7 +125,10 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
             characterAnchor.isEnabled = showRobot
             
-            activityMonitor.updateState(bodyAnchor)
+            let curTime = Date().timeIntervalSince1970
+            let delta = curTime - prevTime
+            prevTime = curTime
+            activityMonitor.updateState(bodyAnchor, delta)
             
             let reps = activityMonitor.repCount
             self.infoLabel.text = "Reps: \(reps)"

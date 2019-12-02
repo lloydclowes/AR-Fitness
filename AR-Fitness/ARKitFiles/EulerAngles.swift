@@ -33,7 +33,24 @@ struct EulerAngles: Codable, Hashable {
         self.z = z
     }
     
-    func difference(_ other : EulerAngles) -> EulerAngles {
-        return EulerAngles(x: (x ?? 0) - (other.x ?? 0), y: (y ?? 0) - (other.y ?? 0), z: (z ?? 0) - (other.z ?? 0))
+    func difference(_ other : EulerAngles, _ tolerances : EulerAngles) -> EulerAngles {
+        
+        var newX : Float? = nil
+        var newY : Float? = nil
+        var newZ : Float? = nil
+        
+        if let x1 = x, let xtol = tolerances.x, xtol.sign != x1.sign && abs(x1) >= abs(xtol) {
+            newX = x1 - (other.x ?? 0)
+        }
+        
+        if let y1 = y, let ytol = tolerances.y, ytol.sign != y1.sign && abs(y1) >= abs(ytol){
+            newY = y1 - (other.y ?? 0)
+        }
+        
+        if let z1 = z, let ztol = tolerances.z, ztol.sign != z1.sign && abs(z1) >= abs(ztol) {
+            newZ = z1 - (other.z ?? 0)
+        }
+        
+        return EulerAngles(x: newX, y: newY, z: newZ)
     }
 }

@@ -20,7 +20,7 @@ class SpeechSynthesizer {
     var speechSynthesizer : AVSpeechSynthesizer?
     var voice : AVSpeechSynthesisVoice?
     
-    static let globalSpeaker = SpeechSynthesizer(speechEnabled: false)
+    static let globalSpeaker = SpeechSynthesizer(speechEnabled: true)
     
     init(speechEnabled : Bool = true, volume : Float = 0.5) {
         self.speechEnabled = speechEnabled

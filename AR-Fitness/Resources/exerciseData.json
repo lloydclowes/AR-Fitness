@@ -9,32 +9,11 @@
     ],
     "className": "LateralRaiseController",
     "duration": "1:00",
+    "startState": "UP",
     "states": [
       {
-        "name": "DOWN",
-        "jointAngles": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": 50
-            },
-            "right_arm_joint": {
-              "y": 50
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": -0.75
-            },
-            "right_arm_joint": {
-              "y": -0.75
-            }
-          }
-        }
-      },
-      {
         "name": "UP",
+        "duration": 60.0,
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
@@ -74,9 +53,11 @@
     "equipment": [],
     "className": "SquatController",
     "duration": "1:00",
+    "startState": "UP",
     "states": [
       {
         "name": "UP",
+        "duration": 1,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -112,6 +93,7 @@
       },
       {
         "name": "DOWN",
+        "duration": 1,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -163,9 +145,11 @@
     "equipment": [],
     "className": "HundredUpsController",
     "duration": "1:00",
+    "startState": "DOWN-1",
     "states": [
       {
         "name": "DOWN-1",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -201,6 +185,7 @@
       },
       {
         "name": "LEFT",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -236,6 +221,7 @@
       },
       {
         "name": "DOWN-2",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -271,6 +257,7 @@
       },
       {
         "name": "RIGHT",
+        "duration": 0.0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
