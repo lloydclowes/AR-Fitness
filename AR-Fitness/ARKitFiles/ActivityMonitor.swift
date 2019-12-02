@@ -13,6 +13,7 @@ class ActivityMonitor {
     
     let useTurningPoints : Bool
     let inCoachingMode : Bool
+    let coachingInfo : CoachModeDetail?
     
     let targetStates : [TargetState]
     var currentState = ActivityState()
@@ -34,13 +35,15 @@ class ActivityMonitor {
         self.targetStates = []
         self.useTurningPoints = false
         self.inCoachingMode = false
+        self.coachingInfo = nil
     }
     
-    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false) {
+    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.useTurningPoints = useTurningPoints
         self.inCoachingMode = coachingMode
+        self.coachingInfo = coachingInfo
         if targetStates.count > 0 {
             for (joint, angles) in targetStates[targetIndex].jointAngles {
                 let x : Float? = angles.x != nil ? Float(0) : nil
@@ -74,6 +77,26 @@ class ActivityMonitor {
     func coachingMode() {
         // Add instructions to exerciseData to be said outloud when reaching a state, so for
         // the target state.
+        if currentState.reaches(targetStates[targetIndex]) {
+        let expectedTransitionDuration = coachingInfo!.transitionDuration
+        if Int(counter) < expectedTransitionDuration {
+                speaker.speak(statement: speaker.speedFocusedStatements.randomElement()!)
+        }
+        counter = 0
+        
+        index = targetIndex
+        lastIndex = index
+        targetIndex = (targetIndex + 1) % targetStates.count
+        
+        if index == 0 {
+            //completeRep()
+        }
+            speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
+        }
+//        } else if !currentState.isTurningPoint() {
+//            speaker.speak(statement: "You need to move to state \(targetStates[targetIndex].name)")
+//        }
+        return
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) {
@@ -93,6 +116,7 @@ class ActivityMonitor {
         
         if (self.inCoachingMode) {
             self.coachingMode()
+            return
         }
         
         // If we have reached the target, update state accordingly

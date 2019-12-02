@@ -71,7 +71,7 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
             }
         })
         
-        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true, coachingMode: true)
+        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true, coachingMode: true, coachingInfo: exerciseData[1].coachMode)
         
         self.recordingSession.startRecording()
         speaker.enableSpeech()

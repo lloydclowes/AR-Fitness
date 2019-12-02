@@ -18,7 +18,14 @@ struct Exercise: Hashable, Codable, Identifiable {
     var className: String
     var duration: String
     var states: [TargetState]
+    var coachMode: CoachModeDetail
     
+}
+
+struct CoachModeDetail: Hashable, Codable {
+    var transitionDuration: Int
+    var stateDuration: Int
+    var stateInstructions: [String]
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {
