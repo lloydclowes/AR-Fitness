@@ -21,14 +21,10 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     
     var activityMonitor = ActivityMonitor()
     
-    var started = false
+    var countedDown = false
     var halfReward = false
     var fiveReward = false
     var completed = false
-    
-    var startState = TargetState("Start")
-//    var timer = Timer()
-//    var counter = 60
     
     var startTime = TimeInterval()
     var prevTime = TimeInterval()
@@ -61,9 +57,8 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         prevTime = Date().timeIntervalSince1970
         
-        let exercise = exerciseData[0]
-        startState = exercise.getStartState()
-        activityMonitor = ActivityMonitor(exercise.states)
+        let exercise = exerciseData[Exercises.lateralRaise.rawValue]
+        activityMonitor = ActivityMonitor(exercise.states, useTurningPoints: true)
         infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
         
         setupViews()
@@ -71,6 +66,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     
     @IBAction func showInformation(sender: UIButton) {
         let modalViewController = ModalViewController()
+        // TODO: This shouldn't be fixed at 60
         modalViewController.updateInfo(nil, timer: (60-Int(round(activityMonitor.remainingDuration)))*60, exerciseName: "Lateral Raises")
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
@@ -124,18 +120,22 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             }
             characterAnchor.isEnabled = showRobot
             
-            if (!started && startState.reachedBy(activityMonitor.currentState)) {
-                speaker.countdown()
-                startTime = Date().timeIntervalSince1970
-                started = true
-            }
-            
             let curTime = Date().timeIntervalSince1970
             let delta = curTime - prevTime
             prevTime = curTime
+            activityMonitor.updateState(bodyAnchor, delta)
+            if !activityMonitor.started {
+                // TODO: every n seconds repeat "Please assume the start position"
+                return
+            }
+            
+            if !countedDown {
+                speaker.countdown()
+                startTime = Date().timeIntervalSince1970
+                countedDown = true
+            }
+            
             if curTime - startTime > 3 {
-                activityMonitor.updateState(bodyAnchor, delta)
-                
                 infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
                 if !halfReward && round(activityMonitor.remainingDuration) <= 30 {
                     halfReward = true
@@ -239,9 +239,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         
     }
     
-    @objc func startActivity() {
-        started = true
-    }
+//    @objc func startActivity() {
+//        started = true
+//    }
 //    @objc func timerAction() {
 //        counter -= 1
 //        print(counter)

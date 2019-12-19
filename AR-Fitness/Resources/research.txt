@@ -1,2 +1,0 @@
-
-We tried identifying state changes by standing points (velocity == 0) but it was overly complicated and less accurate

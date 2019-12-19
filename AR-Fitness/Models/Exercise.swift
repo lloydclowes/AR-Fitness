@@ -20,14 +20,14 @@ struct Exercise: Hashable, Codable, Identifiable {
     var startState: String
     var states: [TargetState]
     
-    public func getStartState() -> TargetState {
-        
-        let startState = self.states.filter {
-            $0.name == self.startState
-        }[0]
-        
-        return TargetState("START", JointAngles(jointAngles: startState.jointAngles.jointAngles), JointAngles(jointAngles: startState.tolerances.jointAngles), 0.0)
-    }
+//    public func getStartState() -> TargetState {
+//        
+//        let startState = self.states.filter {
+//            $0.name == self.startState
+//        }[0]
+//        
+//        return TargetState("START", JointAngles(jointAngles: startState.jointAngles.jointAngles), JointAngles(jointAngles: startState.tolerances.jointAngles), 0.0)
+//    }
     
 }
 

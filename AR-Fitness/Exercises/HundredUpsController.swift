@@ -23,7 +23,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     
     var upDirection = false
     var reps = 0
-    var initial = true
+//    var initial = true
     var reachedSquat = false
     var rewarded = false
 //    var timer = Timer()
@@ -59,6 +59,10 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()
+        
+        let exercise = exerciseData[Exercises.hundredUps.rawValue]
+        activityMonitor = ActivityMonitor(exercise.states)
+        
 //        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
 //        RunLoop.current.add(self.timer, forMode: .common)
     }
@@ -103,8 +107,6 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                print("Error: Unable to load model as BodyTrackedEntity")
            }
        })
-
-        self.activityMonitor = ActivityMonitor(exerciseData[2].states)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -123,6 +125,10 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
+            if !activityMonitor.started {
+                // TODO: every n seconds repeat "Please assume the start position"
+                return
+            }
             
             let reps = activityMonitor.repCount
             self.infoLabel.text = "Reps: \(reps)"

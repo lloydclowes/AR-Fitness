@@ -10,6 +10,11 @@ Incorporate the start state into the json file maybe with a startStateName field
 Do we need the extension to MeshResource in utilities?
 'See Info' should update live
 Find a nice voice for the speech synthesizer
+Assert (or somehow enforce) that any angle that is a part of any target is specified by all targets
+Interrupt the start countdown if the start position is left
+Remove magic numbers
+Ensure joints member of state is correct
+View controllers inherit from base with base viewDidLoad etc
 
 
 FEATURES:

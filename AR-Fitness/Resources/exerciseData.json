@@ -49,7 +49,7 @@
     "states": [
       {
         "name": "UP",
-        "duration": 1,
+        "duration": 0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
@@ -85,7 +85,7 @@
       },
       {
         "name": "DOWN",
-        "duration": 1,
+        "duration": 0,
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {

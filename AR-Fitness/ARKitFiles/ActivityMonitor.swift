@@ -12,23 +12,29 @@ import ARKit
 class ActivityMonitor {
     
     let useTurningPoints : Bool
+    // TODO: Tune this (as low as possible)
+    let turningPointTolerance = Float(0.5)
+    var stillTurning = false
+    var startedTurning = TimeInterval(0)
+    
+    var started = false
     
     let targetStates : [TargetState]
     var currentState = ActivityState()
+    var prevState = ActivityState()
     
     var success = true
     var feedback : [String]
     var durations : [Double]
     
-    var index = 0
-    var improvableIndex = 0
+    var index = -1
     var lastIndex = 0
     var targetIndex = 0
     var repCount = 0
     
     let speaker = SpeechSynthesizer.globalSpeaker
     
-    var lastFeedback : TimeInterval
+    var lastFeedback = TimeInterval()
     
     var targetStateName : String {
         get { return targetStates[targetIndex].name }
@@ -51,40 +57,41 @@ class ActivityMonitor {
         self.useTurningPoints = false
         self.durations = []
         self.feedback = []
-        self.lastFeedback = Date().timeIntervalSince1970
     }
     
     init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.useTurningPoints = useTurningPoints
-        if targetStates.count > 0 {
-            for (joint, angles) in targetStates[targetIndex].jointAngles {
-                let x : Float? = angles.x != nil ? Float(0) : nil
-                let y : Float? = angles.y != nil ? Float(0) : nil
-                let z : Float? = angles.z != nil ? Float(0) : nil
-                // TODO: addAnchor can set the initial angles
-                self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
-            }
+        for (joint, angles) in targetStates[0].jointAngles {
+            let x : Float? = angles.x != nil ? Float(0) : nil
+            let y : Float? = angles.y != nil ? Float(0) : nil
+            let z : Float? = angles.z != nil ? Float(0) : nil
+            // TODO: addAnchor can set the initial angles
+            self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
+            self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
         }
         self.durations = []
         for _ in 0..<targetStates.count {
             self.durations.append(0)
         }
         self.feedback = []
-        self.lastFeedback = Date().timeIntervalSince1970
+    }
+    
+    func restart() {
+        started = false
+        index = -1
     }
     
     func reset() {
         index = 0
-        improvableIndex = 0
         lastIndex = 0
         targetIndex = 0
         for i in 0..<durations.count {
             durations[i] = 0
         }
         feedback = []
-        lastFeedback = Date().timeIntervalSince1970
+        lastFeedback = TimeInterval()
         repCount += 1
     }
     
@@ -93,10 +100,10 @@ class ActivityMonitor {
             speaker.speak(statement: speaker.rewards.randomElement()!)
             repCount += 1
         } else {
-            if feedback.count == 0 {
-                // The state changed to -1 but returned to the current state immediately afterwards
-                speaker.speak(statement: "Okay, but a bit wobbly.")
-            } else {
+            if feedback.count > 0 {
+//                // The state changed to -1 but returned to the current state immediately afterwards
+//                speaker.speak(statement: "Okay, but a bit wobbly.")
+//            } else {
                 speaker.speak(statement: "Not quite. Next time try to")
                 for statement in feedback {
                     speaker.speak(statement: statement)
@@ -107,13 +114,41 @@ class ActivityMonitor {
         success = true
     }
     
+    func isTurningPoint() -> Bool {
+        for (joint, velocities) in currentState.jointVelocities {
+            if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
+                abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
+                return false
+            }
+            if let vcur = velocities.y, let vprev = prevState.jointVelocities[joint]?.y,
+                abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
+                return false
+            }
+            if let vcur = velocities.z, let vprev = prevState.jointVelocities[joint]?.z,
+                abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
+                return false
+            }
+        }
+        return true
+    }
+    
     func updateState(_ bodyAnchor : ARBodyAnchor) {
         updateState(bodyAnchor, 0.0)
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
+        prevState = currentState
         let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
         currentState.update(newAngles, dema, 1.0)
+        
+        // If we haven't started yet, check if we have reached the start state
+        if !started {
+            if currentState.reaches(targetStates[0]) {
+                started = true
+                index = 0
+            }
+            return
+        }
         
         // If the index hasn't changed then ignore
         if index != -1 && currentState.reaches(targetStates[index]) {
@@ -122,15 +157,22 @@ class ActivityMonitor {
         }
         
         // If we are using turning points, only check if we are at a turning point
-        if useTurningPoints && !currentState.isTurningPoint() {
-            index = -1
-            return
+        if useTurningPoints {
+            if isTurningPoint() {
+                if !stillTurning {
+                    startedTurning = Date().timeIntervalSince1970
+                    stillTurning = true
+                }
+            } else {
+                stillTurning = false
+                index = -1
+                return
+            }
         }
         
         // If we returned to the same state as before, resume
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
-//            durations[index] += delta
             success = false
             return
         }
@@ -194,32 +236,33 @@ class ActivityMonitor {
             }
         }
         
-        if Date().timeIntervalSince1970 - lastFeedback > 3 {
+        let curTime = Date().timeIntervalSince1970
+        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 3 {
             lastFeedback = Date().timeIntervalSince1970
             let currentTarget = targetStates[targetIndex]
             let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
             for (joint, angles) in difference {
                 if let dx = angles.x {
                     if dx > 0 {
-                        speaker.speak(statement: "Increase x for joint: \(joint)")
+                        speaker.speak(statement: "Increase x by \(abs(dx)) for joint: \(joint)")
                     } else {
-                        speaker.speak(statement: "Decrease x for joint: \(joint)")
+                        speaker.speak(statement: "Decrease x by \(abs(dx)) for joint: \(joint)")
                     }
                 }
                 
                 if let dy = angles.y {
                     if dy > 0 {
-                        speaker.speak(statement: "Increase y for joint: \(joint)")
+                        speaker.speak(statement: "Increase y by \(abs(dy)) for joint: \(joint)")
                     } else {
-                        speaker.speak(statement: "Decrease y for joint: \(joint)")
+                        speaker.speak(statement: "Decrease y by \(abs(dy)) for joint: \(joint)")
                     }
                 }
                 
                 if let dz = angles.z {
                     if dz > 0 {
-                        speaker.speak(statement: "Increase z for joint: \(joint)")
+                        speaker.speak(statement: "Increase z by \(abs(dz)) for joint: \(joint)")
                     } else {
-                        speaker.speak(statement: "Decrease z for joint: \(joint)")
+                        speaker.speak(statement: "Decrease z by \(abs(dz)) for joint: \(joint)")
                     }
                 }
             }
