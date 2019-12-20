@@ -21,7 +21,7 @@ class RecordingSession {
         isRecording = false
     }
 
-    func poll(_ augmentedState : ActivityState, _ naturalState : ActivityState) {
+    func poll(_ state : ActivityState) {
         if !isRecording {
             return
         }
@@ -35,14 +35,12 @@ class RecordingSession {
         
         lastPoll = currentTime
         
-        let augmentedCopy = ActivityState(copyOf: augmentedState)
-        let naturalCopy = ActivityState(copyOf: naturalState)
-        stateHistory.append(TimedState(currentTime, augmentedCopy, naturalCopy))
+        stateHistory.append(TimedState(currentTime, ActivityState(copyOf: state)))
         //stateHistory.history.append(thing)
     }
 
     func upload() {
-        let url = URL(string: "https://425d9b5f.ngrok.io/record")!
+        let url = URL(string: "https://f91e920f.ngrok.io/record")!
         
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -56,25 +54,6 @@ class RecordingSession {
         
         request.httpBody = data.data(using: .utf8)
         
-        /*
-        
-        for some reason the output does not contain a valid ZLIB header ?!?
-         
-        var dataBuffer = Array(data.utf8)
-        
-        let compBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count)
-        let compressedSize = compression_encode_buffer(compBuffer, data.count, &dataBuffer, data.count, nil, COMPRESSION_ZLIB)
-        
-        if compressedSize == 0 {
-            fatalError("Encoding failed.")
-        }
-        
-        request.httpBody = NSData(bytesNoCopy: compBuffer, length: compressedSize) as Data
-        
-        print("uploading:")
-        print(data.count)
-         */
-        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "No data")
@@ -85,7 +64,7 @@ class RecordingSession {
             if let responseJSON = responseJSON as? [String: Any] {
                 print(responseJSON)
             }
-            print("completed the thing ?? ?? ")
+            print("uploaded the history")
         }
         
         task.resume()

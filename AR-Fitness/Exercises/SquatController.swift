@@ -60,11 +60,9 @@ class SquatController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()
-//        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//        RunLoop.current.add(self.timer, forMode: .common)
         
         let exercise = exerciseData[Exercises.squat.rawValue]
-        self.activityMonitor = ActivityMonitor(exercise.states, useTurningPoints: true)
+        self.activityMonitor = ActivityMonitor(exercise.states)
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -143,9 +141,7 @@ class SquatController: UIViewController, ARSessionDelegate {
             }
             if !reps.isMultiple(of: 5) {
                 rewarded = false
-            }
-            
-//            self.recordingSession.poll(activityMonitor.currentState, ActivityState())
+            }            
         }
     }
     

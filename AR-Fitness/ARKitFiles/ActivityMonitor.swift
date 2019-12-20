@@ -11,9 +11,8 @@ import ARKit
 
 class ActivityMonitor {
     
-    let useTurningPoints : Bool
     // TODO: Tune this (as low as possible)
-    let turningPointTolerance = Float(0.5)
+    let turningPointTolerance = Float(1.5)
     var stillTurning = false
     var startedTurning = TimeInterval(0)
     
@@ -54,15 +53,13 @@ class ActivityMonitor {
     
     init() {
         self.targetStates = []
-        self.useTurningPoints = false
         self.durations = []
         self.feedback = []
     }
     
-    init(_ targetStates : [TargetState], useTurningPoints : Bool = false) {
+    init(_ targetStates : [TargetState]) {
         self.targetStates = targetStates
         self.targetIndex = targetStates.count > 1 ? 1 : 0
-        self.useTurningPoints = useTurningPoints
         for (joint, angles) in targetStates[0].jointAngles {
             let x : Float? = angles.x != nil ? Float(0) : nil
             let y : Float? = angles.y != nil ? Float(0) : nil
@@ -101,9 +98,9 @@ class ActivityMonitor {
             repCount += 1
         } else {
             if feedback.count > 0 {
-//                // The state changed to -1 but returned to the current state immediately afterwards
-//                speaker.speak(statement: "Okay, but a bit wobbly.")
-//            } else {
+                // The state changed to -1 but returned to the current state immediately afterwards
+                speaker.speak(statement: "Okay, but a bit wobbly.")
+            } else {
                 speaker.speak(statement: "Not quite. Next time try to")
                 for statement in feedback {
                     speaker.speak(statement: statement)
@@ -114,22 +111,23 @@ class ActivityMonitor {
         success = true
     }
     
-    func isTurningPoint() -> Bool {
+    func isTurningPoint() -> (Bool, [String]) {
+        var failed = [String]()
         for (joint, velocities) in currentState.jointVelocities {
             if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                return false
+                failed.append(joint + "_x was \(abs(vcur))")
             }
             if let vcur = velocities.y, let vprev = prevState.jointVelocities[joint]?.y,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                return false
+                failed.append(joint + "_y was \(abs(vcur))")
             }
             if let vcur = velocities.z, let vprev = prevState.jointVelocities[joint]?.z,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                return false
+                failed.append(joint + "_z was \(abs(vcur))")
             }
         }
-        return true
+        return (failed.count == 0, failed)
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) {
@@ -156,24 +154,27 @@ class ActivityMonitor {
             return
         }
         
-        // If we are using turning points, only check if we are at a turning point
-        if useTurningPoints {
-            if isTurningPoint() {
-                if !stillTurning {
-                    startedTurning = Date().timeIntervalSince1970
-                    stillTurning = true
-                }
-            } else {
-                stillTurning = false
-                index = -1
-                return
-            }
-        }
-        
         // If we returned to the same state as before, resume
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
-            success = false
+            return
+        }
+        
+        // Only check state change if we are at a turning point
+        let res = isTurningPoint()
+        if res.0 {
+            if !stillTurning {
+//                    print("start turning")
+                startedTurning = Date().timeIntervalSince1970
+                stillTurning = true
+            }
+        } else {
+            if stillTurning {
+//                    print("stopped turning")
+//                    print(res.1)
+                stillTurning = false
+                index = -1
+            }
             return
         }
         
@@ -194,7 +195,7 @@ class ActivityMonitor {
             if index == 0 {
                 completeRep()
             }
-            print("Successful state change")
+            print("Successful change to \(targetStates[index].name)")
             return
         }
         
@@ -244,25 +245,25 @@ class ActivityMonitor {
             for (joint, angles) in difference {
                 if let dx = angles.x {
                     if dx > 0 {
-                        speaker.speak(statement: "Increase x by \(abs(dx)) for joint: \(joint)")
+                        speaker.speak(statement: "Increase x by \(abs(Int(round(dx)))) for joint: \(joint)")
                     } else {
-                        speaker.speak(statement: "Decrease x by \(abs(dx)) for joint: \(joint)")
+                        speaker.speak(statement: "Decrease x by \(abs(Int(round(dx)))) for joint: \(joint)")
                     }
                 }
                 
                 if let dy = angles.y {
                     if dy > 0 {
-                        speaker.speak(statement: "Increase y by \(abs(dy)) for joint: \(joint)")
+                        speaker.speak(statement: "Increase y by \(abs(Int(round(dy)))) for joint: \(joint)")
                     } else {
-                        speaker.speak(statement: "Decrease y by \(abs(dy)) for joint: \(joint)")
+                        speaker.speak(statement: "Decrease y by \(abs(Int(round(dy)))) for joint: \(joint)")
                     }
                 }
                 
                 if let dz = angles.z {
                     if dz > 0 {
-                        speaker.speak(statement: "Increase z by \(abs(dz)) for joint: \(joint)")
+                        speaker.speak(statement: "Increase z by \(abs(Int(round(dz)))) for joint: \(joint)")
                     } else {
-                        speaker.speak(statement: "Decrease z by \(abs(dz)) for joint: \(joint)")
+                        speaker.speak(statement: "Decrease z by \(abs(Int(round(dz)))) for joint: \(joint)")
                     }
                 }
             }

@@ -140,29 +140,29 @@
               "z": -90
             },
             "left_leg_joint": {
-              "z": 20
+              "z": 30
             },
             "right_upLeg_joint": {
               "z": 90
             },
             "right_leg_joint": {
-              "z": 20
+              "z": 30
             }
           }
         },
         "tolerances": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": 20
+              "z": 25
             },
             "left_leg_joint": {
-              "z": 25
+              "z": 10
             },
             "right_upLeg_joint": {
-              "z": -20
+              "z": -25
             },
             "right_leg_joint": {
-              "z": 25
+              "z": 10
             }
           }
         }
@@ -173,7 +173,7 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": -50
+              "z": 0
             },
             "left_leg_joint": {
               "z": 90
@@ -182,23 +182,23 @@
               "z": 90
             },
             "right_leg_joint": {
-              "z": 20
+              "z": 30
             }
           }
         },
         "tolerances": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": -27
+              "z": -25
             },
             "left_leg_joint": {
-              "z": -13.5
+              "z": -10
             },
             "right_upLeg_joint": {
-              "z": -27
+              "z": -25
             },
             "right_leg_joint": {
-              "z": 13.5
+              "z": 10
             }
           }
         }
@@ -212,29 +212,29 @@
               "z": -90
             },
             "left_leg_joint": {
-              "z": 20
+              "z": 30
             },
             "right_upLeg_joint": {
               "z": 90
             },
             "right_leg_joint": {
-              "z": 20
+              "z": 30
             }
           }
         },
         "tolerances": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": 20
+              "z": 25
             },
             "left_leg_joint": {
-              "z": 25
+              "z": 10
             },
             "right_upLeg_joint": {
-              "z": -20
+              "z": -25
             },
             "right_leg_joint": {
-              "z": 25
+              "z": 10
             }
           }
         }
@@ -248,10 +248,10 @@
               "z": -90
             },
             "left_leg_joint": {
-              "z": 20
+              "z": 30
             },
             "right_upLeg_joint": {
-              "z": 55
+              "z": 0
             },
             "right_leg_joint": {
               "z": 90
@@ -261,16 +261,16 @@
         "tolerances": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": 17
+              "z": 25
             },
             "left_leg_joint": {
-              "z": 17
+              "z": 10
             },
             "right_upLeg_joint": {
-              "z": 27
+              "z": 25
             },
             "right_leg_joint": {
-              "z": -27
+              "z": -10
             }
           }
         }

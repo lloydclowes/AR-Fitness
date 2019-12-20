@@ -11,12 +11,10 @@ import Foundation
 struct TimedState : Codable {
     let timestamp : Date
     let augmentedState : ActivityState
-    let naturalState : ActivityState
     
-    init(_ timestamp : Date, _ augmentedState : ActivityState, _ naturalState : ActivityState) {
+    init(_ timestamp : Date, _ augmentedState : ActivityState) {
         self.timestamp = timestamp
         self.augmentedState = augmentedState
-        self.naturalState = naturalState
     }
 }
 

@@ -58,7 +58,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         prevTime = Date().timeIntervalSince1970
         
         let exercise = exerciseData[Exercises.lateralRaise.rawValue]
-        activityMonitor = ActivityMonitor(exercise.states, useTurningPoints: true)
+        activityMonitor = ActivityMonitor(exercise.states)
         infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
         
         setupViews()
