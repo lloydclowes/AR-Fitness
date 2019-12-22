@@ -53,6 +53,18 @@ class TargetState : ActivityState {
         hasher.combine(tolerances)
     }
     
+    func valueBelowTarget(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
+        return tol <= 0.0 && curr < targ + tol
+    }
+    
+    func valueAboveTarget(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
+        return tol >= 0.0 && curr > targ + tol
+    }
+    
+    func valueNotReached(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
+        return valueBelowTarget(current: curr, target: targ, tolerance: tol) || valueAboveTarget(current: curr, target: targ, tolerance: tol)
+    }
+    
     func reachedBy(_ activityState: ActivityState) -> Bool {
         for (joint, targetAngles) in jointAngles {
             guard let angles = activityState.jointAngles[joint] else { return false }

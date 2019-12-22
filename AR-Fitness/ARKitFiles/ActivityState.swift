@@ -74,18 +74,6 @@ class ActivityState: Hashable, Codable {
         hasher.combine(jointAngles)
     }
     
-    func valueBelowTarget(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
-        return tol <= 0.0 && curr < targ + tol
-    }
-    
-    func valueAboveTarget(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
-        return tol >= 0.0 && curr > targ + tol
-    }
-    
-    func valueNotReached(current curr: Float, target targ: Float, tolerance tol: Float) -> Bool {
-        return valueBelowTarget(current: curr, target: targ, tolerance: tol) || valueAboveTarget(current: curr, target: targ, tolerance: tol)
-    }
-    
     func reaches(_ target : TargetState) -> Bool {
         return target.reachedBy(self)
     }

@@ -164,14 +164,14 @@ class ActivityMonitor {
         let res = isTurningPoint()
         if res.0 {
             if !stillTurning {
-//                    print("start turning")
-                startedTurning = Date().timeIntervalSince1970
+//                print("start turning")
+//                startedTurning = Date().timeIntervalSince1970
                 stillTurning = true
             }
         } else {
             if stillTurning {
-//                    print("stopped turning")
-//                    print(res.1)
+                print("stopped turning")
+                print(res.1)
                 stillTurning = false
                 index = -1
             }

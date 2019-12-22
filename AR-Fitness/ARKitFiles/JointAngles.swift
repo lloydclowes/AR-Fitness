@@ -53,15 +53,7 @@ struct JointAngles : Hashable, Codable, Sequence {
                 diff[joint] = jointDiff
             }
         }
-        
-//        for (joint, otherAngles) in other.jointAngles {
-//            if !jointAngles.keys.contains(joint) {
-//                let jointDiff = otherAngles.difference(EulerAngles(), tolerances[joint]!)
-//                if jointDiff != EulerAngles() {
-//                    diff[joint] = jointDiff
-//                }
-//            }
-//        }
+
         return diff
     }
 }
