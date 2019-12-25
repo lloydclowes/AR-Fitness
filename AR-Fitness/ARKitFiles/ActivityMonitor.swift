@@ -153,6 +153,7 @@ class ActivityMonitor {
             
         }
         return
+    }
       
     func isTurningPoint() -> (Bool, [String]) {
         var failed = [String]()
