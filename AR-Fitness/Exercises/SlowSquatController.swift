@@ -29,7 +29,7 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
     let speaker = SpeechSynthesizer.globalSpeaker
     var rewarded = false
 
-    var showRobot = true
+    var showRobot = false
 
     var activityMonitor = ActivityMonitor()
 
