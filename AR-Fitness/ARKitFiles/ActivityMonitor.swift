@@ -13,6 +13,8 @@ class ActivityMonitor {
     
     let useTurningPoints : Bool
     let inCoachingMode : Bool
+    var firstInstr : Bool
+    var times = 0
     let coachingInfo : CoachModeDetail?
     
     let targetStates : [TargetState]
@@ -53,6 +55,7 @@ class ActivityMonitor {
         self.useTurningPoints = false
         self.inCoachingMode = false
         self.coachingInfo = nil
+        self.firstInstr = false
         self.durations = []
         self.feedback = []
         self.lastFeedback = Date().timeIntervalSince1970
@@ -60,6 +63,7 @@ class ActivityMonitor {
     
     init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
         self.targetStates = targetStates
+        self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.useTurningPoints = useTurningPoints
         self.inCoachingMode = coachingMode
@@ -118,24 +122,24 @@ class ActivityMonitor {
         // Add instructions to exerciseData to be said outloud when reaching a state, so for
         // the target state.
         if currentState.reaches(targetStates[targetIndex]) {
-        let expectedTransitionDuration = coachingInfo!.transitionDuration
-        if Int(counter) < expectedTransitionDuration {
-                speaker.speak(statement: speaker.speedFocusedStatements.randomElement()!)
-        }
-        counter = 0
         
         index = targetIndex
         lastIndex = index
         targetIndex = (targetIndex + 1) % targetStates.count
-        
-        if index == 0 {
-            //completeRep()
-        }
+            print(self.times)
+        if firstInstr {
             speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
+            self.times = self.times + 1
         }
-//        } else if !currentState.isTurningPoint() {
-//            speaker.speak(statement: "You need to move to state \(targetStates[targetIndex].name)")
-//        }
+        
+        if self.times >= targetStates.count {
+            if firstInstr {
+                speaker.speak(statement: "That was a perfect rep! You're good to go!")
+                self.firstInstr = false
+            }
+        }
+            
+        }
         return
     }
     
