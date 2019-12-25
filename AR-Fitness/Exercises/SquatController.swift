@@ -21,7 +21,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     var uploaded = false
     let recordingSession = RecordingSession()
     
-    var initial = true
+//    var initial = true
     var reachedSquat = false
 //    var timer = Timer()
     var counter = 0
@@ -60,9 +60,9 @@ class SquatController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()
-//        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//        RunLoop.current.add(self.timer, forMode: .common)
-
+        
+        let exercise = exerciseData[Exercises.squat.rawValue]
+        self.activityMonitor = ActivityMonitor(exercise.states)
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -105,10 +105,8 @@ class SquatController: UIViewController, ARSessionDelegate {
                 print("Error: Unable to load model as BodyTrackedEntity")
             }
         })
-        
-        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true)
-        
-        self.recordingSession.startRecording()
+                
+//        self.recordingSession.startRecording()
         self.prevTime = Date().timeIntervalSince1970
     }
     
@@ -129,19 +127,21 @@ class SquatController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
+            if !activityMonitor.started {
+                // TODO: every n seconds repeat "Please assume the start position"
+                return
+            }
             
             let reps = activityMonitor.repCount
             self.infoLabel.text = "Reps: \(reps)"
-            if (reps != 0 && reps.isMultiple(of: 5) && !rewarded) {
+            if reps != 0 && reps.isMultiple(of: 5) && !rewarded {
                 rewarded = true
                 let randomReward = speaker.rewards.randomElement()!
                 speaker.speak(statement: randomReward)
             }
-            if(!reps.isMultiple(of: 5)) {
+            if !reps.isMultiple(of: 5) {
                 rewarded = false
-            }
-            
-//            self.recordingSession.poll(activityMonitor.currentState, ActivityState())
+            }            
         }
     }
     

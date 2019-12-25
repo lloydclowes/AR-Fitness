@@ -21,12 +21,13 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     var activityMonitor = ActivityMonitor()
     let speaker = SpeechSynthesizer.globalSpeaker
     
+    var startTime = Double.greatestFiniteMagnitude
+    var uploaded = false
+    let recordingSession = RecordingSession()
+    
     var upDirection = false
     var reps = 0
-    var initial = true
-    var reachedSquat = false
     var rewarded = false
-//    var timer = Timer()
     var counter = 0
     
     var prevTime = TimeInterval()
@@ -59,8 +60,11 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()
-//        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//        RunLoop.current.add(self.timer, forMode: .common)
+        
+        let exercise = exerciseData[Exercises.hundredUps.rawValue]
+        activityMonitor = ActivityMonitor(exercise.states)
+        
+        self.recordingSession.startRecording()
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -71,29 +75,29 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-       super.viewDidAppear(animated)
-       arView.session.delegate = self
-       
-       // If the iOS device doesn't support body tracking, raise a developer error for
-       // this unhandled case.
-       guard ARBodyTrackingConfiguration.isSupported else {
-           fatalError("This feature is only supported on devices with an A12 chip")
-       }
+        super.viewDidAppear(animated)
+        arView.session.delegate = self
 
-       // Run a body tracking configration.
-       let configuration = ARBodyTrackingConfiguration()
-       arView.session.run(configuration)
-       arView.scene.addAnchor(characterAnchor)
-       
-       // Asynchronously load the 3D character.
-       var cancellable: AnyCancellable? = nil
-       cancellable = Entity.loadBodyTrackedAsync(named: "robot").sink(
+        // If the iOS device doesn't support body tracking, raise a developer error for
+        // this unhandled case.
+        guard ARBodyTrackingConfiguration.isSupported else {
+           fatalError("This feature is only supported on devices with an A12 chip")
+        }
+
+        // Run a body tracking configration.
+        let configuration = ARBodyTrackingConfiguration()
+        arView.session.run(configuration)
+        arView.scene.addAnchor(characterAnchor)
+
+        // Asynchronously load the 3D character.
+        var cancellable: AnyCancellable? = nil
+        cancellable = Entity.loadBodyTrackedAsync(named: "robot").sink(
            receiveCompletion: { completion in
                if case let .failure(error) = completion {
                    print("Error: Unable to load model: \(error.localizedDescription)")
                }
                cancellable?.cancel()
-       }, receiveValue: { (character: Entity) in
+        }, receiveValue: { (character: Entity) in
            if let character = character as? BodyTrackedEntity {
                // Scale the character to human size
                character.scale = [1.0, 1.0, 1.0]
@@ -102,9 +106,9 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
            } else {
                print("Error: Unable to load model as BodyTrackedEntity")
            }
-       })
+        })
 
-        self.activityMonitor = ActivityMonitor(exerciseData[2].states)
+        self.startTime = Date().timeIntervalSince1970
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -123,6 +127,17 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
+            if !activityMonitor.started {
+                // TODO: every n seconds repeat "Please assume the start position"
+                return
+            }
+            
+//            self.recordingSession.poll(activityMonitor.currentState)
+//            if curTime - startTime > 10 {
+//                print("uploading")
+//                self.recordingSession.upload()
+//                startTime = curTime
+//            }
             
             let reps = activityMonitor.repCount
             self.infoLabel.text = "Reps: \(reps)"
@@ -135,6 +150,8 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
                 rewarded = false
             }
         }
+        
+        
     }
     @objc func timerAction() {
         counter += 1

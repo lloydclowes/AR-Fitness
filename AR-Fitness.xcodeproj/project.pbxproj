@@ -12,7 +12,6 @@
 		185F1C9223857E03005CF226 /* JSONDataExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C8D23857E03005CF226 /* JSONDataExporter.swift */; };
 		185F1C9723857F6E005CF226 /* TimedStateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C9623857F6E005CF226 /* TimedStateHistory.swift */; };
 		187B5358238D7DC7008C4CF0 /* PeakFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187B5357238D7DC7008C4CF0 /* PeakFinder.swift */; };
-		189D134E239176AA006F9030 /* research.txt in Resources */ = {isa = PBXBuildFile; fileRef = 189D134D239176AA006F9030 /* research.txt */; };
 		189D135023917CE9006F9030 /* JointAngles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189D134F23917CE9006F9030 /* JointAngles.swift */; };
 		18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF1B64238E6CD200CDFC2D /* StateHistory.swift */; };
 		18F22906238ECEE900D7FE92 /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 18F22905238ECEE900D7FE92 /* TODO.txt */; };
@@ -55,7 +54,6 @@
 		185F1C8D23857E03005CF226 /* JSONDataExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONDataExporter.swift; path = "../AR-Fitness/Recorder/JSONDataExporter.swift"; sourceTree = "<group>"; };
 		185F1C9623857F6E005CF226 /* TimedStateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimedStateHistory.swift; sourceTree = "<group>"; };
 		187B5357238D7DC7008C4CF0 /* PeakFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeakFinder.swift; sourceTree = "<group>"; };
-		189D134D239176AA006F9030 /* research.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = research.txt; sourceTree = "<group>"; };
 		189D134F23917CE9006F9030 /* JointAngles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointAngles.swift; sourceTree = "<group>"; };
 		18DF1B64238E6CD200CDFC2D /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
 		18F22905238ECEE900D7FE92 /* TODO.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
@@ -172,7 +170,6 @@
 				6E438046235A1F82001A557A /* exerciseData.json */,
 				6EAF45C4236AEE4700710465 /* robot.usdz */,
 				18F22905238ECEE900D7FE92 /* TODO.txt */,
-				189D134D239176AA006F9030 /* research.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -308,7 +305,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E9004D82359BCAD0070AECC /* LaunchScreen.storyboard in Resources */,
-				189D134E239176AA006F9030 /* research.txt in Resources */,
 				6EAF45C5236AEE4700710465 /* robot.usdz in Resources */,
 				6E9004D52359BCAD0070AECC /* Preview Assets.xcassets in Resources */,
 				18F22906238ECEE900D7FE92 /* TODO.txt in Resources */,
