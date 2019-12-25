@@ -111,8 +111,10 @@ class ActivityMonitor {
     
     func completeRep() {
         if success {
-       // Isn't it too much to repeat it for every rep?
-            speaker.speak(statement: speaker.rewards.randomElement()!)
+            if (repCount.isMultiple(of: 3)) {
+                // Giving feedback after each rep seems a bit too much
+                speaker.speak(statement: speaker.rewards.randomElement()!)
+            }
             repCount += 1
         } else {
             if feedback.count > 0 {
@@ -286,37 +288,37 @@ class ActivityMonitor {
             }
         }
         
-        let curTime = Date().timeIntervalSince1970
-        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 3 {
-            lastFeedback = Date().timeIntervalSince1970
-            let currentTarget = targetStates[targetIndex]
-            let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-            for (joint, angles) in difference {
-                if let dx = angles.x {
-                    if dx > 0 {
-                        speaker.speak(statement: "Increase x by \(abs(Int(round(dx)))) for joint: \(joint)")
-                    } else {
-                        speaker.speak(statement: "Decrease x by \(abs(Int(round(dx)))) for joint: \(joint)")
-                    }
-                }
-                
-                if let dy = angles.y {
-                    if dy > 0 {
-                        speaker.speak(statement: "Increase y by \(abs(Int(round(dy)))) for joint: \(joint)")
-                    } else {
-                        speaker.speak(statement: "Decrease y by \(abs(Int(round(dy)))) for joint: \(joint)")
-                    }
-                }
-                
-                if let dz = angles.z {
-                    if dz > 0 {
-                        speaker.speak(statement: "Increase z by \(abs(Int(round(dz)))) for joint: \(joint)")
-                    } else {
-                        speaker.speak(statement: "Decrease z by \(abs(Int(round(dz)))) for joint: \(joint)")
-                    }
-                }
-            }
-        }
+       let curTime = Date().timeIntervalSince1970
+//        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
+//            lastFeedback = Date().timeIntervalSince1970
+//            let currentTarget = targetStates[targetIndex]
+//            let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+//            for (joint, angles) in difference {
+//                if let dx = angles.x {
+//                    if dx > 0 {
+//                        speaker.speak(statement: "Increase x by \(abs(Int(round(dx)))) for: \(joint)")
+//                    } else {
+//                        speaker.speak(statement: "Decrease x by \(abs(Int(round(dx)))) for: \(joint)")
+//                    }
+//                }
+//
+//                if let dy = angles.y {
+//                    if dy > 0 {
+//                        speaker.speak(statement: "Increase y by \(abs(Int(round(dy)))) for: \(joint)")
+//                    } else {
+//                        speaker.speak(statement: "Decrease y by \(abs(Int(round(dy)))) for: \(joint)")
+//                    }
+//                }
+//
+//                if let dz = angles.z {
+//                    if dz > 0 {
+//                        speaker.speak(statement: "Increase z by \(abs(Int(round(dz)))) for: \(joint)")
+//                    } else {
+//                        speaker.speak(statement: "Decrease z by \(abs(Int(round(dz)))) for: \(joint)")
+//                    }
+//                }
+//            }
+    //    }
         
         
         
