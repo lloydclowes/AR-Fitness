@@ -35,7 +35,15 @@
           }
         }
       }
-    ]
+    ],
+    "coachMode": {
+        "transitionDuration": 2,
+        "stateDuration" : 5,
+        "stateInstructions": [
+            "Stand up with your back straight",
+            "Raise your arms and keep them parallel to the floor."
+        ]
+    }
   },
   {
     "name": "Squats",
@@ -119,7 +127,15 @@
           }
         }
       }
-    ]
+    ],
+    "coachMode": {
+        "transitionDuration": 2,
+        "stateDuration" : 1,
+        "stateInstructions": [
+            "Stand up with your back straight",
+            "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
+        ]
+    }
   },
   {
     "name": "Hundred Ups",
@@ -203,6 +219,16 @@
           }
         }
       }
-    ]
+    ],
+    "coachMode": {
+        "transitionDuration": 2,
+        "stateDuration" : 1,
+        "stateInstructions": [
+            "Stand up with your back straight",
+            "Raise your left leg in a ninety degree angle",
+            "Stand up with your back straight",
+            "Raise your right leg in a ninety degree angle",
+        ]
+    }
   }
 ]

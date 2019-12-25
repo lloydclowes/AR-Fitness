@@ -19,6 +19,7 @@ struct Exercise: Hashable, Codable, Identifiable {
     var duration: String
     var startState: String
     var states: [TargetState]
+    var coachMode: CoachModeDetail
     
 //    public func getStartState() -> TargetState {
 //        
@@ -29,6 +30,12 @@ struct Exercise: Hashable, Codable, Identifiable {
 //        return TargetState("START", JointAngles(jointAngles: startState.jointAngles.jointAngles), JointAngles(jointAngles: startState.tolerances.jointAngles), 0.0)
 //    }
     
+}
+
+struct CoachModeDetail: Hashable, Codable {
+    var transitionDuration: Int
+    var stateDuration: Int
+    var stateInstructions: [String]
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {

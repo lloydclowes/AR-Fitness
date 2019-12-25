@@ -11,6 +11,13 @@ import ARKit
 
 class ActivityMonitor {
     
+
+    let useTurningPoints : Bool
+    let inCoachingMode : Bool
+    var firstInstr : Bool
+    var times = 0
+    let coachingInfo : CoachModeDetail?
+
     // TODO: Tune this (as low as possible)
     let turningPointTolerance = Float(1.5)
     var stillTurning = false
@@ -53,13 +60,23 @@ class ActivityMonitor {
     
     init() {
         self.targetStates = []
+        self.useTurningPoints = false
+        self.inCoachingMode = false
+        self.coachingInfo = nil
+        self.firstInstr = false
+
         self.durations = []
         self.feedback = []
     }
-    
-    init(_ targetStates : [TargetState]) {
+
+    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
         self.targetStates = targetStates
+        self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
+        self.useTurningPoints = useTurningPoints
+        self.inCoachingMode = coachingMode
+        self.coachingInfo = coachingInfo
+        
         for (joint, angles) in targetStates[0].jointAngles {
             let x : Float? = angles.x != nil ? Float(0) : nil
             let y : Float? = angles.y != nil ? Float(0) : nil
@@ -94,6 +111,7 @@ class ActivityMonitor {
     
     func completeRep() {
         if success {
+       // Isn't it too much to repeat it for every rep?
             speaker.speak(statement: speaker.rewards.randomElement()!)
             repCount += 1
         } else {
@@ -111,6 +129,31 @@ class ActivityMonitor {
         success = true
     }
     
+
+    func coachingMode() {
+        // Add instructions to exerciseData to be said outloud when reaching a state, so for
+        // the target state.
+        if currentState.reaches(targetStates[targetIndex]) {
+        
+        index = targetIndex
+        lastIndex = index
+        targetIndex = (targetIndex + 1) % targetStates.count
+            print(self.times)
+        if firstInstr {
+            speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
+            self.times = self.times + 1
+        }
+        
+        if self.times >= targetStates.count {
+            if firstInstr {
+                speaker.speak(statement: "That was a perfect rep! You're good to go!")
+                self.firstInstr = false
+            }
+        }
+            
+        }
+        return
+      
     func isTurningPoint() -> (Bool, [String]) {
         var failed = [String]()
         for (joint, velocities) in currentState.jointVelocities {
@@ -153,7 +196,7 @@ class ActivityMonitor {
             durations[index] += delta
             return
         }
-        
+
         // If we returned to the same state as before, resume
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
@@ -175,6 +218,11 @@ class ActivityMonitor {
                 stillTurning = false
                 index = -1
             }
+            return
+        }
+      
+        if (self.inCoachingMode) {
+            self.coachingMode()
             return
         }
         
@@ -268,6 +316,8 @@ class ActivityMonitor {
                 }
             }
         }
+        
+        
         
         index = -1
         return

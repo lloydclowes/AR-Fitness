@@ -13,6 +13,8 @@ class SpeechSynthesizer {
     
     let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
     
+    let speedFocusedStatements = ["Move a bit slower", "Focus on the form, not the speed", "Not so fast!"]
+    
     var speechEnabled : Bool
     var volume : Float
     var speechSynthesizer : AVSpeechSynthesizer?
