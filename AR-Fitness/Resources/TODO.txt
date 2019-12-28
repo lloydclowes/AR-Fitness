@@ -34,7 +34,6 @@ joints didn't reach the state at the same time
 
 moved too quickly/slowly between states (current or average velocity too low/high)
 
-
 LIVE:  (COACH MODE:  light or no weight, slower movement)
 lower/raise specific limb
 slow down / speed up

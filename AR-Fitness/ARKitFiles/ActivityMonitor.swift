@@ -237,6 +237,9 @@ class ActivityMonitor {
                 stillTurning = true
             }
         } else {
+            if currentState.getMaxSpeed() > 20 {
+                print("TOO FAST!!")
+            }
             if stillTurning {
 //                print("stopped turning")
 //                print(res.1)
