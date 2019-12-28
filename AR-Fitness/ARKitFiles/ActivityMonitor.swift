@@ -30,6 +30,8 @@ class ActivityMonitor {
     var prevState = ActivityState()
     
     var success = true
+    var jointSuccess : Dictionary<String, Bool> = [:]
+    
     var feedback : [String]
     var durations : [Double]
     
@@ -84,6 +86,7 @@ class ActivityMonitor {
             // TODO: addAnchor can set the initial angles
             self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
+            self.jointSuccess[joint] = false
         }
         self.durations = []
         for _ in 0..<targetStates.count {
@@ -107,52 +110,72 @@ class ActivityMonitor {
         feedback = []
         lastFeedback = TimeInterval()
         repCount += 1
+        
+        for joint in targetStates[0].jointAngles.keys {
+            self.jointSuccess[joint] = false
+        }
     }
     
     func completeRep() {
         if success {
+            // Every three reps give feedback
             if (repCount.isMultiple(of: 3)) {
-                // Giving feedback after each rep seems a bit too much
                 speaker.speak(statement: speaker.rewards.randomElement()!)
             }
             repCount += 1
         } else {
-            if feedback.count > 0 {
-                // The state changed to -1 but returned to the current state immediately afterwards
-                speaker.speak(statement: "Okay, but a bit wobbly.")
-            } else {
-                speaker.speak(statement: "Not quite. Next time try to")
-                for statement in feedback {
-                    speaker.speak(statement: statement)
+//            if feedback.count > 0 {
+//                // The state changed to -1 but returned to the current state immediately afterwards
+//                speaker.speak(statement: "Okay, but a bit wobbly.")
+//            }
+            
+            var missed = [String]()
+            for (joint, success) in jointSuccess {
+                if !success {
+                    missed.append(joint)
                 }
-                feedback = []
             }
+            
+            if missed.count == 0 {
+                speaker.speak(statement: "Your joints didn't reach their targets at the same time.")
+            } else if missed.count == 1 {
+                speaker.speak(statement: "Your " + missed[0] + " didn't reach its target.")
+            } else {
+                var missedStr = "Your " + missed[0]
+                for i in 1..<missed.count - 1 {
+                    missedStr += ", " + missed[i]
+                }
+                missedStr += " and " + missed[missed.count - 1] + " joints didn't reach their targets."
+                speaker.speak(statement: missedStr)
+            }
+
+            feedback = []
         }
         success = true
+        for joint in targetStates[0].jointAngles.keys {
+            self.jointSuccess[joint] = false
+        }
     }
     
-
     func coachingMode() {
         // Add instructions to exerciseData to be said outloud when reaching a state, so for
         // the target state.
         if currentState.reaches(targetStates[targetIndex]) {
-        
-        index = targetIndex
-        lastIndex = index
-        targetIndex = (targetIndex + 1) % targetStates.count
+            index = targetIndex
+            lastIndex = index
+            targetIndex = (targetIndex + 1) % targetStates.count
             print(self.times)
-        if firstInstr {
-            speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
-            self.times = self.times + 1
-        }
-        
-        if self.times >= targetStates.count {
             if firstInstr {
-                speaker.speak(statement: "That was a perfect rep! You're good to go!")
-                self.firstInstr = false
+                speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
+                self.times = self.times + 1
             }
-        }
             
+            if self.times >= targetStates.count {
+                if firstInstr {
+                    speaker.speak(statement: "That was a perfect rep! You're good to go!")
+                    self.firstInstr = false
+                }
+            }
         }
         return
     }
@@ -162,15 +185,15 @@ class ActivityMonitor {
         for (joint, velocities) in currentState.jointVelocities {
             if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                failed.append(joint + "_x was \(abs(vcur))")
+                failed.append(joint + ".x was \(abs(vcur))")
             }
             if let vcur = velocities.y, let vprev = prevState.jointVelocities[joint]?.y,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                failed.append(joint + "_y was \(abs(vcur))")
+                failed.append(joint + ".y was \(abs(vcur))")
             }
             if let vcur = velocities.z, let vprev = prevState.jointVelocities[joint]?.z,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                failed.append(joint + "_z was \(abs(vcur))")
+                failed.append(joint + ".z was \(abs(vcur))")
             }
         }
         return (failed.count == 0, failed)
@@ -210,14 +233,13 @@ class ActivityMonitor {
         let res = isTurningPoint()
         if res.0 {
             if !stillTurning {
-//                print("start turning")
-//                startedTurning = Date().timeIntervalSince1970
+                startedTurning = Date().timeIntervalSince1970
                 stillTurning = true
             }
         } else {
             if stillTurning {
-                print("stopped turning")
-                print(res.1)
+//                print("stopped turning")
+//                print(res.1)
                 stillTurning = false
                 index = -1
             }
@@ -288,7 +310,15 @@ class ActivityMonitor {
             }
         }
         
-       let curTime = Date().timeIntervalSince1970
+        let currentTarget = targetStates[targetIndex]
+        let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+        for (joint, angles) in difference {
+            if angles.x == nil || angles.y == nil || angles.z == nil {
+                jointSuccess[joint] = true
+            }
+        }
+        
+//        let curTime = Date().timeIntervalSince1970
 //        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
 //            lastFeedback = Date().timeIntervalSince1970
 //            let currentTarget = targetStates[targetIndex]
@@ -318,9 +348,7 @@ class ActivityMonitor {
 //                    }
 //                }
 //            }
-    //    }
-        
-        
+//        }
         
         index = -1
         return

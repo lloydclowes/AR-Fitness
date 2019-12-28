@@ -101,8 +101,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
 
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
-        arView.session.run(configuration)
+        configuration.environmentTexturing = .none
         
+        arView.session.run(configuration)
         arView.scene.addAnchor(characterAnchor)
         
         // Asynchronously load the 3D character.

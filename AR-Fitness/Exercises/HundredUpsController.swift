@@ -103,6 +103,8 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
 
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
+        configuration.environmentTexturing = .none
+        
         arView.session.run(configuration)
         arView.scene.addAnchor(characterAnchor)
 
