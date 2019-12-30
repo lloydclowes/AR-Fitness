@@ -52,8 +52,6 @@ struct EulerAngles: Codable, Hashable {
         var dy : Float? = nil
         var dz : Float? = nil
         
-        // if tol < 0 && dx > 0 -> nil
-        // if tol > 0 && dx > 0 -> nil
         if let x1 = x {
             dx = x1 - (other.x ?? 0) + (tolerances.x ?? 0)
             if dx! >= 0 {

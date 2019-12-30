@@ -203,11 +203,7 @@ class ActivityMonitor {
         updateState(bodyAnchor, 0.0)
     }
     
-    func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
-        prevState = currentState
-        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
-        currentState.update(newAngles, dema, 1.0)
-        
+    func updateIndex(_ delta : Double) {
         // If we haven't started yet, check if we have reached the start state
         if !started {
             if currentState.reaches(targetStates[0]) {
@@ -321,47 +317,56 @@ class ActivityMonitor {
             }
         }
         
+        index = -1
+    }
+    
+    func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
+        prevState = currentState
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
+        currentState.update(newAngles, dema, 1.0)
+        
+        updateIndex(delta)
+        
         let currentTarget = targetStates[targetIndex]
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-        for joint in jointSuccess.keys {
-            if !difference.keys.contains(joint) {
-                jointSuccess[joint] = true
+        if inCoachingMode {
+    //        let curTime = Date().timeIntervalSince1970
+    //        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
+    //            lastFeedback = Date().timeIntervalSince1970
+    //            let currentTarget = targetStates[targetIndex]
+    //            let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+    //            for (joint, angles) in difference {
+    //                if let dx = angles.x {
+    //                    if dx > 0 {
+    //                        speaker.speak(statement: "Increase x by \(abs(Int(round(dx)))) for: \(joint)")
+    //                    } else {
+    //                        speaker.speak(statement: "Decrease x by \(abs(Int(round(dx)))) for: \(joint)")
+    //                    }
+    //                }
+    //
+    //                if let dy = angles.y {
+    //                    if dy > 0 {
+    //                        speaker.speak(statement: "Increase y by \(abs(Int(round(dy)))) for: \(joint)")
+    //                    } else {
+    //                        speaker.speak(statement: "Decrease y by \(abs(Int(round(dy)))) for: \(joint)")
+    //                    }
+    //                }
+    //
+    //                if let dz = angles.z {
+    //                    if dz > 0 {
+    //                        speaker.speak(statement: "Increase z by \(abs(Int(round(dz)))) for: \(joint)")
+    //                    } else {
+    //                        speaker.speak(statement: "Decrease z by \(abs(Int(round(dz)))) for: \(joint)")
+    //                    }
+    //                }
+    //            }
+    //        }
+        } else {
+            for joint in jointSuccess.keys {
+                if !difference.keys.contains(joint) {
+                    jointSuccess[joint] = true
+                }
             }
         }
-        
-//        let curTime = Date().timeIntervalSince1970
-//        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
-//            lastFeedback = Date().timeIntervalSince1970
-//            let currentTarget = targetStates[targetIndex]
-//            let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-//            for (joint, angles) in difference {
-//                if let dx = angles.x {
-//                    if dx > 0 {
-//                        speaker.speak(statement: "Increase x by \(abs(Int(round(dx)))) for: \(joint)")
-//                    } else {
-//                        speaker.speak(statement: "Decrease x by \(abs(Int(round(dx)))) for: \(joint)")
-//                    }
-//                }
-//
-//                if let dy = angles.y {
-//                    if dy > 0 {
-//                        speaker.speak(statement: "Increase y by \(abs(Int(round(dy)))) for: \(joint)")
-//                    } else {
-//                        speaker.speak(statement: "Decrease y by \(abs(Int(round(dy)))) for: \(joint)")
-//                    }
-//                }
-//
-//                if let dz = angles.z {
-//                    if dz > 0 {
-//                        speaker.speak(statement: "Increase z by \(abs(Int(round(dz)))) for: \(joint)")
-//                    } else {
-//                        speaker.speak(statement: "Decrease z by \(abs(Int(round(dz)))) for: \(joint)")
-//                    }
-//                }
-//            }
-//        }
-        
-        index = -1
-        return
     }
 }
