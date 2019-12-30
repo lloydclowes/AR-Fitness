@@ -111,8 +111,8 @@ class ActivityMonitor {
         lastFeedback = TimeInterval()
         repCount += 1
         
-        for joint in targetStates[0].jointAngles.keys {
-            self.jointSuccess[joint] = false
+        for joint in jointSuccess.keys {
+            jointSuccess[joint] = false
         }
     }
     
@@ -152,8 +152,8 @@ class ActivityMonitor {
             feedback = []
         }
         success = true
-        for joint in targetStates[0].jointAngles.keys {
-            self.jointSuccess[joint] = false
+        for joint in jointSuccess.keys {
+            jointSuccess[joint] = false
         }
     }
     
@@ -211,6 +211,7 @@ class ActivityMonitor {
         // If we haven't started yet, check if we have reached the start state
         if !started {
             if currentState.reaches(targetStates[0]) {
+                print("START")
                 started = true
                 index = 0
             }
@@ -225,7 +226,12 @@ class ActivityMonitor {
 
         // If we returned to the same state as before, resume
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
+            print("return to previous")
             index = lastIndex
+            success = false
+            if index == 0 {
+                completeRep()
+            }
             return
         }
         
@@ -271,7 +277,7 @@ class ActivityMonitor {
             if index == 0 {
                 completeRep()
             }
-            print("Successful change to \(targetStates[index].name)")
+            print("advanced to \(targetStates[index].name)")
             return
         }
         
@@ -281,6 +287,8 @@ class ActivityMonitor {
             if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variable
                 index = (targetIndex + i) % targetStates.count
+                
+                print("jumped to \(index)")
                 
                 // If we did not arrive back at the last state we reached, add feedback for the missed states
                 if index != lastIndex {
@@ -315,8 +323,8 @@ class ActivityMonitor {
         
         let currentTarget = targetStates[targetIndex]
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-        for (joint, angles) in difference {
-            if angles.x == nil || angles.y == nil || angles.z == nil {
+        for joint in jointSuccess.keys {
+            if !difference.keys.contains(joint) {
                 jointSuccess[joint] = true
             }
         }
