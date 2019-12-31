@@ -1,6 +1,5 @@
 CODE TODO:
 'See Info' should update live
-Interrupt the start countdown if the start position is left
 Make feedback frequency (in reps) customisable
 change check for index == 0 to completeRep to be if index < lastIndex
 
