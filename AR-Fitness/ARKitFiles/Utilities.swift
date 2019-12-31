@@ -96,3 +96,19 @@ func dema(_ actual : Float, _ prev : Float) -> Float {
     let double_smoothed = ema(smoothed, prev)
     return 2 * smoothed - double_smoothed
 }
+
+// Joins a list of strings as if they were spoken in english
+func spokenListJoin(_ arr : [String]) -> String {
+    if arr.count == 0 {
+        return ""
+    }
+    if arr.count == 1 {
+        return arr[0]
+    }
+    
+    var joined = "\(arr[0])"
+    for i in 1..<arr.count - 1 {
+        joined += ", \(arr[i])"
+    }
+    return joined + " and \(arr[arr.count - 1])"
+}

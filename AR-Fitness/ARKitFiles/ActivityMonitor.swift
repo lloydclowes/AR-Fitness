@@ -11,7 +11,6 @@ import ARKit
 
 class ActivityMonitor {
     
-
     let useTurningPoints : Bool
     let inCoachingMode : Bool
     var firstInstr : Bool
@@ -29,11 +28,10 @@ class ActivityMonitor {
     var currentState = ActivityState()
     var prevState = ActivityState()
     
-    var success = true
-    var jointSuccess : Dictionary<String, Bool> = [:]
+    var stateSuccesses = [StateSuccess]()
     
-    var feedback : [String]
-    var durations : [Double]
+//    var feedback : [String]
+//    var durations : [Double]
     
     var index = -1
     var lastIndex = 0
@@ -57,7 +55,9 @@ class ActivityMonitor {
     }
     
     var remainingDuration : Double {
-        get { return max(0, targetStates[lastIndex].duration - durations[lastIndex]) }
+        get { /* return max(0, targetStates[lastIndex].duration - durations[lastIndex]) */
+            return max(0, targetStates[lastIndex].duration - stateSuccesses[lastIndex].duration)
+        }
     }
     
     init() {
@@ -66,9 +66,9 @@ class ActivityMonitor {
         self.inCoachingMode = false
         self.coachingInfo = nil
         self.firstInstr = false
-
-        self.durations = []
-        self.feedback = []
+                
+//        self.durations = []
+//        self.feedback = []
     }
 
     init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
@@ -86,13 +86,17 @@ class ActivityMonitor {
             // TODO: addAnchor can set the initial angles
             self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
-            self.jointSuccess[joint] = false
         }
-        self.durations = []
-        for _ in 0..<targetStates.count {
-            self.durations.append(0)
+        
+        for targetState in targetStates {
+            self.stateSuccesses.append(StateSuccess(joints: Array(targetState.jointAngles.keys)))
         }
-        self.feedback = []
+        
+//        self.durations = []
+//        for _ in 0..<targetStates.count {
+//            self.durations.append(0)
+//        }
+//        self.feedback = []
     }
     
     func restart() {
@@ -100,61 +104,87 @@ class ActivityMonitor {
         index = -1
     }
     
-    func reset() {
-        index = 0
-        lastIndex = 0
-        targetIndex = 0
-        for i in 0..<durations.count {
-            durations[i] = 0
-        }
-        feedback = []
-        lastFeedback = TimeInterval()
-        repCount += 1
-        
-        for joint in jointSuccess.keys {
-            jointSuccess[joint] = false
+    func prettifyJointFailures(state : String, joints : [String]) -> String {
+        if joints.count == 0 {
+            return "Your joints didn't reach the \(state) state at the same time"
+        } else {
+            return "Your \(spokenListJoin(joints)) didn't reach the \(state) state"
         }
     }
     
     func completeRep() {
-        if success {
-            // Every three reps give feedback
-            if (repCount.isMultiple(of: 3)) {
+        // Find all the states that were never hit and the reason
+        var missedStates = [String]()
+        for i in 0..<targetStates.count {
+            let stateSuccess = stateSuccesses[i]
+            if stateSuccess.duration == 0 {
+                missedStates.append(prettifyJointFailures(state: targetStates[i].name, joints: Array(stateSuccess.jointFailures)))
+            }
+        }
+        
+        // Find all states that weren't held for long enough
+        var shortDurations = [String]()
+        for i in 0..<targetStates.count {
+            if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
+                shortDurations.append(targetStates[i].name)
+            }
+        }
+        
+        // Reset the success structs
+        for i in 0..<targetStates.count {
+            self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
+        }
+        
+        // Check for success by no feedback
+        if missedStates.count == 0 && shortDurations.count == 0 {
+            repCount += 1
+            if repCount % 3 == 1 {
                 speaker.speak(statement: speaker.rewards.randomElement()!)
             }
-            repCount += 1
-        } else {
-//            if feedback.count > 0 {
-//                // The state changed to -1 but returned to the current state immediately afterwards
-//                speaker.speak(statement: "Okay, but a bit wobbly.")
+            return
+        }
+        
+        if missedStates.count > 0 {
+            speaker.speak(statement: spokenListJoin(missedStates))
+        }
+        
+        if shortDurations.count == 1 {
+            speaker.speak(statement: "You didn't stay in the \(shortDurations[0]) state for long enough.")
+        } else if shortDurations.count > 1 {
+            speaker.speak(statement: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
+        }
+        
+//        if repSuccess {
+//            // Every three reps give feedback
+//            if (repCount.isMultiple(of: 3)) {
+//                speaker.speak(statement: speaker.rewards.randomElement()!)
+//            }
+//            repCount += 1
+//        } else {
+//            let totalFailedJoints = stateFailures.reduce(0, { x, y in x + y.count })
+//            if totalFailedJoints == 0 {
+//
+//            } else if totalFailedJoints > 4 {
+//                var missedStates = [String]()
+//                for i in 0..<stateFailures.count {
+//                    if stateFailures[i].count > 0 {
+//                        missedStates.append(targetStates[i].name)
+//                    }
+//                }
+//                speaker.speak(statement: "You didn't reach the " + spokenListJoin(missedStates) + " states.")
+//            } else {
+//                let spokenJoints = stateFailures.enumerated().map {
+//                    prettifyJointFailures(state: targetStates[$0.0].name, joints: Array($0.1))
+//                }
+//                speaker.speak(statement: spokenListJoin(spokenJoints))
 //            }
             
-            var missed = [String]()
-            for (joint, success) in jointSuccess {
-                if !success {
-                    missed.append(joint)
-                }
-            }
-            
-            if missed.count == 0 {
-                speaker.speak(statement: "Your joints didn't reach their targets at the same time.")
-            } else if missed.count == 1 {
-                speaker.speak(statement: "Your " + missed[0] + " didn't reach its target.")
-            } else {
-                var missedStr = "Your " + missed[0]
-                for i in 1..<missed.count - 1 {
-                    missedStr += ", " + missed[i]
-                }
-                missedStr += " and " + missed[missed.count - 1] + " joints didn't reach their targets."
-                speaker.speak(statement: missedStr)
-            }
-
-            feedback = []
-        }
-        success = true
-        for joint in jointSuccess.keys {
-            jointSuccess[joint] = false
-        }
+//            feedback = []
+//        }
+//        repSuccess = true
+//        for i in 0..<stateFailures.count {
+//            stateFailures[i] = []
+//        }
     }
     
     func coachingMode() {
@@ -216,7 +246,8 @@ class ActivityMonitor {
         
         // If the index hasn't changed then ignore
         if index != -1 && currentState.reaches(targetStates[index]) {
-            durations[index] += delta
+//            durations[index] += delta
+            stateSuccesses[index].duration += delta
             return
         }
 
@@ -224,7 +255,7 @@ class ActivityMonitor {
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
             print("return to previous")
             index = lastIndex
-            success = false
+//            repSuccess = false  TODO: What to put here?
             if index == 0 {
                 completeRep()
             }
@@ -259,20 +290,21 @@ class ActivityMonitor {
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
             index = targetIndex
-            durations[index] = 0 // or delta
-
-            let expectedDuration = targetStates[lastIndex].duration
-            if durations[lastIndex] < expectedDuration {
-                success = false
-                feedback.append("Stay in \(targetStates[lastIndex].name) state longer")
+            if index < lastIndex {
+                completeRep()
             }
-            
             lastIndex = index
             targetIndex = (targetIndex + 1) % targetStates.count
             
-            if index == 0 {
-                completeRep()
-            }
+            stateSuccesses[index].duration += delta
+            
+//            durations[index] = 0 // or delta     --- Reset inside completeRep
+//            let expectedDuration = targetStates[lastIndex].duration
+//            if durations[lastIndex] < expectedDuration {
+//                repSuccess = false
+//                feedback.append("Stay in \(targetStates[lastIndex].name) state longer")
+//            }
+            
             print("advanced to \(targetStates[index].name)")
             return
         }
@@ -281,38 +313,36 @@ class ActivityMonitor {
         for i in 1..<targetStates.count {
             // If we have reached a future state
             if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
-                // Update index variable
+                // Update index variables
                 index = (targetIndex + i) % targetStates.count
-                
-                print("jumped to \(index)")
-                
-                // If we did not arrive back at the last state we reached, add feedback for the missed states
-                if index != lastIndex {
-                    durations[index] = delta
-
-                    var missed = "Missed: \(targetStates[targetIndex].name)"
-                    for j in 1..<i {
-                        missed += " and " + targetStates[(targetIndex + j) % targetStates.count].name
-                    }
-                    feedback.append(missed)
-                    
-                    let expectedDuration = targetStates[lastIndex].duration
-                    if durations[lastIndex] < expectedDuration {
-                        feedback.append("You should stay in the \(targetStates[lastIndex].name) state longer.")
-                    }
-                } else {
-                    durations[index] += delta
-                }
-                
-                lastIndex = index
-                targetIndex = (index + 1) % targetStates.count
-
-                // The rep was not completed fully since we must have skipped a state
-                success = false
-                
-                if index == 0 {
+                if index < lastIndex {
                     completeRep()
                 }
+                lastIndex = index
+                targetIndex = (index + 1) % targetStates.count
+                
+                stateSuccesses[index].duration += delta
+                
+                // If we did not arrive back at the last state we reached, add feedback for the missed states
+//                if index != lastIndex {
+//                    durations[index] = delta
+//                    var missed = "Missed: \(targetStates[targetIndex].name)"
+//                    for j in 1..<i {
+//                        missed += " and " + targetStates[(targetIndex + j) % targetStates.count].name
+//                    }
+//                    feedback.append(missed)
+//
+//                    let expectedDuration = targetStates[lastIndex].duration
+//                    if durations[lastIndex] < expectedDuration {
+//                        feedback.append("You should stay in the \(targetStates[lastIndex].name) state longer.")
+//                    }
+//                } else {
+//                    durations[index] += delta
+//                }
+//                // The rep was not completed fully since we must have skipped a state
+//                repSuccess = false
+                
+                print("jumped to \(index)")
                 return
             }
         }
@@ -362,9 +392,9 @@ class ActivityMonitor {
     //            }
     //        }
         } else {
-            for joint in jointSuccess.keys {
+            for joint in targetStates[targetIndex].jointAngles.keys {
                 if !difference.keys.contains(joint) {
-                    jointSuccess[joint] = true
+                    stateSuccesses[targetIndex].jointFailures.remove(joint)
                 }
             }
         }
