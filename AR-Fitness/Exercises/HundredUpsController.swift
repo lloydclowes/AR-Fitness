@@ -69,6 +69,10 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
         return button
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        arView.session.pause()
+    }
+    
     override func viewDidLoad() {
         infoLabel.text = "Reps: 0"
         setupViews()

@@ -91,6 +91,10 @@ class SquatController: UIViewController, ARSessionDelegate {
         
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        arView.session.pause()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         arView.session.delegate = self

@@ -66,6 +66,10 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         return button
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        arView.session.pause()
+    }
+    
     override func viewDidLoad() {
         prevTime = Date().timeIntervalSince1970
         

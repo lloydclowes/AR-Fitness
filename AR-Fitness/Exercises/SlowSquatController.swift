@@ -33,6 +33,10 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
 
     var activityMonitor = ActivityMonitor()
 
+    override func viewDidDisappear(_ animated: Bool) {
+        arView.session.pause()
+    }
+    
     override func viewDidLoad() {
         setupViews()
     }
