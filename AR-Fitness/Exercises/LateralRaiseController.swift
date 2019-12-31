@@ -20,7 +20,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     let speaker = SpeechSynthesizer.globalSpeaker
     
     var activityMonitor = ActivityMonitor()
-    
+    var started = false
     var countedDown = false
     var halfReward = false
     var fiveReward = false
@@ -28,6 +28,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var label = "Hide"
     var startTime = TimeInterval()
     var prevTime = TimeInterval()
+    var waitingTime : TimeInterval? = nil
     
     var showRobot = false
     
@@ -87,6 +88,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
     }
+    
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
         self.label = (self.showRobot) ? "Hide" : "Show"
@@ -145,18 +147,26 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
+            if !countedDown {
+                speaker.countdown()
+                countedDown = true
+                waitingTime = Date().timeIntervalSince1970
+                
+            }
+            
             if !activityMonitor.started {
                 // TODO: every n seconds repeat "Please assume the start position"
                 return
             }
             
-            if !countedDown {
-                speaker.countdown()
+            if !started {
+                speaker.stopSpeaking()
                 startTime = Date().timeIntervalSince1970
-                countedDown = true
+                started = true
             }
+                
             
-            if curTime - startTime > 3 {
+            //if curTime - startTime > 3 {
                 infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
                 if !halfReward && round(activityMonitor.remainingDuration) <= 30 {
                     halfReward = true
@@ -171,7 +181,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     //                started = false
     //                halfReward = false
     //                fiveReward = false
-                }
+                //}
             }
         }
     }

@@ -65,4 +65,8 @@ class SpeechSynthesizer {
         speak(statement: "GO!")
     }
     
+    func stopSpeaking() {
+        self.speechSynthesizer?.stopSpeaking(at: AVSpeechBoundary.immediate)
+    }
+    
 }
