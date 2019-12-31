@@ -163,6 +163,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                 speaker.stopSpeaking()
                 startTime = Date().timeIntervalSince1970
                 started = true
+                speaker.speak(statement: "Keep this posture for 60 seconds!")
             }
                 
             
