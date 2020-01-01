@@ -33,13 +33,25 @@ struct EulerAngles: Codable, Hashable {
         self.z = z
     }
     
+    func magnitude() -> Float {
+        var mag = Float(0)
+        if let x1 = x {
+            mag += pow(x1, 2)
+        }
+        if let y1 = y {
+            mag += pow(y1, 2)
+        }
+        if let z1 = z {
+            mag += pow(z1, 2)
+        }
+        return sqrt(mag)
+    }
+    
     func difference(_ other : EulerAngles, _ tolerances : EulerAngles) -> EulerAngles {
         var dx : Float? = nil
         var dy : Float? = nil
         var dz : Float? = nil
         
-        // if tol < 0 && dx.sign > 0 -> nil
-        // if tol > 0 && dx.sign > 0 -> nil
         if let x1 = x {
             dx = x1 - (other.x ?? 0) + (tolerances.x ?? 0)
             if dx! >= 0 {
