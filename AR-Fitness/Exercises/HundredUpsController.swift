@@ -76,7 +76,7 @@ class HundredUpsController: UIViewController, ARSessionDelegate {
         let exercise = exerciseData[Exercises.hundredUps.rawValue]
         activityMonitor = ActivityMonitor(exercise.states)
         
-        self.recordingSession.startRecording()
+//        self.recordingSession.startRecording()
     }
     
     @IBAction func showInformation(sender: UIButton) {

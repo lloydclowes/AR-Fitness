@@ -53,20 +53,26 @@ struct EulerAngles: Codable, Hashable {
         var dz : Float? = nil
         
         if let x1 = x {
-            dx = x1 - (other.x ?? 0) + (tolerances.x ?? 0)
-            if dx! >= 0 {
+            let tol = tolerances.x!
+            let other = other.x!
+            dx = x1 + tol - other
+            if dx!.sign == tol.sign {
                 dx = nil
             }
         }
         if let y1 = y {
-            dy = y1 - (other.y ?? 0) + (tolerances.y ?? 0)
-            if dy! >= 0 {
+            let tol = tolerances.y!
+            let other = other.y!
+            dy = y1 + tol - other
+            if dy!.sign == tol.sign {
                 dy = nil
             }
         }
         if let z1 = z {
-            dz = z1 - (other.z ?? 0) + (tolerances.z ?? 0)
-            if dz! >= 0 {
+            let tol = tolerances.z!
+            let other = other.z!
+            dz = z1 + tol - other
+            if dz!.sign == tol.sign {
                 dz = nil
             }
         }
