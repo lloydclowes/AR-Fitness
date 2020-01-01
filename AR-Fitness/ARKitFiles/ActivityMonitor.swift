@@ -30,9 +30,6 @@ class ActivityMonitor {
     
     var stateSuccesses = [StateSuccess]()
     
-//    var feedback : [String]
-//    var durations : [Double]
-    
     var index = -1
     var lastIndex = 0
     var targetIndex = 0
@@ -55,9 +52,7 @@ class ActivityMonitor {
     }
     
     var remainingDuration : Double {
-        get { /* return max(0, targetStates[lastIndex].duration - durations[lastIndex]) */
-            return max(0, targetStates[lastIndex].duration - stateSuccesses[lastIndex].duration)
-        }
+        get { return max(0, targetStates[lastIndex].duration - stateSuccesses[lastIndex].duration) }
     }
     
     init() {
@@ -66,9 +61,6 @@ class ActivityMonitor {
         self.inCoachingMode = false
         self.coachingInfo = nil
         self.firstInstr = false
-                
-//        self.durations = []
-//        self.feedback = []
     }
 
     init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
@@ -91,12 +83,6 @@ class ActivityMonitor {
         for targetState in targetStates {
             self.stateSuccesses.append(StateSuccess(joints: Array(targetState.jointAngles.keys)))
         }
-        
-//        self.durations = []
-//        for _ in 0..<targetStates.count {
-//            self.durations.append(0)
-//        }
-//        self.feedback = []
     }
     
     func restart() {
@@ -117,7 +103,7 @@ class ActivityMonitor {
         var missedStates = [String]()
         for i in 0..<targetStates.count {
             let stateSuccess = stateSuccesses[i]
-            if stateSuccess.duration == 0 {
+            if stateSuccess.duration <= 0.1 {
                 missedStates.append(prettifyJointFailures(state: targetStates[i].name, joints: Array(stateSuccess.jointFailures)))
             }
         }
@@ -125,7 +111,7 @@ class ActivityMonitor {
         // Find all states that weren't held for long enough
         var shortDurations = [String]()
         for i in 0..<targetStates.count {
-            if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
+            if 0.1 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
                 shortDurations.append(targetStates[i].name)
             }
         }
@@ -153,38 +139,6 @@ class ActivityMonitor {
         } else if shortDurations.count > 1 {
             speaker.speak(statement: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
         }
-        
-//        if repSuccess {
-//            // Every three reps give feedback
-//            if (repCount.isMultiple(of: 3)) {
-//                speaker.speak(statement: speaker.rewards.randomElement()!)
-//            }
-//            repCount += 1
-//        } else {
-//            let totalFailedJoints = stateFailures.reduce(0, { x, y in x + y.count })
-//            if totalFailedJoints == 0 {
-//
-//            } else if totalFailedJoints > 4 {
-//                var missedStates = [String]()
-//                for i in 0..<stateFailures.count {
-//                    if stateFailures[i].count > 0 {
-//                        missedStates.append(targetStates[i].name)
-//                    }
-//                }
-//                speaker.speak(statement: "You didn't reach the " + spokenListJoin(missedStates) + " states.")
-//            } else {
-//                let spokenJoints = stateFailures.enumerated().map {
-//                    prettifyJointFailures(state: targetStates[$0.0].name, joints: Array($0.1))
-//                }
-//                speaker.speak(statement: spokenListJoin(spokenJoints))
-//            }
-            
-//            feedback = []
-//        }
-//        repSuccess = true
-//        for i in 0..<stateFailures.count {
-//            stateFailures[i] = []
-//        }
     }
     
     func coachingMode() {
@@ -246,7 +200,6 @@ class ActivityMonitor {
         
         // If the index hasn't changed then ignore
         if index != -1 && currentState.reaches(targetStates[index]) {
-//            durations[index] += delta
             stateSuccesses[index].duration += delta
             return
         }
@@ -255,7 +208,6 @@ class ActivityMonitor {
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
             print("return to previous")
             index = lastIndex
-//            repSuccess = false  TODO: What to put here?
             if index == 0 {
                 completeRep()
             }
@@ -274,8 +226,6 @@ class ActivityMonitor {
                 print("TOO FAST!!")
             }
             if stillTurning {
-//                print("stopped turning")
-//                print(res.1)
                 stillTurning = false
                 index = -1
             }
@@ -298,13 +248,6 @@ class ActivityMonitor {
             
             stateSuccesses[index].duration += delta
             
-//            durations[index] = 0 // or delta     --- Reset inside completeRep
-//            let expectedDuration = targetStates[lastIndex].duration
-//            if durations[lastIndex] < expectedDuration {
-//                repSuccess = false
-//                feedback.append("Stay in \(targetStates[lastIndex].name) state longer")
-//            }
-            
             print("advanced to \(targetStates[index].name)")
             return
         }
@@ -322,25 +265,6 @@ class ActivityMonitor {
                 targetIndex = (index + 1) % targetStates.count
                 
                 stateSuccesses[index].duration += delta
-                
-                // If we did not arrive back at the last state we reached, add feedback for the missed states
-//                if index != lastIndex {
-//                    durations[index] = delta
-//                    var missed = "Missed: \(targetStates[targetIndex].name)"
-//                    for j in 1..<i {
-//                        missed += " and " + targetStates[(targetIndex + j) % targetStates.count].name
-//                    }
-//                    feedback.append(missed)
-//
-//                    let expectedDuration = targetStates[lastIndex].duration
-//                    if durations[lastIndex] < expectedDuration {
-//                        feedback.append("You should stay in the \(targetStates[lastIndex].name) state longer.")
-//                    }
-//                } else {
-//                    durations[index] += delta
-//                }
-//                // The rep was not completed fully since we must have skipped a state
-//                repSuccess = false
                 
                 print("jumped to \(index)")
                 return
@@ -393,7 +317,7 @@ class ActivityMonitor {
     //        }
         } else {
             for joint in targetStates[targetIndex].jointAngles.keys {
-                if !difference.keys.contains(joint) {
+                if !difference.keys.contains(joint) && stateSuccesses[targetIndex].jointFailures.contains(joint) {
                     stateSuccesses[targetIndex].jointFailures.remove(joint)
                 }
             }

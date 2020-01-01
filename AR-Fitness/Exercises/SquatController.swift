@@ -18,6 +18,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     let characterOffset: SIMD3<Float> = [0, 0, 0]
     let characterAnchor = AnchorEntity()
     
+    var startTime = Double.greatestFiniteMagnitude
     var uploaded = false
     let recordingSession = RecordingSession()
     
@@ -76,6 +77,8 @@ class SquatController: UIViewController, ARSessionDelegate {
         
         let exercise = exerciseData[Exercises.squat.rawValue]
         self.activityMonitor = ActivityMonitor(exercise.states)
+        
+//        self.recordingSession.startRecording()
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -133,6 +136,7 @@ class SquatController: UIViewController, ARSessionDelegate {
                 
 //        self.recordingSession.startRecording()
         self.prevTime = Date().timeIntervalSince1970
+        self.startTime = Date().timeIntervalSince1970
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -156,6 +160,13 @@ class SquatController: UIViewController, ARSessionDelegate {
                 // TODO: every n seconds repeat "Please assume the start position"
                 return
             }
+            
+//            self.recordingSession.poll(activityMonitor.currentState)
+//            if curTime - startTime > 10 {
+//                print("uploading")
+//                self.recordingSession.upload()
+//                startTime = curTime
+//            }
             
             let reps = activityMonitor.repCount
             self.infoLabel.text = "Reps: \(reps)"
