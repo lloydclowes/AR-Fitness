@@ -11,7 +11,6 @@ import ARKit
 
 class ActivityMonitor {
     
-    let useTurningPoints : Bool
     let inCoachingMode : Bool
     var firstInstr : Bool
     var times = 0
@@ -24,6 +23,7 @@ class ActivityMonitor {
     
     var started = false
     
+    let startState : TargetState
     let targetStates : [TargetState]
     var currentState = ActivityState()
     var prevState = ActivityState()
@@ -57,18 +57,18 @@ class ActivityMonitor {
     }
     
     init() {
+        self.startState = TargetState("START")
         self.targetStates = []
-        self.useTurningPoints = false
         self.inCoachingMode = false
         self.coachingInfo = nil
         self.firstInstr = false
     }
 
-    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
-        self.targetStates = targetStates
+    init(start : TargetState, states : [TargetState], coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
+        self.startState = start
+        self.targetStates = states
         self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
-        self.useTurningPoints = useTurningPoints
         self.inCoachingMode = coachingMode
         self.coachingInfo = coachingInfo
         
@@ -192,7 +192,7 @@ class ActivityMonitor {
     func updateIndex(_ delta : Double) {
         // If we haven't started yet, check if we have reached the start state
         if !started {
-            if currentState.reaches(targetStates[0]) {
+            if currentState.reaches(startState) {
                 print("START")
                 started = true
                 index = 0

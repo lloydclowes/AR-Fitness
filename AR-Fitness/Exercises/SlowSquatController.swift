@@ -73,7 +73,8 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
             }
         })
         
-        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true, coachingMode: true, coachingInfo: exerciseData[1].coachMode)
+        let exercise = exerciseData[Exercises.squat.rawValue]
+        self.activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states, coachingMode: true, coachingInfo: exercise.coachMode)
         
         self.recordingSession.startRecording()
         speaker.enableSpeech()
@@ -94,9 +95,7 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
             characterAnchor.isEnabled = showRobot
             
             activityMonitor.updateState(bodyAnchor)
-            
-            
-            
+
 //            self.recordingSession.poll(activityMonitor.currentState, ActivityState())
         }
     }

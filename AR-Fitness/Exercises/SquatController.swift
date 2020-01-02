@@ -76,7 +76,7 @@ class SquatController: UIViewController, ARSessionDelegate {
         setupViews()
         
         let exercise = exerciseData[Exercises.squat.rawValue]
-        self.activityMonitor = ActivityMonitor(exercise.states)
+        self.activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states)
         
 //        self.recordingSession.startRecording()
     }
