@@ -1,7 +1,6 @@
 CODE TODO:
 'See Info' should update live
 Make feedback frequency (in reps) customisable
-change check for index == 0 to completeRep to be if index < lastIndex
 
 Tolerances have an enum to describe whether it is +ve, -ve or absolute
 i.e. whether it allows you to be above the target, below it or around it
