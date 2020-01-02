@@ -14,6 +14,7 @@ enum Exercises : Int {
     case lateralRaise
     case squat
     case hundredUps
+    case jumpingJacks
 }
 
 func load<T: Decodable>(_ filename: String) -> T {

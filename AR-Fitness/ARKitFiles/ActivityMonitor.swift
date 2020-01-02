@@ -184,6 +184,8 @@ class ActivityMonitor {
         prevState = currentState
         let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
         currentState.update(newAngles, dema, 1.0)
+        //print(newAngles)
+        print(currentStateName)
         
         // If we haven't started yet, check if we have reached the start state
         if !started {
