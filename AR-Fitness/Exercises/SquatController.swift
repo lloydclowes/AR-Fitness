@@ -26,7 +26,7 @@ class SquatController: UIViewController, ARSessionDelegate {
     var counter = 0
     let speaker = SpeechSynthesizer.globalSpeaker
     var rewarded = false
-    
+    var timer = Timer()
     var prevTime = TimeInterval()
     
     var showRobot = true
@@ -135,6 +135,8 @@ class SquatController: UIViewController, ARSessionDelegate {
 //        self.recordingSession.startRecording()
         self.prevTime = Date().timeIntervalSince1970
         self.startTime = Date().timeIntervalSince1970
+        self.runTimer()
+        
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -179,8 +181,12 @@ class SquatController: UIViewController, ARSessionDelegate {
         }
     }
     
-    @objc func timerAction() {
+    @objc func updateTimer() {
         counter += 1
+    }
+    
+    func runTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(self.updateTimer)), userInfo: nil, repeats: true)
     }
     
     func setupViews() {
