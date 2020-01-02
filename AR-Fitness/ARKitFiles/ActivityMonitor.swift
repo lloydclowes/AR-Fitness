@@ -11,7 +11,6 @@ import ARKit
 
 class ActivityMonitor {
     
-    let useTurningPoints : Bool
     let inCoachingMode : Bool
     var firstInstr : Bool
     var times = 0
@@ -24,6 +23,7 @@ class ActivityMonitor {
     
     var started = false
     
+    let startState : TargetState
     let targetStates : [TargetState]
     var currentState = ActivityState()
     var prevState = ActivityState()
@@ -32,6 +32,7 @@ class ActivityMonitor {
     
     var index = -1
     var lastIndex = 0
+    var lastArrived = TimeInterval()
     var targetIndex = 0
     var repCount = 0
     
@@ -56,18 +57,18 @@ class ActivityMonitor {
     }
     
     init() {
+        self.startState = TargetState("START")
         self.targetStates = []
-        self.useTurningPoints = false
         self.inCoachingMode = false
         self.coachingInfo = nil
         self.firstInstr = false
     }
 
-    init(_ targetStates : [TargetState], useTurningPoints : Bool = false, coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
-        self.targetStates = targetStates
+    init(start : TargetState, states : [TargetState], coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
+        self.startState = start
+        self.targetStates = states
         self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
-        self.useTurningPoints = useTurningPoints
         self.inCoachingMode = coachingMode
         self.coachingInfo = coachingInfo
         
@@ -103,7 +104,7 @@ class ActivityMonitor {
         var missedStates = [String]()
         for i in 0..<targetStates.count {
             let stateSuccess = stateSuccesses[i]
-            if stateSuccess.duration <= 0.1 {
+            if stateSuccess.duration == 0 {
                 missedStates.append(prettifyJointFailures(state: targetStates[i].name, joints: Array(stateSuccess.jointFailures)))
             }
         }
@@ -111,7 +112,7 @@ class ActivityMonitor {
         // Find all states that weren't held for long enough
         var shortDurations = [String]()
         for i in 0..<targetStates.count {
-            if 0.1 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
+            if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
                 shortDurations.append(targetStates[i].name)
             }
         }
@@ -124,6 +125,7 @@ class ActivityMonitor {
         // Check for success by no feedback
         if missedStates.count == 0 && shortDurations.count == 0 {
             repCount += 1
+            print("success")
             if repCount % 3 == 1 {
                 speaker.speak(statement: speaker.rewards.randomElement()!)
             }
@@ -190,7 +192,7 @@ class ActivityMonitor {
     func updateIndex(_ delta : Double) {
         // If we haven't started yet, check if we have reached the start state
         if !started {
-            if currentState.reaches(targetStates[0]) {
+            if currentState.reaches(startState) {
                 print("START")
                 started = true
                 index = 0
@@ -198,19 +200,24 @@ class ActivityMonitor {
             return
         }
         
+        let curTime = Date().timeIntervalSince1970
+        
         // If the index hasn't changed then ignore
         if index != -1 && currentState.reaches(targetStates[index]) {
+            lastArrived = curTime
             stateSuccesses[index].duration += delta
+//            print("remain")
             return
         }
 
         // If we returned to the same state as before, resume
         if index == -1 && currentState.reaches(targetStates[lastIndex]) {
-            print("return to previous")
             index = lastIndex
-            if index == 0 {
+            if curTime - lastArrived > 0.1 && index == 0 {
                 completeRep()
             }
+            lastArrived = curTime
+            print("return to \(index)")
             return
         }
         
@@ -222,7 +229,7 @@ class ActivityMonitor {
                 stillTurning = true
             }
         } else {
-            if currentState.getMaxSpeed() > 20 {
+            if currentState.getMaxSpeed() > 30 {
                 print("TOO FAST!!")
             }
             if stillTurning {
@@ -240,13 +247,14 @@ class ActivityMonitor {
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
             index = targetIndex
+            stateSuccesses[index].duration += delta
             if index < lastIndex {
                 completeRep()
             }
-            lastIndex = index
-            targetIndex = (targetIndex + 1) % targetStates.count
             
-            stateSuccesses[index].duration += delta
+            lastIndex = index
+            lastArrived = curTime
+            targetIndex = (targetIndex + 1) % targetStates.count
             
             print("advanced to \(targetStates[index].name)")
             return
@@ -258,13 +266,14 @@ class ActivityMonitor {
             if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
                 // Update index variables
                 index = (targetIndex + i) % targetStates.count
+                stateSuccesses[index].duration += delta
                 if index < lastIndex {
                     completeRep()
                 }
-                lastIndex = index
-                targetIndex = (index + 1) % targetStates.count
                 
-                stateSuccesses[index].duration += delta
+                lastIndex = index
+                lastArrived = curTime
+                targetIndex = (index + 1) % targetStates.count
                 
                 print("jumped to \(index)")
                 return
@@ -316,11 +325,16 @@ class ActivityMonitor {
     //            }
     //        }
         } else {
+//            print("-- start --")
             for joint in targetStates[targetIndex].jointAngles.keys {
-                if !difference.keys.contains(joint) && stateSuccesses[targetIndex].jointFailures.contains(joint) {
+                if !difference.keys.contains(joint) {
+//                    print("reached \(joint)")
                     stateSuccesses[targetIndex].jointFailures.remove(joint)
+                } else {
+//                    print("d_\(joint): \(difference[joint]!)")
                 }
             }
+//            print("-- end --")
         }
     }
 }
