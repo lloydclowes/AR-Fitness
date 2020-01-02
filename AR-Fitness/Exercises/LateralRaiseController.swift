@@ -75,7 +75,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         prevTime = Date().timeIntervalSince1970
         
         let exercise = exerciseData[Exercises.lateralRaise.rawValue]
-        activityMonitor = ActivityMonitor(exercise.states)
+        activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states)
         infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
         
         setupViews()
@@ -107,8 +107,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
 
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
-        arView.session.run(configuration)
+        configuration.environmentTexturing = .none
         
+        arView.session.run(configuration)
         arView.scene.addAnchor(characterAnchor)
         
         // Asynchronously load the 3D character.
@@ -186,59 +187,6 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             }
         }
     }
-            
-            // TODO: swap 1 for startIndex
-//            if activityMonitor.index != 1 {
-//                timer.invalidate()
-//            }
-//
-//            if (!started && startState.reachedBy(activityMonitor.currentState)) {
-//                speaker.countdown()
-//                started = true
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-//                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//                    RunLoop.current.add(self.timer, forMode: .common)
-//                }
-//            }
-//
-//            if (started && delta > 2.0) {
-//                prevTime = curTime
-//                let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
-//                let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
-//
-//                let lowerTol: Float = 10.0
-//                let upperTol: Float = -10.0
-//
-//                var left = 0
-//                var right = 0
-//                if (anglesLeft.y?.sign == .plus && anglesLeft.y! > lowerTol) {
-//                    left = -1
-//                } else if (anglesLeft.y?.sign == .minus && anglesLeft.y! < upperTol) {
-//                    left = 1
-//                }
-//
-//                if (anglesRight.y?.sign == .plus && anglesRight.y! > lowerTol) {
-//                    right = -1
-//                } else if (anglesRight.y?.sign == .minus &&  anglesRight.y! < upperTol ) {
-//                    right = 1
-//                }
-//
-//                var phrase = ""
-//                if left != 0 {
-//                    phrase = "Please \(left == -1 ? "raise" : "lower") your left arm"
-//                }
-//                if right != 0 {
-//                    let dir = left == -1 ? "raise" : "lower"
-//                    if phrase == "" {
-//                        phrase = "Please \(dir) your right arm"
-//                    } else {
-//                        phrase += " and \(dir) your right arm"
-//                    }
-//                }
-//
-//                if phrase != "" {
-//                    speaker.speak(statement: phrase)
-//                }
     
     func setupViews() {
         let button = infoButton()

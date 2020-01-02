@@ -9,7 +9,30 @@
     ],
     "className": "LateralRaiseController",
     "duration": "1:00",
-    "startState": "UP",
+    "startState": {
+      "name": "START",
+      "duration": 60.0,
+      "jointAngles": {
+        "jointAngles": {
+          "left_arm_joint": {
+            "y": 0
+          },
+          "right_arm_joint": {
+            "y": 0
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "left_arm_joint": {
+            "y": 0.75
+          },
+          "right_arm_joint": {
+            "y": 0.75
+          }
+        }
+      }
+    },
     "states": [
       {
         "name": "UP",
@@ -53,7 +76,42 @@
     "equipment": [],
     "className": "SquatController",
     "duration": "1:00",
-    "startState": "UP",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "left_upLeg_joint": {
+            "y": 0
+          },
+          "right_upLeg_joint": {
+            "y": 0
+          },
+          "left_leg_joint": {
+            "z": 15
+          },
+          "right_leg_joint": {
+            "z": 15
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "left_upLeg_joint": {
+            "y": -20
+          },
+          "right_upLeg_joint": {
+            "y": 20
+          },
+          "left_leg_joint": {
+            "z": 25
+          },
+          "right_leg_joint": {
+            "z": 25
+          }
+        }
+      }
+    },
     "states": [
       {
         "name": "UP",
@@ -61,26 +119,26 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": -90
+              "y": 0
             },
             "right_upLeg_joint": {
-              "z": 90
+              "y": 0
             },
             "left_leg_joint": {
-              "z": 25
+              "z": 15
             },
             "right_leg_joint": {
-              "z": 25
+              "z": 15
             }
           }
         },
         "tolerances": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": 20
+              "y": -20
             },
             "right_upLeg_joint": {
-              "z": -20
+              "y": 20
             },
             "left_leg_joint": {
               "z": 25
@@ -97,10 +155,10 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": 0
+              "y": -80
             },
             "right_upLeg_joint": {
-              "z": 0
+              "y": 80
             },
             "left_leg_joint": {
               "z": 90
@@ -113,16 +171,16 @@
         "tolerances": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "z": -20
+              "y": 25
             },
             "right_upLeg_joint": {
-              "z": 20
+              "y": -25
             },
             "left_leg_joint": {
-              "z": -15
+              "z": -20
             },
             "right_leg_joint": {
-              "z": -15
+              "z": -20
             }
           }
         }
@@ -134,100 +192,6 @@
         "stateInstructions": [
             "Stand up with your back straight",
             "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
-        ]
-    }
-  },
-  {
-    "name": "Hundred Ups",
-    "id": 6,
-    "muscleGroup": "Legs",
-    "intensity": "High",
-    "equipment": [],
-    "className": "HundredUpsController",
-    "duration": "1:00",
-    "startState": "DOWN-1",
-    "states": [
-      {
-        "name": "LEFT",
-        "duration": 0.0,
-        "jointAngles": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": -80
-            },
-            "left_leg_joint": {
-              "z": 90
-            },
-            "right_upLeg_joint": {
-              "y": 0
-            },
-            "right_leg_joint": {
-              "z": 20
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": 20
-            },
-            "left_leg_joint": {
-              "z": -10
-            },
-            "right_upLeg_joint": {
-              "y": 15
-            },
-            "right_leg_joint": {
-              "z": 15
-            }
-          }
-        }
-      },
-      {
-        "name": "RIGHT",
-        "duration": 0.0,
-        "jointAngles": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": 0
-            },
-            "left_leg_joint": {
-              "z": 20
-            },
-            "right_upLeg_joint": {
-              "y": 80
-            },
-            "right_leg_joint": {
-              "z": 90
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": -15
-            },
-            "left_leg_joint": {
-              "z": 15
-            },
-            "right_upLeg_joint": {
-              "y": -20
-            },
-            "right_leg_joint": {
-              "z": -10
-            }
-          }
-        }
-      }
-    ],
-    "coachMode": {
-        "transitionDuration": 2,
-        "stateDuration" : 1,
-        "stateInstructions": [
-            "Stand up with your back straight",
-            "Raise your left leg in a ninety degree angle",
-            "Stand up with your back straight",
-            "Raise your right leg in a ninety degree angle",
         ]
     }
   }

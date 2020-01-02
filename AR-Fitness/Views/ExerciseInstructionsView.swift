@@ -34,8 +34,6 @@ struct ExerciseInstructionControllerContainer: UIViewControllerRepresentable {
             return LateralRaiseController()
         case "Squats":
             return SlowSquatController()
-        case "Hundred Ups":
-            return HundredUpsController()
         default:
             return SquatController()
         }
