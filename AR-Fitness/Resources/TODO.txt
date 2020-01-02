@@ -1,5 +1,4 @@
 CODE TODO:
-'See Info' should update live
 Make feedback frequency (in reps) customisable
 
 Tolerances have an enum to describe whether it is +ve, -ve or absolute
