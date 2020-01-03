@@ -13,7 +13,6 @@ let exerciseData: [Exercise] = load("exerciseData.json")
 enum Exercises : Int {
     case lateralRaise
     case squat
-    case hundredUps
     case jumpingJacks
 }
 

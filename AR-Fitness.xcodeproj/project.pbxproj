@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1811475D23BB789900456876 /* StateSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1811475C23BB789900456876 /* StateSuccess.swift */; };
 		185F1C78238557F8005CF226 /* TargetState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C77238557F8005CF226 /* TargetState.swift */; };
 		185F1C9023857E03005CF226 /* RecordingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C8B23857E03005CF226 /* RecordingSession.swift */; };
 		185F1C9223857E03005CF226 /* JSONDataExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185F1C8D23857E03005CF226 /* JSONDataExporter.swift */; };
@@ -14,6 +15,9 @@
 		187B5358238D7DC7008C4CF0 /* PeakFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187B5357238D7DC7008C4CF0 /* PeakFinder.swift */; };
 		189D135023917CE9006F9030 /* JointAngles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189D134F23917CE9006F9030 /* JointAngles.swift */; };
 		18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF1B64238E6CD200CDFC2D /* StateHistory.swift */; };
+		18EC275323BE56DE00EE53AD /* JointUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275223BE56DE00EE53AD /* JointUtilities.swift */; };
+		18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275623BF929E00EE53AD /* JointFeedback.swift */; };
+		18EC275B23BF9DBD00EE53AD /* JumpingJackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275A23BF9DBC00EE53AD /* JumpingJackController.swift */; };
 		18F22906238ECEE900D7FE92 /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 18F22905238ECEE900D7FE92 /* TODO.txt */; };
 		6739F178238FC4A5000F6B18 /* InfoPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6739F177238FC4A5000F6B18 /* InfoPage.swift */; };
 		6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6739F179238FDF50000F6B18 /* ExerciseInstructionsView.swift */; };
@@ -29,7 +33,6 @@
 		6E4195CC236622D20093FDD1 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4195CB236622D20093FDD1 /* Data.swift */; };
 		6E4195CE2366EDD00093FDD1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4195CD2366EDD00093FDD1 /* SettingsView.swift */; };
 		6E4292DD2381E11C00CE0B38 /* SquatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4292DC2381E11C00CE0B38 /* SquatController.swift */; };
-		6E4292DF2381FF4600CE0B38 /* HundredUpsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4292DE2381FF4600CE0B38 /* HundredUpsController.swift */; };
 		6E438043235A197A001A557A /* ExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E438042235A197A001A557A /* ExerciseDetailView.swift */; };
 		6E438047235A1F82001A557A /* exerciseData.json in Resources */ = {isa = PBXBuildFile; fileRef = 6E438046235A1F82001A557A /* exerciseData.json */; };
 		6E43804C235A4EE2001A557A /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E43804B235A4EE2001A557A /* Exercise.swift */; };
@@ -50,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1811475C23BB789900456876 /* StateSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateSuccess.swift; sourceTree = "<group>"; };
 		185F1C77238557F8005CF226 /* TargetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetState.swift; sourceTree = "<group>"; };
 		185F1C8B23857E03005CF226 /* RecordingSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecordingSession.swift; path = "../AR-Fitness/Recorder/RecordingSession.swift"; sourceTree = "<group>"; };
 		185F1C8D23857E03005CF226 /* JSONDataExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONDataExporter.swift; path = "../AR-Fitness/Recorder/JSONDataExporter.swift"; sourceTree = "<group>"; };
@@ -57,6 +61,9 @@
 		187B5357238D7DC7008C4CF0 /* PeakFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeakFinder.swift; sourceTree = "<group>"; };
 		189D134F23917CE9006F9030 /* JointAngles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointAngles.swift; sourceTree = "<group>"; };
 		18DF1B64238E6CD200CDFC2D /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
+		18EC275223BE56DE00EE53AD /* JointUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JointUtilities.swift; sourceTree = "<group>"; };
+		18EC275623BF929E00EE53AD /* JointFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointFeedback.swift; sourceTree = "<group>"; };
+		18EC275A23BF9DBC00EE53AD /* JumpingJackController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JumpingJackController.swift; sourceTree = "<group>"; };
 		18F22905238ECEE900D7FE92 /* TODO.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		6739F177238FC4A5000F6B18 /* InfoPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoPage.swift; sourceTree = "<group>"; };
 		6739F179238FDF50000F6B18 /* ExerciseInstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseInstructionsView.swift; sourceTree = "<group>"; };
@@ -72,7 +79,6 @@
 		6E4195CB236622D20093FDD1 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		6E4195CD2366EDD00093FDD1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		6E4292DC2381E11C00CE0B38 /* SquatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquatController.swift; sourceTree = "<group>"; };
-		6E4292DE2381FF4600CE0B38 /* HundredUpsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HundredUpsController.swift; sourceTree = "<group>"; };
 		6E438042235A197A001A557A /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
 		6E438046235A1F82001A557A /* exerciseData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = exerciseData.json; sourceTree = "<group>"; };
 		6E43804B235A4EE2001A557A /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
@@ -131,7 +137,9 @@
 				6E30CA91236A35C100AADAF2 /* EulerAngles.swift */,
 				6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */,
 				189D134F23917CE9006F9030 /* JointAngles.swift */,
+				18EC275623BF929E00EE53AD /* JointFeedback.swift */,
 				18DF1B64238E6CD200CDFC2D /* StateHistory.swift */,
+				1811475C23BB789900456876 /* StateSuccess.swift */,
 				185F1C77238557F8005CF226 /* TargetState.swift */,
 				6E30CA8D236A358800AADAF2 /* Utilities.swift */,
 			);
@@ -141,9 +149,9 @@
 		6E3277362379BD1100C700C9 /* Exercises */ = {
 			isa = PBXGroup;
 			children = (
+				18EC275A23BF9DBC00EE53AD /* JumpingJackController.swift */,
 				6E32773A2379D2F200C700C9 /* LateralRaiseController.swift */,
 				6E4292DC2381E11C00CE0B38 /* SquatController.swift */,
-				6E4292DE2381FF4600CE0B38 /* HundredUpsController.swift */,
 				67CF915523940BAB0088DA8F /* SlowSquatController.swift */,
 			);
 			path = Exercises;
@@ -152,6 +160,7 @@
 		6E3277372379BF1700C700C9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				18EC275223BE56DE00EE53AD /* JointUtilities.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -334,8 +343,8 @@
 				6E4195CE2366EDD00093FDD1 /* SettingsView.swift in Sources */,
 				678F070D235B935F00CE5AC6 /* ExerciseRowView.swift in Sources */,
 				185F1C78238557F8005CF226 /* TargetState.swift in Sources */,
+				18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */,
 				6EAF45C1236AE6E500710465 /* ARUIView.swift in Sources */,
-				6E4292DF2381FF4600CE0B38 /* HundredUpsController.swift in Sources */,
 				6E438043235A197A001A557A /* ExerciseDetailView.swift in Sources */,
 				6739F178238FC4A5000F6B18 /* InfoPage.swift in Sources */,
 				6E3277392379BF2300C700C9 /* SpeechSynthesizer.swift in Sources */,
@@ -348,10 +357,13 @@
 				6E30CA92236A35C100AADAF2 /* EulerAngles.swift in Sources */,
 				67FB2C2F235E208600AD0CD2 /* MainPageView.swift in Sources */,
 				189D135023917CE9006F9030 /* JointAngles.swift in Sources */,
+				18EC275B23BF9DBD00EE53AD /* JumpingJackController.swift in Sources */,
 				6EAF45C3236AE8D900710465 /* GetJointAnglesExtension.swift in Sources */,
+				18EC275323BE56DE00EE53AD /* JointUtilities.swift in Sources */,
 				6E43804C235A4EE2001A557A /* Exercise.swift in Sources */,
 				6E86FC8E236332F500810FE6 /* MuscleGroupsList.swift in Sources */,
 				185F1C9023857E03005CF226 /* RecordingSession.swift in Sources */,
+				1811475D23BB789900456876 /* StateSuccess.swift in Sources */,
 				185F1C9223857E03005CF226 /* JSONDataExporter.swift in Sources */,
 				6E9004E6235A086E0070AECC /* IntensityButtonView.swift in Sources */,
 				6E32773B2379D2F200C700C9 /* LateralRaiseController.swift in Sources */,
@@ -502,14 +514,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AR-Fitness/Preview Content\"";
-				DEVELOPMENT_TEAM = 8D9PAKRRB8;
+				DEVELOPMENT_TEAM = X6QU5C9KQ5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "AR-Fitness/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "blancatebar.AR-Fitness";
+				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.AR-Fitness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -522,14 +534,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AR-Fitness/Preview Content\"";
-				DEVELOPMENT_TEAM = 8D9PAKRRB8;
+				DEVELOPMENT_TEAM = X6QU5C9KQ5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "AR-Fitness/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "blancatebar.AR-Fitness";
+				PRODUCT_BUNDLE_IDENTIFIER = "brandon4bz.AR-Fitness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

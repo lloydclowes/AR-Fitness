@@ -25,10 +25,14 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     private var player: AVAudioPlayer?
     private var completionHandler: (() -> Void)?
     
+    func speak(statement: String) {
+        speak(text: statement) {}
+    }
+    
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
-        guard !self.busy else {
-            print("Speech Service busy")
-            return
+        
+        if speechServiceIsBusy() {
+            cutOffSpeech()
         }
         
         self.busy = true
@@ -64,6 +68,23 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
                 self.player!.play()
             }
         }
+    }
+    
+    func speechServiceIsBusy() -> Bool {
+        return self.busy
+    }
+    
+    // Returns false if nothing is currently being said; true if the speech was cut off
+    @discardableResult
+    func cutOffSpeech() -> Bool {
+        
+        if !speechServiceIsBusy() {
+            return false
+        }
+        
+        self.player?.stop()
+        return true
+        
     }
     
     private func buildPostData(text: String, voiceType: VoiceType) -> Data {

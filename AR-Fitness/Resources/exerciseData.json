@@ -1,309 +1,452 @@
-        [
-          {
-            "name": "Lateral Raises",
-            "id": 5,
-            "muscleGroup": "Arms",
-            "intensity": "Low",
-            "equipment": [
-              "Dumbbells"
-            ],
-            "className": "LateralRaiseController",
-            "duration": "1:00",
-            "startState": "UP",
-            "states": [
-              {
-                "name": "UP",
-                "duration": 60.0,
-                "jointAngles": {
-                  "jointAngles": {
-                    "left_arm_joint": {
-                      "y": 0
-                    },
-                    "right_arm_joint": {
-                      "y": 0
-                    }
-                  }
-                },
-                "tolerances": {
-                  "jointAngles": {
-                    "left_arm_joint": {
-                      "y": 0.75
-                    },
-                    "right_arm_joint": {
-                      "y": 0.75
-                    }
-                  }
-                }
-              }
-            ],
-            "coachMode": {
-                "transitionDuration": 2,
-                "stateDuration" : 5,
-                "stateInstructions": [
-                    "Stand up with your back straight",
-                    "Raise your arms and keep them parallel to the floor."
-                ]
-            }
+[
+  {
+    "name": "Lateral Raises",
+    "id": 5,
+    "muscleGroup": "Arms",
+    "intensity": "Low",
+    "equipment": [
+      "Dumbbells"
+    ],
+    "className": "LateralRaiseController",
+    "duration": "1:00",
+    "startMessage": "For this exercise you should stand upright with your arms out straight to the side so that your body forms a T shape.",
+    "startState": {
+      "name": "START",
+      "duration": 20,
+      "jointAngles": {
+        "jointAngles": {
+          "left_arm_joint": {
+            "y": 0
           },
-          {
-            "name": "Squats",
-            "id": 3,
-            "muscleGroup": "Legs",
-            "intensity": "High",
-            "equipment": [],
-            "className": "SquatController",
-            "duration": "1:00",
-            "startState": "UP",
-            "states": [
-              {
-                "name": "UP",
-                "duration": 0,
-                "jointAngles": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "z": -90
-                    },
-                    "right_upLeg_joint": {
-                      "z": 90
-                    },
-                    "left_leg_joint": {
-                      "z": 25
-                    },
-                    "right_leg_joint": {
-                      "z": 25
-                    }
-                  }
-                },
-                "tolerances": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "z": 20
-                    },
-                    "right_upLeg_joint": {
-                      "z": -20
-                    },
-                    "left_leg_joint": {
-                      "z": 25
-                    },
-                    "right_leg_joint": {
-                      "z": 25
-                    }
-                  }
-                }
-              },
-              {
-                "name": "DOWN",
-                "duration": 0,
-                "jointAngles": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "z": 0
-                    },
-                    "right_upLeg_joint": {
-                      "z": 0
-                    },
-                    "left_leg_joint": {
-                      "z": 90
-                    },
-                    "right_leg_joint": {
-                      "z": 90
-                    }
-                  }
-                },
-                "tolerances": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "z": -20
-                    },
-                    "right_upLeg_joint": {
-                      "z": 20
-                    },
-                    "left_leg_joint": {
-                      "z": -15
-                    },
-                    "right_leg_joint": {
-                      "z": -15
-                    }
-                  }
-                }
-              }
-            ],
-            "coachMode": {
-                "transitionDuration": 2,
-                "stateDuration" : 1,
-                "stateInstructions": [
-                    "Stand up with your back straight",
-                    "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
-                ]
-            }
+          "right_arm_joint": {
+            "y": 0
           },
-          {
-            "name": "Hundred Ups",
-            "id": 6,
-            "muscleGroup": "Legs",
-            "intensity": "High",
-            "equipment": [],
-            "className": "HundredUpsController",
-            "duration": "1:00",
-            "startState": "DOWN-1",
-            "states": [
-              {
-                "name": "LEFT",
-                "duration": 0.0,
-                "jointAngles": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "y": -80
-                    },
-                    "left_leg_joint": {
-                      "z": 90
-                    },
-                    "right_upLeg_joint": {
-                      "y": 0
-                    },
-                    "right_leg_joint": {
-                      "z": 20
-                    }
-                  }
-                },
-                "tolerances": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "y": 20
-                    },
-                    "left_leg_joint": {
-                      "z": -10
-                    },
-                    "right_upLeg_joint": {
-                      "y": 15
-                    },
-                    "right_leg_joint": {
-                      "z": 15
-                    }
-                  }
-                }
-              },
-              {
-                "name": "RIGHT",
-                "duration": 0.0,
-                "jointAngles": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "y": 0
-                    },
-                    "left_leg_joint": {
-                      "z": 20
-                    },
-                    "right_upLeg_joint": {
-                      "y": 80
-                    },
-                    "right_leg_joint": {
-                      "z": 90
-                    }
-                  }
-                },
-                "tolerances": {
-                  "jointAngles": {
-                    "left_upLeg_joint": {
-                      "y": -15
-                    },
-                    "left_leg_joint": {
-                      "z": 15
-                    },
-                    "right_upLeg_joint": {
-                      "y": -20
-                    },
-                    "right_leg_joint": {
-                      "z": -10
-                    }
-                  }
-                }
-              }
-            ],
-            "coachMode": {
-                "transitionDuration": 2,
-                "stateDuration" : 1,
-                "stateInstructions": [
-                    "Stand up with your back straight",
-                    "Raise your left leg in a ninety degree angle",
-                    "Stand up with your back straight",
-                    "Raise your right leg in a ninety degree angle"
-                ]
-            }
+          "left_forearm_joint": {
+            "z": -20
           },
-          {
-             "name": "Jumping Jacks",
-             "id": 7,
-             "muscleGroup": "Whole body",
-             "intensity": "High",
-             "equipment": [],
-             "className": "JumpingJackController",
-             "duration": "1:00",
-             "startState": "DOWN",
-             "coachMode": {
-                 "transitionDuration": 0,
-                 "stateDuration" : 0,
-                 "stateInstructions": [
-                     "Stand up with your back straight and arms lowered"
-                 ]
-             },
-             "states": [
-                 {
-                     "name": "DOWN",
-                     "duration": 0.0,
-                     "jointAngles": {
-                       "jointAngles": {
-                         "right_arm_joint": {
-                             "x": 30,
-                             "y": 40
-                         },
-                         "left_arm_joint": {
-                             "x": 30,
-                             "y": 40
-                         }
-                       }
-                     },
-                     "tolerances": {
-                       "jointAngles": {
-                         "right_arm_joint": {
-                             "x": 10,
-                             "y": 10
-                         },
-                         "left_arm_joint": {
-                             "x": 10,
-                             "y": 10
-                         }
-                       }
-                     }
-                 },
-                 {
-                     "name": "UP",
-                     "duration": 0.0,
-                     "jointAngles": {
-                       "jointAngles": {
-                         "right_arm_joint": {
-                             "x": -60,
-                             "y": -35
-                         },
-                         "left_arm_joint": {
-                             "x": -60,
-                             "y": -35
-                         }
-                       }
-                     },
-                     "tolerances": {
-                       "jointAngles": {
-                         "right_arm_joint": {
-                             "x": -20,
-                             "y": -20
-                         },
-                         "left_arm_joint": {
-                             "x": -20,
-                             "y": -20
-                         }
-                       }
-                     }
-                 }
-             ]
-           }
-        ]
+          "right_forearm_joint": {
+            "z": -20
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "left_arm_joint": {
+            "y": 0.75
+          },
+          "right_arm_joint": {
+            "y": 0.75
+          },
+          "left_forearm_joint": {
+            "z": -10
+          },
+          "right_forearm_joint": {
+            "z": -10
+          }
+        }
+      }
+    },
+    "states": [
+      {
+        "name": "UP",
+        "duration": 20,
+        "jointAngles": {
+          "jointAngles": {
+            "left_arm_joint": {
+              "y": 0
+            },
+            "right_arm_joint": {
+              "y": 0
+            },
+            "left_forearm_joint": {
+              "z": -20
+            },
+            "right_forearm_joint": {
+              "z": -20
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "left_arm_joint": {
+              "y": 0.75
+            },
+            "right_arm_joint": {
+              "y": 0.75
+            },
+            "left_forearm_joint": {
+              "z": -10
+            },
+            "right_forearm_joint": {
+              "z": -10
+            }
+          }
+        }
+      }
+    ],
+    "feedback": {
+      "left_arm_joint": {
+        "yFeedback": {
+          "decrease": "Raise your left arm",
+          "increase": "Lower your left arm"
+        }
+      },
+      "right_arm_joint": {
+        "yFeedback": {
+          "decrease": "Raise your right arm",
+          "increase": "Lower your right arm"
+        }
+      },
+      "left_forearm_joint": {
+        "zFeedback": {
+          "decrease": "Bend your left arm",
+          "increase": "Straighten your left arm"
+        }
+      },
+      "right_forearm_joint": {
+        "zFeedback": {
+          "decrease": "Bend your right arm",
+          "increase": "Straighten your right arm"
+        }
+      }
+    },
+    "coachMode": {
+      "transitionDuration": 2,
+      "stateDuration": 5,
+      "stateInstructions": [
+        "Stand up with your back straight",
+        "Raise your arms and keep them parallel to the floor."
+      ]
+    }
+  },
+  {
+    "name": "Squats",
+    "id": 3,
+    "muscleGroup": "Legs",
+    "intensity": "High",
+    "equipment": [],
+    "className": "SquatController",
+    "duration": "1:00",
+    "startMessage": "For this exercise start standing upright with your legs straight. Crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Push down with your legs through your heels until your legs are straight to return to the starting position.",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "left_upLeg_joint": {
+            "y": 0
+          },
+          "right_upLeg_joint": {
+            "y": 0
+          },
+          "left_leg_joint": {
+            "z": 15
+          },
+          "right_leg_joint": {
+            "z": 15
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "left_upLeg_joint": {
+            "y": -20
+          },
+          "right_upLeg_joint": {
+            "y": 20
+          },
+          "left_leg_joint": {
+            "z": 25
+          },
+          "right_leg_joint": {
+            "z": 25
+          }
+        }
+      }
+    },
+    "states": [
+      {
+        "name": "UP",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "left_upLeg_joint": {
+              "y": 0
+            },
+            "right_upLeg_joint": {
+              "y": 0
+            },
+            "left_leg_joint": {
+              "z": 15
+            },
+            "right_leg_joint": {
+              "z": 15
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "left_upLeg_joint": {
+              "y": -20
+            },
+            "right_upLeg_joint": {
+              "y": 20
+            },
+            "left_leg_joint": {
+              "z": 25
+            },
+            "right_leg_joint": {
+              "z": 25
+            }
+          }
+        }
+      },
+      {
+        "name": "DOWN",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "left_upLeg_joint": {
+              "y": -80
+            },
+            "right_upLeg_joint": {
+              "y": 80
+            },
+            "left_leg_joint": {
+              "z": 90
+            },
+            "right_leg_joint": {
+              "z": 90
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "left_upLeg_joint": {
+              "y": 25
+            },
+            "right_upLeg_joint": {
+              "y": -25
+            },
+            "left_leg_joint": {
+              "z": -20
+            },
+            "right_leg_joint": {
+              "z": -20
+            }
+          }
+        }
+      }
+    ],
+    "feedback": {
+      "left_upLeg_joint": {
+        "yFeedback": {
+          "decrease": "Squat deeper on your left",
+          "increase": "Not so deep on your left"
+        }
+      },
+      "right_upLeg_joint": {
+        "yFeedback": {
+          "decrease": "Not so deep on your right",
+          "increase": "Squat deeper on your right"
+        }
+      },
+      "left_leg_joint": {
+        "zFeedback": {
+          "decrease": "Straighten your left knee",
+          "increase": "Bend your left knee"
+        }
+      },
+      "right_leg_joint": {
+        "zFeedback": {
+          "decrease": "Straighten your right knee",
+          "increase": "Bend your right knee"
+        }
+      }
+    },
+    "coachMode": {
+      "transitionDuration": 2,
+      "stateDuration": 1,
+      "stateInstructions": [
+        "Stand up with your back straight",
+        "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
+      ]
+    }
+  },
+  {
+    "name": "Jumping Jacks",
+    "id": 7,
+    "muscleGroup": "Whole body",
+    "intensity": "High",
+    "equipment": [],
+    "className": "JumpingJackController",
+    "duration": "1:00",
+    "startMessage": "In this exercise start with your legs together and arms by your sides. Then jump in the air and as you do so, keeping your arms fairly straight, raise them to a 45 degree angle and spread your legs apart. In this state your body should for a star shape. Then jump again and return to the starting position.",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "right_arm_joint": {
+            "x": 30,
+            "y": 40,
+            "z": 10
+          },
+          "left_arm_joint": {
+            "x": 30,
+            "y": 40,
+            "z": 10
+          },
+          "right_shoulder_1_joint": {
+            "x": -20,
+            "y": -20,
+            "z": -40
+          },
+          "left_shoulder_1_joint": {
+            "x": -20,
+            "y": -20,
+            "z": -40
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "right_arm_joint": {
+            "x": 10,
+            "y": 10,
+            "z": 10
+          },
+          "left_arm_joint": {
+            "x": 10,
+            "y": 10,
+            "z": 10
+          },
+          "right_shoulder_1_joint": {
+            "x": -20,
+            "y": -20,
+            "z": -40
+          },
+          "left_shoulder_1_joint": {
+            "x": -20,
+            "y": -20,
+            "z": -40
+          }
+        }
+      }
+    },
+    "states": [
+      {
+        "name": "DOWN",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": 30,
+              "y": 40,
+              "z": 40
+            },
+            "left_arm_joint": {
+              "x": 30,
+              "y": 40,
+              "z": 40
+            },
+            "right_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            },
+            "left_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": 10,
+              "y": 10,
+              "z": 40
+            },
+            "left_arm_joint": {
+              "x": 10,
+              "y": 10,
+              "z": 40
+            },
+            "right_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            },
+            "left_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            }
+          }
+        }
+      },
+      {
+        "name": "UP",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": -60,
+              "y": -35,
+              "z": -40
+            },
+            "left_arm_joint": {
+              "x": -60,
+              "y": -35,
+              "z": -40
+            },
+            "right_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            },
+            "left_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            },
+            "left_arm_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            },
+            "right_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            },
+            "left_shoulder_1_joint": {
+              "x": -20,
+              "y": -20,
+              "z": -40
+            }
+          }
+        }
+      }
+    ],
+    "feedback": {},
+    "coachMode": {
+      "transitionDuration": 0,
+      "stateDuration": 0,
+      "stateInstructions": [
+        "Stand up with your back straight and arms lowered"
+      ]
+    }
+  }
+]

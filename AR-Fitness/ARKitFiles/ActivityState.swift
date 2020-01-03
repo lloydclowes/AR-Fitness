@@ -78,6 +78,14 @@ class ActivityState: Hashable, Codable {
         return target.reachedBy(self)
     }
         
+    func getMaxSpeed() -> Float {
+        var maxSpeed = Float(0)
+        for (_, v) in jointVelocities {
+            maxSpeed = Float.maximum(maxSpeed, v.magnitude())
+        }
+        return maxSpeed
+    }
+    
     func update(_ newAngles : JointAngles, _ augmentation : (Float, Float) -> Float, _ delta : Float) {
         // TODO: Try apply augmentation twice to velocity and three/four times to acceleration
         for (joint, angles) in jointAngles {

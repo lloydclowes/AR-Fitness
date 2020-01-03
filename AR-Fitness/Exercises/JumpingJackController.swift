@@ -59,8 +59,8 @@ class JumpingJackController: UIViewController, ARSessionDelegate {
     }
     
     override func viewDidLoad() {
-        let exercise = exerciseData[3]
-        self.activityMonitor = ActivityMonitor(exercise.states)
+        let exercise = exerciseData[Exercises.jumpingJacks.rawValue]
+        self.activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: false)
         print("initiated")
         setupViews()
     }

@@ -17,18 +17,11 @@ struct Exercise: Hashable, Codable, Identifiable {
     var equipment: [String]
     var className: String
     var duration: String
-    var startState: String
+    var startMessage : String
+    var startState: TargetState
     var states: [TargetState]
+    var feedback: Dictionary<String, JointFeedback>
     var coachMode: CoachModeDetail
-    
-//    public func getStartState() -> TargetState {
-//        
-//        let startState = self.states.filter {
-//            $0.name == self.startState
-//        }[0]
-//        
-//        return TargetState("START", JointAngles(jointAngles: startState.jointAngles.jointAngles), JointAngles(jointAngles: startState.tolerances.jointAngles), 0.0)
-//    }
     
 }
 

@@ -47,8 +47,6 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
             return LateralRaiseController()
         case "Squats":
             return SquatController()
-        case "Hundred Ups":
-            return HundredUpsController()
         case "Jumping Jacks":
             return JumpingJackController()
         default:

@@ -53,6 +53,8 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
 
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
+        configuration.environmentTexturing = .none
+        
         arView.session.run(configuration)
         arView.scene.addAnchor(characterAnchor)
         
@@ -75,7 +77,8 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
             }
         })
         
-        self.activityMonitor = ActivityMonitor(exerciseData[1].states, useTurningPoints: true, coachingMode: true, coachingInfo: exerciseData[1].coachMode)
+        let exercise = exerciseData[Exercises.squat.rawValue]
+        self.activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: true)
         
         self.recordingSession.startRecording()
         speaker.enableSpeech()
@@ -96,9 +99,7 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
             characterAnchor.isEnabled = showRobot
             
             activityMonitor.updateState(bodyAnchor)
-            
-            
-            
+
 //            self.recordingSession.poll(activityMonitor.currentState, ActivityState())
         }
     }

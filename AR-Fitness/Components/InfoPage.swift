@@ -36,7 +36,7 @@ class ModalViewController: UIViewController {
         } else {
             isTimeBased = true
         }
-        time = timer/2 
+        self.time = timer
         exercise = exerciseName
         infoLabel.text! += "Activity time: \(time)"
     }
@@ -82,11 +82,9 @@ class ModalViewController: UIViewController {
     func getCaloriesBurnedPerExercise() -> Int {
         switch self.exercise {
         case "Lateral Raises":
-            return Int((Float(time)/3600) * 4)
+            return Int((Float(self.time)/60) * 4)
         case "Squats":
-            return Int((Float(time)/3600) * 15)
-        case "Hundred Ups":
-            return Int((Float(time)/3600) * 6)
+            return Int((Float(self.time)/60) * 15)
         default:
             return 0
         }

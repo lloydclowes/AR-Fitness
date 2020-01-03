@@ -17,9 +17,16 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var character: BodyTrackedEntity?
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
-    let speaker = SpeechSynthesizer.globalSpeaker
+//    let speaker = SpeechSynthesizer.globalSpeaker
+    let speaker = SpeechService.shared
     
     var activityMonitor = ActivityMonitor()
+    
+    var lastInstructions = Date().timeIntervalSince1970
+    
+    var uploaded = false
+    let recordingSession = RecordingSession()
+    
     var started = false
     var countedDown = false
     var halfReward = false
@@ -30,7 +37,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var prevTime = TimeInterval()
     var waitingTime : TimeInterval? = nil
     
-    var showRobot = false
+    var showRobot = true
     
     let infoLabel : UILabel = {
         let myLabel = UILabel()
@@ -69,22 +76,28 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
+        speaker.cutOffSpeech()
     }
     
     override func viewDidLoad() {
         prevTime = Date().timeIntervalSince1970
         
         let exercise = exerciseData[Exercises.lateralRaise.rawValue]
-        activityMonitor = ActivityMonitor(exercise.states)
+        activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: true)
         infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+        
+        speaker.speak(statement: exercise.startMessage)
+        lastInstructions = Date().timeIntervalSince1970
+        
+        recordingSession.startRecording()
         
         setupViews()
     }
     
     @IBAction func showInformation(sender: UIButton) {
         let modalViewController = ModalViewController()
-        // TODO: This shouldn't be fixed at 60
-        modalViewController.updateInfo(nil, timer: (60-Int(round(activityMonitor.remainingDuration)))*60, exerciseName: "Lateral Raises")
+        // TODO: This shouldn't be fixed at 20
+        modalViewController.updateInfo(nil, timer: (20-Int(round(activityMonitor.remainingDuration)))*20, exerciseName: "Lateral Raises")
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
     }
@@ -92,7 +105,6 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
         self.label = (self.showRobot) ? "Hide" : "Show"
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -107,8 +119,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
 
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
-        arView.session.run(configuration)
+        configuration.environmentTexturing = .none
         
+        arView.session.run(configuration)
         arView.scene.addAnchor(characterAnchor)
         
         // Asynchronously load the 3D character.
@@ -147,98 +160,44 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
-            if !countedDown {
-                speaker.countdown()
-                countedDown = true
-                waitingTime = Date().timeIntervalSince1970
-                
-            }
             
+//            self.recordingSession.poll(activityMonitor.currentState)
+//            if curTime - startTime > 10 {
+//                print("uploading")
+//                self.recordingSession.upload()
+//                startTime = curTime
+//            }
+//
             if !activityMonitor.started {
-                // TODO: every n seconds repeat "Please assume the start position"
+                if curTime - lastInstructions > 10 {
+                    lastInstructions = curTime
+                    speaker.speak(statement: "Please assume the start position.")
+                }
                 return
             }
             
             if !started {
-                speaker.stopSpeaking()
+                speaker.speak(statement: "Good! Now hold that posture for 20 seconds.")
                 startTime = Date().timeIntervalSince1970
                 started = true
-                speaker.speak(statement: "Keep this posture for 60 seconds!")
             }
-                
             
-            //if curTime - startTime > 3 {
-                infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
-                if !halfReward && round(activityMonitor.remainingDuration) <= 30 {
-                    halfReward = true
-                    speaker.speak(statement: "Half way there!")
-                } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {
-                    fiveReward = true
-                    speaker.speak(statement: "Only five more seconds!")
-                } else if !completed && round(activityMonitor.remainingDuration) <= 0 {
-                    speaker.speak(statement: "Well done! You've completed the challenge")
-                    completed = true
-    //                activityMonitor.reset()
-    //                started = false
-    //                halfReward = false
-    //                fiveReward = false
-                //}
+//            print("rem: \(activityMonitor.remainingDuration)")
+//            print("dur: \(activityMonitor.stateSuccesses[activityMonitor.lastIndex].duration)")
+            
+            infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+            if !halfReward && round(activityMonitor.remainingDuration) <= 10 {
+                halfReward = true
+                speaker.speak(statement: "Half way there!")
+            } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {
+                fiveReward = true
+                speaker.speak(statement: "Only five more seconds!")
+            } else if !completed && round(activityMonitor.remainingDuration) <= 0 {
+                speaker.speak(statement: "Well done! You've completed the challenge")
+                completed = true
             }
         }
     }
-            
-            // TODO: swap 1 for startIndex
-//            if activityMonitor.index != 1 {
-//                timer.invalidate()
-//            }
-//
-//            if (!started && startState.reachedBy(activityMonitor.currentState)) {
-//                speaker.countdown()
-//                started = true
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-//                    self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-//                    RunLoop.current.add(self.timer, forMode: .common)
-//                }
-//            }
-//
-//            if (started && delta > 2.0) {
-//                prevTime = curTime
-//                let anglesLeft = bodyAnchor.getLocalJointAngleXYZ("left_arm_joint")
-//                let anglesRight = bodyAnchor.getLocalJointAngleXYZ("right_arm_joint")
-//
-//                let lowerTol: Float = 10.0
-//                let upperTol: Float = -10.0
-//
-//                var left = 0
-//                var right = 0
-//                if (anglesLeft.y?.sign == .plus && anglesLeft.y! > lowerTol) {
-//                    left = -1
-//                } else if (anglesLeft.y?.sign == .minus && anglesLeft.y! < upperTol) {
-//                    left = 1
-//                }
-//
-//                if (anglesRight.y?.sign == .plus && anglesRight.y! > lowerTol) {
-//                    right = -1
-//                } else if (anglesRight.y?.sign == .minus &&  anglesRight.y! < upperTol ) {
-//                    right = 1
-//                }
-//
-//                var phrase = ""
-//                if left != 0 {
-//                    phrase = "Please \(left == -1 ? "raise" : "lower") your left arm"
-//                }
-//                if right != 0 {
-//                    let dir = left == -1 ? "raise" : "lower"
-//                    if phrase == "" {
-//                        phrase = "Please \(dir) your right arm"
-//                    } else {
-//                        phrase += " and \(dir) your right arm"
-//                    }
-//                }
-//
-//                if phrase != "" {
-//                    speaker.speak(statement: phrase)
-//                }
     
     func setupViews() {
         let button = infoButton()
@@ -252,14 +211,12 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 30))
-        self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 30))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         
         // button constraints
         button.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
-        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: infoLabel, attribute: .trailing, multiplier: 1, constant: 100))
         self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
         self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
@@ -278,22 +235,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
     }
-    
-//    @objc func startActivity() {
-//        started = true
-//    }
-//    @objc func timerAction() {
-//        counter -= 1
-//        print(counter)
-//        infoLabel.text = "Timer: \(self.counter)"
-//        if(counter == 30) {
-//            speaker.speak(statement: "Half way there!")
-//        } else if(counter == 5) {
-//            speaker.speak(statement: "Only five more seconds!")
-//        } else if(counter == 0) {
-//            speaker.speak(statement: "Well done! You've completed the challenge")
-//        }
-//    }
+
 }
 
 
