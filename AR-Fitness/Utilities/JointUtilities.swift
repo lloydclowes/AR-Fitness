@@ -19,9 +19,9 @@ let mappings = [
     "right_forearm_joint": "right forearm"
 ]
 
-func jointToName(value: String) -> String {
-    if (mappings[value] != nil) {
-        return mappings[value]!
+func jointToName(_ joint: String) -> String {
+    if (mappings[joint] != nil) {
+        return mappings[joint]!
     }
-    return ""
+    return joint
 }

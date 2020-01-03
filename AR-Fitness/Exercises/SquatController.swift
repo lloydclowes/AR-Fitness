@@ -33,7 +33,6 @@ class SquatController: UIViewController, ARSessionDelegate {
     var prevTime = TimeInterval()
     
     var showRobot = true
-    var label = "Hide"
     
     var activityMonitor = ActivityMonitor()
     
@@ -48,29 +47,29 @@ class SquatController: UIViewController, ARSessionDelegate {
         myLabel.layer.cornerRadius = 25
         return myLabel
     }()
-    
-    func infoButton() -> UIButton {
+        
+    let infoButton : UIButton = {
         let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
         button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         button.setAttributedTitle(NSAttributedString(string: "See info", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20), NSAttributedString.Key.foregroundColor:
             UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
-        button.addTarget(nil, action: #selector(self.showInformation), for: UIControl.Event.touchUpInside)
+        button.addTarget(nil, action: #selector(showInformation), for: UIControl.Event.touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 25
         return button
-    }
+    }()
     
-    func robotButton() -> UIButton {
+    let robotButton : UIButton = {
         let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
         button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         
-        button.setAttributedTitle(NSAttributedString(string: "robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
-            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
-        button.addTarget(nil, action: #selector(self.toggleRobot), for: UIControl.Event.touchUpInside)
+        button.setAttributedTitle(NSAttributedString(string: "Toggle robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
+        button.addTarget(nil, action: #selector(toggleRobot), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 15
         return button
-    }
+    }()
     
     override func viewDidLoad() {
         infoLabel.text = "Reps: \(activityMonitor.repCount)"
@@ -94,11 +93,13 @@ class SquatController: UIViewController, ARSessionDelegate {
     
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
-        self.label = (self.showRobot) ? "Hide" : "Show"
+        // TODO: Fix this
+        sender.setTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
+        speaker.cutOffSpeech()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -197,12 +198,11 @@ class SquatController: UIViewController, ARSessionDelegate {
     }
     
     func setupViews() {
-        let button = infoButton()
-        let toggleRobotButton = robotButton()
+        
         view.addSubview(arView)
         view.addSubview(infoLabel)
-        view.addSubview(button)
-        view.addSubview(toggleRobotButton)
+        view.addSubview(infoButton)
+        view.addSubview(robotButton)
         
         // label constraints (position, size...)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -212,18 +212,18 @@ class SquatController: UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         
         // button constraints
-        button.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
-        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
-        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
-        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        infoButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
+        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
+        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
         
         // toggle robot button constraints
-    toggleRobotButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
-        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
-        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
-        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
+        robotButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
         
         arView.translatesAutoresizingMaskIntoConstraints = false

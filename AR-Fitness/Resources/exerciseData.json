@@ -12,7 +12,7 @@
     "startMessage": "For this exercise you should stand upright with your arms out straight to the side so that your body forms a T shape.",
     "startState": {
       "name": "START",
-      "duration": 20.0,
+      "duration": 20,
       "jointAngles": {
         "jointAngles": {
           "left_arm_joint": {
@@ -20,6 +20,12 @@
           },
           "right_arm_joint": {
             "y": 0
+          },
+          "left_forearm_joint": {
+            "z": -20
+          },
+          "right_forearm_joint": {
+            "z": -20
           }
         }
       },
@@ -30,6 +36,12 @@
           },
           "right_arm_joint": {
             "y": 0.75
+          },
+          "left_forearm_joint": {
+            "z": -10
+          },
+          "right_forearm_joint": {
+            "z": -10
           }
         }
       }
@@ -37,7 +49,7 @@
     "states": [
       {
         "name": "UP",
-        "duration": 20.0,
+        "duration": 20,
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
@@ -45,6 +57,12 @@
             },
             "right_arm_joint": {
               "y": 0
+            },
+            "left_forearm_joint": {
+              "z": -20
+            },
+            "right_forearm_joint": {
+              "z": -20
             }
           }
         },
@@ -55,18 +73,24 @@
             },
             "right_arm_joint": {
               "y": 0.75
+            },
+            "left_forearm_joint": {
+              "z": -10
+            },
+            "right_forearm_joint": {
+              "z": -10
             }
           }
         }
       }
     ],
     "coachMode": {
-        "transitionDuration": 2,
-        "stateDuration" : 5,
-        "stateInstructions": [
-            "Stand up with your back straight",
-            "Raise your arms and keep them parallel to the floor."
-        ]
+      "transitionDuration": 2,
+      "stateDuration": 5,
+      "stateInstructions": [
+        "Stand up with your back straight",
+        "Raise your arms and keep them parallel to the floor."
+      ]
     }
   },
   {
@@ -189,12 +213,12 @@
       }
     ],
     "coachMode": {
-        "transitionDuration": 2,
-        "stateDuration" : 1,
-        "stateInstructions": [
-            "Stand up with your back straight",
-            "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
-        ]
+      "transitionDuration": 2,
+      "stateDuration": 1,
+      "stateInstructions": [
+        "Stand up with your back straight",
+        "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
+      ]
     }
   }
 ]

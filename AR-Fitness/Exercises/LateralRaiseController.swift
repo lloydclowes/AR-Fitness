@@ -37,7 +37,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var prevTime = TimeInterval()
     var waitingTime : TimeInterval? = nil
     
-    var showRobot = false
+    var showRobot = true
     
     let infoLabel : UILabel = {
         let myLabel = UILabel()
@@ -76,6 +76,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
+        speaker.cutOffSpeech()
     }
     
     override func viewDidLoad() {
@@ -95,7 +96,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     
     @IBAction func showInformation(sender: UIButton) {
         let modalViewController = ModalViewController()
-        // TODO: This shouldn't be fixed at 60
+        // TODO: This shouldn't be fixed at 20
         modalViewController.updateInfo(nil, timer: (20-Int(round(activityMonitor.remainingDuration)))*20, exerciseName: "Lateral Raises")
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
@@ -166,7 +167,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
 //                self.recordingSession.upload()
 //                startTime = curTime
 //            }
-            
+//
             if !activityMonitor.started {
                 if curTime - lastInstructions > 10 {
                     lastInstructions = curTime
@@ -180,6 +181,9 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
                 startTime = Date().timeIntervalSince1970
                 started = true
             }
+            
+//            print("rem: \(activityMonitor.remainingDuration)")
+//            print("dur: \(activityMonitor.stateSuccesses[activityMonitor.lastIndex].duration)")
             
             infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
             if !halfReward && round(activityMonitor.remainingDuration) <= 10 {

@@ -281,6 +281,7 @@ class ActivityMonitor {
         }
         
         index = -1
+//        print("unknown")
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
@@ -293,37 +294,41 @@ class ActivityMonitor {
         let currentTarget = targetStates[targetIndex]
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
         if inCoachingMode {
-    //        let curTime = Date().timeIntervalSince1970
-    //        if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
-    //            lastFeedback = Date().timeIntervalSince1970
-    //            let currentTarget = targetStates[targetIndex]
-    //            let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-    //            for (joint, angles) in difference {
-    //                if let dx = angles.x {
-    //                    if dx > 0 {
-    //                        speaker.speak(statement: "Increase x by \(abs(Int(round(dx)))) for: \(joint)")
-    //                    } else {
-    //                        speaker.speak(statement: "Decrease x by \(abs(Int(round(dx)))) for: \(joint)")
-    //                    }
-    //                }
-    //
-    //                if let dy = angles.y {
-    //                    if dy > 0 {
-    //                        speaker.speak(statement: "Increase y by \(abs(Int(round(dy)))) for: \(joint)")
-    //                    } else {
-    //                        speaker.speak(statement: "Decrease y by \(abs(Int(round(dy)))) for: \(joint)")
-    //                    }
-    //                }
-    //
-    //                if let dz = angles.z {
-    //                    if dz > 0 {
-    //                        speaker.speak(statement: "Increase z by \(abs(Int(round(dz)))) for: \(joint)")
-    //                    } else {
-    //                        speaker.speak(statement: "Decrease z by \(abs(Int(round(dz)))) for: \(joint)")
-    //                    }
-    //                }
-    //            }
-    //        }
+            let curTime = Date().timeIntervalSince1970
+            if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
+                lastFeedback = Date().timeIntervalSince1970
+                var feedback = [String]()
+                for (joint, angles) in difference {
+                    var jointFeedback = [String]()
+                    if let dx = angles.x {
+                        if dx > 0 {
+//                            jointFeedback.append("increase x by \(abs(Int(round(dx))))")
+                            jointFeedback.append("increase x")
+                        } else {
+//                            jointFeedback.append("decrease x by \(abs(Int(round(dx))))")
+                            jointFeedback.append("decrease x")
+                        }
+                    }
+    
+                    if let dy = angles.y {
+                        if dy > 0 {
+                            jointFeedback.append("increase y")
+                        } else {
+                            jointFeedback.append("decrease y")
+                        }
+                    }
+    
+                    if let dz = angles.z {
+                        if dz > 0 {
+                            jointFeedback.append("increase z")
+                        } else {
+                            jointFeedback.append("decrease z")
+                        }
+                    }
+                    feedback.append(spokenListJoin(jointFeedback) + " for your \(jointToName(joint))")
+                }
+                speaker.speak(statement: spokenListJoin(feedback))
+            }
         } else {
 //            print("-- start --")
             for joint in targetStates[targetIndex].jointAngles.keys {
