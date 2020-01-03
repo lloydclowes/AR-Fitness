@@ -23,10 +23,13 @@ class SquatController: UIViewController, ARSessionDelegate {
     let recordingSession = RecordingSession()
     
     var reachedSquat = false
+
     var counter = 0
-    let speaker = SpeechSynthesizer.globalSpeaker
+    let speaker = SpeechService.shared
     var rewarded = false
     var timer = Timer()
+    
+    var lastInstructions = Date().timeIntervalSince1970
     var prevTime = TimeInterval()
     
     var showRobot = true
@@ -76,7 +79,10 @@ class SquatController: UIViewController, ARSessionDelegate {
         let exercise = exerciseData[Exercises.squat.rawValue]
         self.activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states)
         
-//        self.recordingSession.startRecording()
+        speaker.speak(statement: exercise.startMessage)
+        lastInstructions = Date().timeIntervalSince1970
+        
+        self.recordingSession.startRecording()
     }
     
     @IBAction func showInformation(sender: UIButton) {
@@ -89,7 +95,6 @@ class SquatController: UIViewController, ARSessionDelegate {
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
         self.label = (self.showRobot) ? "Hide" : "Show"
-        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -136,7 +141,6 @@ class SquatController: UIViewController, ARSessionDelegate {
         self.prevTime = Date().timeIntervalSince1970
         self.startTime = Date().timeIntervalSince1970
         self.runTimer()
-        
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -157,11 +161,14 @@ class SquatController: UIViewController, ARSessionDelegate {
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
             if !activityMonitor.started {
-                // TODO: every n seconds repeat "Please assume the start position"
+                if curTime - lastInstructions > 10 {
+                    lastInstructions = curTime
+                    speaker.speak(statement: "Please assume the start position.")
+                }
                 return
             }
             
-          self.recordingSession.poll(activityMonitor.currentState)
+//          self.recordingSession.poll(activityMonitor.currentState)
 //            if curTime - startTime > 10 {
 //                print("uploading")
 //                self.recordingSession.upload()
@@ -172,7 +179,7 @@ class SquatController: UIViewController, ARSessionDelegate {
             self.infoLabel.text = "Reps: \(reps)"
             if reps != 0 && reps.isMultiple(of: 5) && !rewarded {
                 rewarded = true
-                let randomReward = speaker.rewards.randomElement()!
+                let randomReward = SpeechSynthesizer.rewards.randomElement()!
                 speaker.speak(statement: randomReward)
             }
             if !reps.isMultiple(of: 5) {

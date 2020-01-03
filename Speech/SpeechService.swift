@@ -25,6 +25,10 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     private var player: AVAudioPlayer?
     private var completionHandler: (() -> Void)?
     
+    func speak(statement: String) {
+        speak(text: statement) {}
+    }
+    
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
         
         if speechServiceIsBusy() {

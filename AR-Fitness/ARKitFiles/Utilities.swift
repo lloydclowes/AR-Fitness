@@ -11,39 +11,6 @@ import ARKit
 
 let radToDeg = 180 / Float.pi
 
-extension MeshResource {
-    
-    /**
-     Generate three axes of a coordinate system with x axis = red, y axis = green and z axis = blue
-     - parameters:
-     - axisLength: Length of the axes in m
-     - thickness: Thickness of the axes as a percentage of their length
-     */
-    static func generateCoordinateSystemAxes(length: Float = 0.1, thickness: Float = 2.0) -> Entity {
-        let thicknessInM = (length / 100) * thickness
-        let cornerRadius = thickness / 2.0
-        let offset = length / 2.0
-        
-        let xAxisBox = MeshResource.generateBox(size: [length, thicknessInM, thicknessInM], cornerRadius: cornerRadius)
-        let yAxisBox = MeshResource.generateBox(size: [thicknessInM, length, thicknessInM], cornerRadius: cornerRadius)
-        let zAxisBox = MeshResource.generateBox(size: [thicknessInM, thicknessInM, length], cornerRadius: cornerRadius)
-    
-        let xAxis = ModelEntity(mesh: xAxisBox, materials: [UnlitMaterial(color: .red)])
-        let yAxis = ModelEntity(mesh: yAxisBox, materials: [UnlitMaterial(color: .green)])
-        let zAxis = ModelEntity(mesh: zAxisBox, materials: [UnlitMaterial(color: .blue)])
-        
-        xAxis.position = [offset, 0, 0]
-        yAxis.position = [0, offset, 0]
-        zAxis.position = [0, 0, offset]
-        
-        let axes = Entity()
-        axes.addChild(xAxis)
-        axes.addChild(yAxis)
-        axes.addChild(zAxis)
-        return axes
-    }
-}
-
 // Converts a column major simd_float4x4 into its 3 rotations about the X, Y, Z axes respectively.
 func getRotationXYZ(matrix: simd_float4x4) -> EulerAngles {
     return getRotationXYZ(quatf: Transform(matrix: matrix).rotation)
@@ -77,6 +44,22 @@ func getRotationXYZ(quatf: simd_quatf) -> EulerAngles {
 }
 
 
+// Joins a list of strings as if they were spoken in english
+func spokenListJoin(_ arr : [String]) -> String {
+    if arr.count == 0 {
+        return ""
+    }
+    if arr.count == 1 {
+        return arr[0]
+    }
+    
+    var joined = "\(arr[0])"
+    for i in 1..<arr.count - 1 {
+        joined += ", \(arr[i])"
+    }
+    return joined + " and \(arr[arr.count - 1])"
+}
+
 // AUGMENTATION FUNCTIONS:
 
 // Use replace as augmentation function to ignore the previous value completely
@@ -97,18 +80,4 @@ func dema(_ actual : Float, _ prev : Float) -> Float {
     return 2 * smoothed - double_smoothed
 }
 
-// Joins a list of strings as if they were spoken in english
-func spokenListJoin(_ arr : [String]) -> String {
-    if arr.count == 0 {
-        return ""
-    }
-    if arr.count == 1 {
-        return arr[0]
-    }
-    
-    var joined = "\(arr[0])"
-    for i in 1..<arr.count - 1 {
-        joined += ", \(arr[i])"
-    }
-    return joined + " and \(arr[arr.count - 1])"
-}
+

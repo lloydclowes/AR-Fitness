@@ -40,7 +40,7 @@ class RecordingSession {
     }
 
     func upload() {
-        let url = URL(string: "https://6b32ef8b.ngrok.io/record")!
+        let url = URL(string: "https://11efb413.ngrok.io/record")!
         
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = "POST"

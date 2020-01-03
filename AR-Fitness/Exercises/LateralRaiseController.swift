@@ -17,9 +17,16 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     var character: BodyTrackedEntity?
     let characterOffset: SIMD3<Float> = [0, 0, 0] // Offset the character by one meter to the left
     let characterAnchor = AnchorEntity()
-    let speaker = SpeechSynthesizer.globalSpeaker
+//    let speaker = SpeechSynthesizer.globalSpeaker
+    let speaker = SpeechService.shared
     
     var activityMonitor = ActivityMonitor()
+    
+    var lastInstructions = Date().timeIntervalSince1970
+    
+    var uploaded = false
+    let recordingSession = RecordingSession()
+    
     var started = false
     var countedDown = false
     var halfReward = false
@@ -75,8 +82,13 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         prevTime = Date().timeIntervalSince1970
         
         let exercise = exerciseData[Exercises.lateralRaise.rawValue]
-        activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states)
+        activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states, coachingMode: true)
         infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+        
+        speaker.speak(statement: exercise.startMessage)
+        lastInstructions = Date().timeIntervalSince1970
+        
+        recordingSession.startRecording()
         
         setupViews()
     }
@@ -84,7 +96,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     @IBAction func showInformation(sender: UIButton) {
         let modalViewController = ModalViewController()
         // TODO: This shouldn't be fixed at 60
-        modalViewController.updateInfo(nil, timer: (60-Int(round(activityMonitor.remainingDuration)))*60, exerciseName: "Lateral Raises")
+        modalViewController.updateInfo(nil, timer: (20-Int(round(activityMonitor.remainingDuration)))*20, exerciseName: "Lateral Raises")
         modalViewController.modalPresentationStyle = .overCurrentContext
         present(modalViewController, animated: true, completion: {})
     }
@@ -92,7 +104,6 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
         self.label = (self.showRobot) ? "Hide" : "Show"
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -148,42 +159,38 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
-            if !countedDown {
-                speaker.countdown()
-                countedDown = true
-                waitingTime = Date().timeIntervalSince1970
-                
-            }
+            
+//            self.recordingSession.poll(activityMonitor.currentState)
+//            if curTime - startTime > 10 {
+//                print("uploading")
+//                self.recordingSession.upload()
+//                startTime = curTime
+//            }
             
             if !activityMonitor.started {
-                // TODO: every n seconds repeat "Please assume the start position"
+                if curTime - lastInstructions > 10 {
+                    lastInstructions = curTime
+                    speaker.speak(statement: "Please assume the start position.")
+                }
                 return
             }
             
             if !started {
-                speaker.stopSpeaking()
+                speaker.speak(statement: "Good! Now hold that posture for 20 seconds.")
                 startTime = Date().timeIntervalSince1970
                 started = true
-                speaker.speak(statement: "Keep this posture for 60 seconds!")
             }
-                
             
-            //if curTime - startTime > 3 {
-                infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
-                if !halfReward && round(activityMonitor.remainingDuration) <= 30 {
-                    halfReward = true
-                    speaker.speak(statement: "Half way there!")
-                } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {
-                    fiveReward = true
-                    speaker.speak(statement: "Only five more seconds!")
-                } else if !completed && round(activityMonitor.remainingDuration) <= 0 {
-                    speaker.speak(statement: "Well done! You've completed the challenge")
-                    completed = true
-    //                activityMonitor.reset()
-    //                started = false
-    //                halfReward = false
-    //                fiveReward = false
-                //}
+            infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+            if !halfReward && round(activityMonitor.remainingDuration) <= 10 {
+                halfReward = true
+                speaker.speak(statement: "Half way there!")
+            } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {
+                fiveReward = true
+                speaker.speak(statement: "Only five more seconds!")
+            } else if !completed && round(activityMonitor.remainingDuration) <= 0 {
+                speaker.speak(statement: "Well done! You've completed the challenge")
+                completed = true
             }
         }
     }
@@ -224,7 +231,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
     }
-    
+
 }
 
 

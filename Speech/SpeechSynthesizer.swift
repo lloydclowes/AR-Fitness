@@ -11,9 +11,9 @@ import AVFoundation
 
 class SpeechSynthesizer {
     
-    let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
+    static let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
     
-    let speedFocusedStatements = ["Move a bit slower", "Focus on the form, not the speed", "Not so fast!"]
+    static let speedFocusedStatements = ["Move a bit slower", "Focus on the form, not the speed", "Not so fast!"]
     
     var speechEnabled : Bool
     var volume : Float
@@ -44,6 +44,7 @@ class SpeechSynthesizer {
     }
     
     func speak(statement: String) {
+        stopSpeaking()
         if speechEnabled, let synthesizer = speechSynthesizer {
             synthesizer.speak(makeUtterance(statement: statement))
         }

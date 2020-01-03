@@ -36,7 +36,7 @@ class ActivityMonitor {
     var targetIndex = 0
     var repCount = 0
     
-    let speaker = SpeechSynthesizer.globalSpeaker
+    let speaker = SpeechService.shared
     
     var lastFeedback = TimeInterval()
     
@@ -127,7 +127,7 @@ class ActivityMonitor {
             repCount += 1
             print("success")
             if repCount % 3 == 1 {
-                speaker.speak(statement: speaker.rewards.randomElement()!)
+                speaker.speak(statement: SpeechSynthesizer.rewards.randomElement()!)
             }
             return
         }

@@ -9,9 +9,10 @@
     ],
     "className": "LateralRaiseController",
     "duration": "1:00",
+    "startMessage": "For this exercise you should stand upright with your arms out straight to the side so that your body forms a T shape.",
     "startState": {
       "name": "START",
-      "duration": 60.0,
+      "duration": 20.0,
       "jointAngles": {
         "jointAngles": {
           "left_arm_joint": {
@@ -36,7 +37,7 @@
     "states": [
       {
         "name": "UP",
-        "duration": 60.0,
+        "duration": 20.0,
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
@@ -76,6 +77,7 @@
     "equipment": [],
     "className": "SquatController",
     "duration": "1:00",
+    "startMessage": "For this exercise start standing upright with your legs straight. Crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Push down with your legs through your heels until your legs are straight to return to the starting position.",
     "startState": {
       "name": "START",
       "duration": 0,
