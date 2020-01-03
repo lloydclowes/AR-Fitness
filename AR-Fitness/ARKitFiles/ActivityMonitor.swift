@@ -39,6 +39,7 @@ class ActivityMonitor {
     let speaker = SpeechService.shared
     
     var lastFeedback = TimeInterval()
+    let exerciseFeedback : Dictionary<String, JointFeedback>
     
     var targetStateName : String {
         get { return targetStates[targetIndex].name }
@@ -62,15 +63,17 @@ class ActivityMonitor {
         self.inCoachingMode = false
         self.coachingInfo = nil
         self.firstInstr = false
+        self.exerciseFeedback = [:]
     }
 
-    init(start : TargetState, states : [TargetState], coachingMode : Bool = false, coachingInfo : CoachModeDetail? = nil) {
-        self.startState = start
-        self.targetStates = states
+    init(exercise: Exercise, coachingMode : Bool = false) {
+        self.startState = exercise.startState
+        self.targetStates = exercise.states
         self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.inCoachingMode = coachingMode
-        self.coachingInfo = coachingInfo
+        self.coachingInfo = exercise.coachMode
+        self.exerciseFeedback = exercise.feedback
         
         for (joint, angles) in targetStates[0].jointAngles {
             let x : Float? = angles.x != nil ? Float(0) : nil
@@ -295,7 +298,7 @@ class ActivityMonitor {
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
         if inCoachingMode {
             let curTime = Date().timeIntervalSince1970
-            if stillTurning && curTime - startedTurning > 1 && curTime - lastFeedback > 10 {
+            if stillTurning && curTime - lastFeedback > 10 {
                 lastFeedback = Date().timeIntervalSince1970
                 var feedback = [String]()
                 for (joint, angles) in difference {
@@ -303,29 +306,35 @@ class ActivityMonitor {
                     if let dx = angles.x {
                         if dx > 0 {
 //                            jointFeedback.append("increase x by \(abs(Int(round(dx))))")
-                            jointFeedback.append("increase x")
+//                            jointFeedback.append("increase x")
+                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.increase)
                         } else {
 //                            jointFeedback.append("decrease x by \(abs(Int(round(dx))))")
-                            jointFeedback.append("decrease x")
+//                            jointFeedback.append("decrease x")
+                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.decrease)
                         }
                     }
     
                     if let dy = angles.y {
                         if dy > 0 {
-                            jointFeedback.append("increase y")
+//                            jointFeedback.append("increase y")
+                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.increase)
                         } else {
-                            jointFeedback.append("decrease y")
+//                            jointFeedback.append("decrease y")
+                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.decrease)
                         }
                     }
     
                     if let dz = angles.z {
                         if dz > 0 {
-                            jointFeedback.append("increase z")
+//                            jointFeedback.append("increase z")
+                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.increase)
                         } else {
-                            jointFeedback.append("decrease z")
+//                            jointFeedback.append("decrease z")
+                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
                         }
                     }
-                    feedback.append(spokenListJoin(jointFeedback) + " for your \(jointToName(joint))")
+                    feedback.append(spokenListJoin(jointFeedback))
                 }
                 speaker.speak(statement: spokenListJoin(feedback))
             }

@@ -16,6 +16,7 @@
 		189D135023917CE9006F9030 /* JointAngles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189D134F23917CE9006F9030 /* JointAngles.swift */; };
 		18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF1B64238E6CD200CDFC2D /* StateHistory.swift */; };
 		18EC275323BE56DE00EE53AD /* JointUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275223BE56DE00EE53AD /* JointUtilities.swift */; };
+		18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275623BF929E00EE53AD /* JointFeedback.swift */; };
 		18F22906238ECEE900D7FE92 /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 18F22905238ECEE900D7FE92 /* TODO.txt */; };
 		6739F178238FC4A5000F6B18 /* InfoPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6739F177238FC4A5000F6B18 /* InfoPage.swift */; };
 		6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6739F179238FDF50000F6B18 /* ExerciseInstructionsView.swift */; };
@@ -60,6 +61,7 @@
 		189D134F23917CE9006F9030 /* JointAngles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointAngles.swift; sourceTree = "<group>"; };
 		18DF1B64238E6CD200CDFC2D /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
 		18EC275223BE56DE00EE53AD /* JointUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JointUtilities.swift; sourceTree = "<group>"; };
+		18EC275623BF929E00EE53AD /* JointFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointFeedback.swift; sourceTree = "<group>"; };
 		18F22905238ECEE900D7FE92 /* TODO.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		6739F177238FC4A5000F6B18 /* InfoPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoPage.swift; sourceTree = "<group>"; };
 		6739F179238FDF50000F6B18 /* ExerciseInstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseInstructionsView.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				6E30CA91236A35C100AADAF2 /* EulerAngles.swift */,
 				6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */,
 				189D134F23917CE9006F9030 /* JointAngles.swift */,
+				18EC275623BF929E00EE53AD /* JointFeedback.swift */,
 				18DF1B64238E6CD200CDFC2D /* StateHistory.swift */,
 				1811475C23BB789900456876 /* StateSuccess.swift */,
 				185F1C77238557F8005CF226 /* TargetState.swift */,
@@ -337,6 +340,7 @@
 				6E4195CE2366EDD00093FDD1 /* SettingsView.swift in Sources */,
 				678F070D235B935F00CE5AC6 /* ExerciseRowView.swift in Sources */,
 				185F1C78238557F8005CF226 /* TargetState.swift in Sources */,
+				18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */,
 				6EAF45C1236AE6E500710465 /* ARUIView.swift in Sources */,
 				6E438043235A197A001A557A /* ExerciseDetailView.swift in Sources */,
 				6739F178238FC4A5000F6B18 /* InfoPage.swift in Sources */,

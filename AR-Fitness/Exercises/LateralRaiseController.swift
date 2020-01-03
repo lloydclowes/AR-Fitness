@@ -83,7 +83,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         prevTime = Date().timeIntervalSince1970
         
         let exercise = exerciseData[Exercises.lateralRaise.rawValue]
-        activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states, coachingMode: true)
+        activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: true)
         infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
         
         speaker.speak(statement: exercise.startMessage)

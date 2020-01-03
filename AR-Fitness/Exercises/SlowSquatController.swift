@@ -78,7 +78,7 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
         })
         
         let exercise = exerciseData[Exercises.squat.rawValue]
-        self.activityMonitor = ActivityMonitor(start: exercise.startState, states: exercise.states, coachingMode: true, coachingInfo: exercise.coachMode)
+        self.activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: true)
         
         self.recordingSession.startRecording()
         speaker.enableSpeech()

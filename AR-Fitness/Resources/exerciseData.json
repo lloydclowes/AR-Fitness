@@ -84,6 +84,20 @@
         }
       }
     ],
+    "feedback" : {
+          "left_arm_joint": {
+            "yFeedback": { "decrease": "Raise your left arm", "increase": "Lower your left arm" }
+          },
+          "right_arm_joint": {
+            "yFeedback": { "decrease": "Raise your right arm", "increase": "Lower your right arm" }
+          },
+          "left_forearm_joint": {
+            "zFeedback": { "decrease": "Bend your left arm", "increase": "Straighten your left arm" }
+          },
+          "right_forearm_joint": {
+            "zFeedback": { "decrease": "Bend your right arm", "increase": "Straighten your right arm" }
+          }
+    },
     "coachMode": {
       "transitionDuration": 2,
       "stateDuration": 5,
@@ -212,6 +226,20 @@
         }
       }
     ],
+    "feedback": {
+        "left_upLeg_joint": {
+          "yFeedback": { "decrease": "Squat deeper on your left", "increase": "Not so deep on your left" }
+        },
+        "right_upLeg_joint": {
+          "yFeedback": { "decrease": "Not so deep on your right", "increase": "Squat deeper on your right" }
+        },
+        "left_leg_joint": {
+          "zFeedback": { "decrease": "Straighten your left knee", "increase": "Bend your left knee" }
+        },
+        "right_leg_joint": {
+          "zFeedback": { "decrease": "Straighten your right knee", "increase": "Bend your right knee" }
+        }
+    },
     "coachMode": {
       "transitionDuration": 2,
       "stateDuration": 1,
