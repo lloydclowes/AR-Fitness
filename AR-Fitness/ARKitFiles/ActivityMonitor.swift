@@ -95,10 +95,14 @@ class ActivityMonitor {
     }
     
     func prettifyJointFailures(state : String, joints : [String]) -> String {
+        var named_joints = [String]()
+        for joint in joints {
+            named_joints.append(jointToName(joint))
+        }
         if joints.count == 0 {
             return "Your joints didn't reach the \(state) state at the same time"
         } else {
-            return "Your \(spokenListJoin(joints)) didn't reach the \(state) state"
+            return "Your \(spokenListJoin(named_joints)) didn't reach the \(state) state"
         }
     }
     
@@ -135,7 +139,7 @@ class ActivityMonitor {
             return
         }
         
-        if missedStates.count > 0 {
+        if !inCoachingMode && missedStates.count > 0 {
             speaker.speak(statement: spokenListJoin(missedStates))
         }
         
@@ -242,10 +246,10 @@ class ActivityMonitor {
             return
         }
       
-        if (self.inCoachingMode) {
-            self.coachingMode()
-            return
-        }
+//        if (self.inCoachingMode) {
+//            self.coachingMode()
+//            return
+//        }
         
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
@@ -298,57 +302,44 @@ class ActivityMonitor {
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
         if inCoachingMode {
             let curTime = Date().timeIntervalSince1970
-            if stillTurning && curTime - lastFeedback > 10 {
-                lastFeedback = Date().timeIntervalSince1970
-                var feedback = [String]()
-                for (joint, angles) in difference {
-                    var jointFeedback = [String]()
-                    if let dx = angles.x {
-                        if dx > 0 {
-//                            jointFeedback.append("increase x by \(abs(Int(round(dx))))")
-//                            jointFeedback.append("increase x")
-                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.increase)
-                        } else {
-//                            jointFeedback.append("decrease x by \(abs(Int(round(dx))))")
-//                            jointFeedback.append("decrease x")
-                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.decrease)
+                    if stillTurning && curTime - lastFeedback > 10 {
+                        lastFeedback = Date().timeIntervalSince1970
+                        var feedback = [String]()
+                        for (joint, angles) in difference {
+                            var jointFeedback = [String]()
+                            if let dx = angles.x {
+                                if dx > 0 {
+                                    jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.increase)
+                                } else {
+                                    jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.decrease)
+                                }
+                            }
+                            if let dy = angles.y {
+                                if dy > 0 {
+                                    jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.increase)
+                                } else {
+                                    jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.decrease)
+                                }
+                            }
+            
+                            if let dz = angles.z {
+                                if dz > 0 {
+                                    jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.increase)
+                                } else {
+                                    jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
+                                }
+                            }
+                            feedback.append(spokenListJoin(jointFeedback))
                         }
+                        speaker.speak(statement: spokenListJoin(feedback))
                     }
-    
-                    if let dy = angles.y {
-                        if dy > 0 {
-//                            jointFeedback.append("increase y")
-                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.increase)
-                        } else {
-//                            jointFeedback.append("decrease y")
-                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.decrease)
-                        }
-                    }
-    
-                    if let dz = angles.z {
-                        if dz > 0 {
-//                            jointFeedback.append("increase z")
-                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.increase)
-                        } else {
-//                            jointFeedback.append("decrease z")
-                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
-                        }
-                    }
-                    feedback.append(spokenListJoin(jointFeedback))
-                }
-                speaker.speak(statement: spokenListJoin(feedback))
-            }
         } else {
-//            print("-- start --")
             for joint in targetStates[targetIndex].jointAngles.keys {
                 if !difference.keys.contains(joint) {
-//                    print("reached \(joint)")
                     stateSuccesses[targetIndex].jointFailures.remove(joint)
                 } else {
-//                    print("d_\(joint): \(difference[joint]!)")
                 }
             }
-//            print("-- end --")
         }
     }
 }

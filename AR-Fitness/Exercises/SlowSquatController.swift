@@ -26,13 +26,24 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
     var reachedSquat = false
     var timer = Timer()
     var counter = 0
-    let speaker = SpeechSynthesizer.globalSpeaker
+    let speaker = SpeechService.shared
     var rewarded = false
 
     var showRobot = false
 
     var activityMonitor = ActivityMonitor()
 
+    let robotButton : UIButton = {
+        let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
+        button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+        
+        button.setAttributedTitle(NSAttributedString(string: "Toggle robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
+        button.addTarget(nil, action: #selector(toggleRobot), for: .touchUpInside)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 15
+        return button
+    }()
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
     }
@@ -81,8 +92,13 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
         self.activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: true)
         
         self.recordingSession.startRecording()
-        speaker.enableSpeech()
-        speaker.speak(statement: "In order to start the live coach session, move to the \(exerciseData[1].states[0].name) position")
+        speaker.speak(statement: exercise.startMessage)
+    }
+    
+    @IBAction func toggleRobot(sender: UIButton) {
+        self.showRobot = !self.showRobot
+        // TODO: Fix this
+        sender.setTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -106,6 +122,14 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
     
     func setupViews() {
         view.addSubview(arView)
+        view.addSubview(robotButton)
+        
+        // toggle robot button constraints
+        robotButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 100))
+        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true

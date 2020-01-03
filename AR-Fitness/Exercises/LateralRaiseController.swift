@@ -66,7 +66,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
         button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         
-        button.setAttributedTitle(NSAttributedString(string: "robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+        button.setAttributedTitle(NSAttributedString(string: "Toggle robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
             UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
         button.addTarget(nil, action: #selector(self.toggleRobot), for: UIControl.Event.touchUpInside)
         button.clipsToBounds = true
@@ -224,7 +224,7 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         toggleRobotButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
         self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
-        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 100))
         self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
         // arView constraints
