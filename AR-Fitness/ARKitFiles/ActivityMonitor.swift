@@ -302,7 +302,7 @@ class ActivityMonitor {
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
         if inCoachingMode {
             let curTime = Date().timeIntervalSince1970
-                    if stillTurning && curTime - lastFeedback > 10 {
+                    if !stillTurning && curTime - lastFeedback > 10 {
                         lastFeedback = Date().timeIntervalSince1970
                         var feedback = [String]()
                         for (joint, angles) in difference {
