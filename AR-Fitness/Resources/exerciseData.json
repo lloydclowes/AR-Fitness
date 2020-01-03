@@ -241,8 +241,8 @@
              "duration": "1:00",
              "startState": "DOWN",
              "coachMode": {
-                 "transitionDuration": 2,
-                 "stateDuration" : 1,
+                 "transitionDuration": 0,
+                 "stateDuration" : 0,
                  "stateInstructions": [
                      "Stand up with your back straight and arms lowered"
                  ]
@@ -250,114 +250,44 @@
              "states": [
                  {
                      "name": "DOWN",
-                     "duration": 0,
+                     "duration": 0.0,
                      "jointAngles": {
                        "jointAngles": {
                          "right_arm_joint": {
-                             "x": 35,
+                             "x": 30,
                              "y": 40
-                         },
-                         "right_forearm_joint": {
-                             "x": 0,
-                             "y": 0
                          },
                          "left_arm_joint": {
-                             "x": 35,
+                             "x": 30,
                              "y": 40
-                         },
-                         "left_forearm_joint": {
-                             "x": 0,
-                             "y": 0
-                         },
-                         "left_upLeg_joint": {
-                             "x": -80,
-                             "z": -70
-                         },
-                         "left_leg_joint": {
-                             "y": 0,
-                             "z": 20
-                         },
-                         "right_upLeg_joint": {
-                             "x": 80,
-                             "z": 70
-                         },
-                         "right_leg_joint": {
-                             "y": 0,
-                             "z": 20
                          }
                        }
                      },
                      "tolerances": {
                        "jointAngles": {
                          "right_arm_joint": {
-                             "x": 20,
-                             "y": 20
-                         },
-                         "right_forearm_joint": {
-                             "x": 20,
-                             "y": 20
+                             "x": 10,
+                             "y": 10
                          },
                          "left_arm_joint": {
-                             "x": 20,
-                             "y": 20
-                         },
-                         "left_forearm_joint": {
-                             "x": 20,
-                             "y": 20
-                         },
-                         "left_upLeg_joint": {
-                             "x": -30,
-                             "z": -30
-                         },
-                         "left_leg_joint": {
-                             "y": 10,
-                             "z": 20
-                         },
-                         "right_upLeg_joint": {
-                             "x": 30,
-                             "z": 30
-                         },
-                         "right_leg_joint": {
-                             "y": 10,
-                             "z": 20
+                             "x": 10,
+                             "y": 10
                          }
                        }
                      }
                  },
                  {
                      "name": "UP",
-                     "duration": 0,
+                     "duration": 0.0,
                      "jointAngles": {
                        "jointAngles": {
                          "right_arm_joint": {
                              "x": -60,
-                             "y": -40
-                         },
-                         "right_forearm_joint": {
-                             "z": -50
+                             "y": -35
                          },
                          "left_arm_joint": {
                              "x": -60,
-                             "y": -40
-                         },
-                         "left_forearm_joint": {
-                             "z": -50
-                         },
-                         "left_upLeg_joint": {
-                             "x": -90,
-                             "z": -40
-                         },
-                         "left_leg_joint": {
-                             "y": 0,
-                             "z": 20
-                         },
-                         "right_upLeg_joint": {
-                             "x": 60,
-                             "z": 50
-                         },
-                         "right_leg_joint": {
-                             "y": 0,
-                             "z": 20
+                             "y": -35
                          }
                        }
                      },
@@ -367,31 +297,9 @@
                              "x": -20,
                              "y": -20
                          },
-                         "right_forearm_joint": {
-                             "z": -30
-                         },
                          "left_arm_joint": {
                              "x": -20,
                              "y": -20
-                         },
-                         "left_forearm_joint": {
-                             "z": -30
-                         },
-                         "left_upLeg_joint": {
-                             "x": -20,
-                             "z": -30
-                         },
-                         "left_leg_joint": {
-                             "y": 10,
-                             "z": 20
-                         },
-                         "right_upLeg_joint": {
-                             "x": 20,
-                             "z": 30
-                         },
-                         "right_leg_joint": {
-                             "y": 10,
-                             "z": 20
                          }
                        }
                      }

@@ -32,10 +32,28 @@ class JumpingJackController: UIViewController, ARSessionDelegate {
     let speaker = SpeechSynthesizer.globalSpeaker
     var rewarded = false
 
-    var showRobot = false
-
+    var showRobot = true
+    var label = "Hide"
+    
     var activityMonitor = ActivityMonitor()
 
+    @IBAction func toggleRobot(sender: UIButton) {
+          self.showRobot = !self.showRobot
+          self.label = (self.showRobot) ? "Hide" : "Show"
+    }
+    
+    func robotButton() -> UIButton {
+        let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
+        button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+        
+        button.setAttributedTitle(NSAttributedString(string: "robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
+        button.addTarget(nil, action: #selector(self.toggleRobot), for: UIControl.Event.touchUpInside)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 15
+        return button
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
     }
@@ -43,7 +61,6 @@ class JumpingJackController: UIViewController, ARSessionDelegate {
     override func viewDidLoad() {
         let exercise = exerciseData[3]
         self.activityMonitor = ActivityMonitor(exercise.states)
-        
         print("initiated")
         setupViews()
     }
@@ -111,12 +128,22 @@ class JumpingJackController: UIViewController, ARSessionDelegate {
                 self.recordingSession.upload()
                 startTime = curTime
             }
+            print("reps: ", activityMonitor.repCount)
         }
         
     }
     
     func setupViews() {
         view.addSubview(arView)
+        
+        let toggleRobotButton = robotButton()
+        view.addSubview(toggleRobotButton)
+        
+        toggleRobotButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
