@@ -15,7 +15,7 @@ class HoldingController : ARViewController {
     }
     
     override func handleRewards() {
-        if !halfReward && round(activityMonitor.remainingDuration) <= 10 {
+        if !halfReward && round(activityMonitor.remainingDuration) <= activityMonitor.fullDuration / 2 {
             halfReward = true
             speaker.speak(text: "Half way there!")
         } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {

@@ -56,10 +56,6 @@ class ARViewController : UIViewController, ARSessionDelegate {
         self.activityMonitor = ActivityMonitor(exercise: exercise, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
     }
     
-    deinit {
-        print("DEINIT AR VIEW CONTROLLER")
-    }
-    
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
         sender.setTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)  // TODO: Fix this

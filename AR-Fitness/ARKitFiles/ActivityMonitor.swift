@@ -52,6 +52,10 @@ class ActivityMonitor {
         }
     }
     
+    var fullDuration : Double {
+        get { return targetStates[targetIndex].duration }
+    }
+    
     init() {
         self.startState = TargetState("START")
         self.targetStates = []
