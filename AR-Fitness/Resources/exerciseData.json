@@ -288,48 +288,36 @@
       "jointAngles": {
         "jointAngles": {
           "right_arm_joint": {
-            "x": 30,
-            "y": 40,
-            "z": 10
+            "x": 40,
+            "y": 50
           },
           "left_arm_joint": {
-            "x": 30,
-            "y": 40,
-            "z": 10
+            "x": 40,
+            "y": 50
           },
-          "right_shoulder_1_joint": {
-            "x": -20,
-            "y": -20,
-            "z": -40
+          "right_upLeg_joint": {
+              "z": 80
           },
-          "left_shoulder_1_joint": {
-            "x": -20,
-            "y": -20,
-            "z": -40
+          "left_upLeg_joint": {
+              "z": -80
           }
         }
       },
       "tolerances": {
         "jointAngles": {
           "right_arm_joint": {
-            "x": 10,
-            "y": 10,
-            "z": 10
+            "x": -10,
+            "y": -10
           },
           "left_arm_joint": {
-            "x": 10,
-            "y": 10,
-            "z": 10
+            "x": -10,
+            "y": -10
           },
-          "right_shoulder_1_joint": {
-            "x": -20,
-            "y": -20,
-            "z": -40
+          "right_upLeg_joint": {
+              "z": -10
           },
-          "left_shoulder_1_joint": {
-            "x": -20,
-            "y": -20,
-            "z": -40
+          "left_upLeg_joint": {
+              "z": 10
           }
         }
       }
@@ -341,48 +329,36 @@
         "jointAngles": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": 30,
-              "y": 40,
-              "z": 40
+              "x": 40,
+              "y": 50
             },
             "left_arm_joint": {
-              "x": 30,
-              "y": 40,
-              "z": 40
+              "x": 40,
+              "y": 50
             },
-            "right_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
+            "right_upLeg_joint": {
+                "z": 80
             },
-            "left_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
+            "left_upLeg_joint": {
+                "z": -80
             }
           }
         },
         "tolerances": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": 10,
-              "y": 10,
-              "z": 40
+              "x": -10,
+              "y": -10
             },
             "left_arm_joint": {
-              "x": 10,
-              "y": 10,
-              "z": 40
+              "x": -10,
+              "y": -10
             },
-            "right_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
+            "right_upLeg_joint": {
+                "z": -10
             },
-            "left_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
+            "left_upLeg_joint": {
+                "z": 10
             }
           }
         }
@@ -391,54 +367,42 @@
         "name": "UP",
         "duration": 0,
         "jointAngles": {
-          "jointAngles": {
-            "right_arm_joint": {
-              "x": -60,
-              "y": -35,
-              "z": -40
-            },
-            "left_arm_joint": {
-              "x": -60,
-              "y": -35,
-              "z": -40
-            },
-            "right_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
-            },
-            "left_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
+            "jointAngles": {
+                "right_arm_joint": {
+                    "x": -60,
+                    "y": -40
+                },
+                "left_arm_joint": {
+                    "x": -60,
+                    "y": -40
+                },
+                "right_upLeg_joint": {
+                    "z": 60
+                },
+                "left_upLeg_joint": {
+                    "z": -60
+                }
             }
-          }
         },
         "tolerances": {
-          "jointAngles": {
-            "right_arm_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
-            },
-            "left_arm_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
-            },
-            "right_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
-            },
-            "left_shoulder_1_joint": {
-              "x": -20,
-              "y": -20,
-              "z": -40
+            "jointAngles": {
+                "right_arm_joint": {
+                    "x": 10,
+                    "y": 10
+                },
+                "left_arm_joint": {
+                    "x": 10,
+                    "y": 10
+                },
+                "right_upLeg_joint": {
+                    "z": -10
+                },
+                "left_upLeg_joint": {
+                    "z": 10
+                }
             }
-          }
         }
-      }
+    }
     ],
     "feedback": {},
     "coachMode": {
