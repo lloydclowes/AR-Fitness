@@ -404,5 +404,115 @@
         }
       }
     }
+  },
+  {
+  "name": "Squat + Hold",
+  "id": 4,
+  "muscleGroup": "Legs",
+  "intensity": "Low",
+  "equipment": [],
+  "className": "SquatHoldController",
+  "duration": "0:20",
+  "startMessage": "For this exercise start crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Maintain your body in this position for the time set.",
+  "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "left_upLeg_joint": {
+            "y": -75
+          },
+          "right_upLeg_joint": {
+            "y": 75
+          },
+          "left_leg_joint": {
+            "z": 90
+          },
+          "right_leg_joint": {
+            "z": 90
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "left_upLeg_joint": {
+            "y": 25
+          },
+          "right_upLeg_joint": {
+            "y": -25
+          },
+          "left_leg_joint": {
+            "z": -20
+          },
+          "right_leg_joint": {
+            "z": -20
+          }
+        }
+      }
+    },
+    "states": [
+      {
+        "name": "DOWN",
+        "duration": 20,
+        "jointAngles": {
+          "jointAngles": {
+            "left_upLeg_joint": {
+              "y": -75
+            },
+            "right_upLeg_joint": {
+              "y": 75
+            },
+            "left_leg_joint": {
+              "z": 90
+            },
+            "right_leg_joint": {
+              "z": 90
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "left_upLeg_joint": {
+              "y": 25
+            },
+            "right_upLeg_joint": {
+              "y": -25
+            },
+            "left_leg_joint": {
+              "z": -20
+            },
+            "right_leg_joint": {
+              "z": -20
+            }
+          }
+        }
+      }
+    ],
+    "feedback": {
+      "left_upLeg_joint": {
+        "yFeedback": {
+          "decrease": "Squat deeper on your left",
+          "increase": "Not so deep on your left"
+        }
+      },
+      "right_upLeg_joint": {
+        "yFeedback": {
+          "decrease": "Not so deep on your right",
+          "increase": "Squat deeper on your right"
+        }
+      },
+      "left_leg_joint": {
+        "zFeedback": {
+          "decrease": "Straighten your left knee",
+          "increase": "Bend your left knee"
+        }
+      },
+      "right_leg_joint": {
+        "zFeedback": {
+          "decrease": "Straighten your right knee",
+          "increase": "Bend your right knee"
+        }
+      }
+    }
   }
 ]
