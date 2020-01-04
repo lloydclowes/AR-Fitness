@@ -37,6 +37,9 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
             return RepCountController(exercise: exercise, liveFeedback: false, countFirstRep: true)
         case "Lateral Raise + Hold":
             return HoldingController(exercise: exercise, liveFeedback: true)
+        case "Squat + Hold":
+            return HoldingController(exercise: exercise,
+            liveFeedback: true)
         case "Squats":
             return RepCountController(exercise: exercise, liveFeedback: false)
         default:
