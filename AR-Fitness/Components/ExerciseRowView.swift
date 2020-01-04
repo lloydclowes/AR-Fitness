@@ -1,11 +1,3 @@
-//
-//  ExerciseRowView.swift
-//  Testing UI
-//
-//  Created by Blanca Tebar on 19/10/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
-
 import SwiftUI
 
 struct ExerciseRowView: View {
@@ -72,11 +64,3 @@ struct ExerciseRowView: View {
     }
 }
 
-//struct ExerciseRowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ExerciseRowView(
-//            exercise: Exercise(id: 001, name: "Sit ups", intensity: .high, muscleGroup: .core, equipment: ["foo", "poo"], className: "ARUIViewController", duration: "2:00"),
-//            color: Color(red: 1.00, green: 0.98, blue: 0.98)
-//        ).padding()
-//    }
-//}

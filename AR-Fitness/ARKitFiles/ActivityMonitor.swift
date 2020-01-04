@@ -1,11 +1,3 @@
-//
-//  ActivityMonitor.swift
-//  AR-Sports
-//
-//  Created by Brandon Forbes on 21/10/2019.
-//  Copyright © 2019 LV8. All rights reserved.
-//
-
 import Foundation
 import ARKit
 
@@ -14,12 +6,7 @@ class ActivityMonitor {
     let liveFeedback : Bool
     let countFirstRep : Bool
     
-//    var firstInstr : Bool
-//    var times = 0
-//    let coachingInfo : CoachModeDetail?
-
-    // TODO: Tune this (as low as possible)
-    let turningPointTolerance = Float(1.5)
+    let turningPointTolerance = Float(1.5)   // TODO: Tune this (as low as possible)
     var stillTurning = false
     var startedTurning = TimeInterval(0)
     
@@ -70,19 +57,15 @@ class ActivityMonitor {
         self.targetStates = []
         self.liveFeedback = false
         self.countFirstRep = false
-//        self.coachingInfo = nil
-//        self.firstInstr = false
         self.exerciseFeedback = [:]
     }
 
     init(exercise: Exercise, liveFeedback : Bool = false, countFirstRep : Bool = false) {
         self.startState = exercise.startState
         self.targetStates = exercise.states
-//        self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
-//        self.coachingInfo = exercise.coachMode
         self.exerciseFeedback = exercise.feedback
         
         for (joint, angles) in targetStates[0].jointAngles {
@@ -281,7 +264,7 @@ class ActivityMonitor {
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
         prevState = currentState
         let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
-        currentState.update(newAngles, dema, 1.0)
+        currentState.update(newAngles, Augmentation.dema, 1.0)
         
         updateIndex(delta)
         

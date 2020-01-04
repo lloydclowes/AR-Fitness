@@ -9,7 +9,15 @@ import Foundation
 import RealityKit
 import ARKit
 
-let radToDeg = 180 / Float.pi
+// Radians to degrees
+func degrees(fromRadians : Float) -> Float {
+    return fromRadians * 180 / .pi
+}
+
+// Degrees to radians
+func radians(fromDegrees : Float) -> Float {
+    return fromDegrees * .pi / 180
+}
 
 // Converts a column major simd_float4x4 into its 3 rotations about the X, Y, Z axes respectively.
 func getRotationXYZ(matrix: simd_float4x4) -> EulerAngles {
@@ -40,9 +48,8 @@ func getRotationXYZ(quatf: simd_quatf) -> EulerAngles {
     let cosy_cosp = 1 - 2 * (qvec.y * qvec.y + qvec.z * qvec.z)
     let yaw = atan2(siny_cosp, cosy_cosp)
 
-    return EulerAngles(x: radToDeg * roll, y: radToDeg * pitch, z: radToDeg * yaw)
+    return EulerAngles(x: degrees(fromRadians: roll), y: degrees(fromRadians: pitch), z: degrees(fromRadians: yaw))
 }
-
 
 // Joins a list of strings as if they were spoken in english
 func spokenListJoin(_ arr : [String]) -> String {
@@ -60,24 +67,34 @@ func spokenListJoin(_ arr : [String]) -> String {
     return joined + " and \(arr[arr.count - 1])"
 }
 
-// AUGMENTATION FUNCTIONS:
+// Converts a joint name (underscored) into common English
+fileprivate let jointNameMappings : Dictionary<String, String> = [:]
 
-// Use replace as augmentation function to ignore the previous value completely
-func replace(_ cur : Float, _ prev : Float) -> Float {
-    return cur
+func jointToName(_ joint : String) -> String {
+    if jointNameMappings.keys.contains(joint){
+        return jointNameMappings[joint]!
+    } else {
+        return joint.replacingOccurrences(of: "_", with: " ")
+    }
 }
 
-// Single exponential moving average
-func ema(_ actual : Float, _ ema_prev : Float) -> Float {
-    let alpha = Float(0.25)
-    return actual * alpha + ema_prev * (1.0 - alpha)
+struct Augmentation {
+    // Use replace as augmentation function to ignore the previous value completely
+    static func replace(_ cur : Float, _ prev : Float) -> Float {
+        return cur
+    }
+    
+    // Single exponential moving average
+    static func ema(_ actual : Float, _ ema_prev : Float) -> Float {
+        let alpha = Float(0.25)
+        return actual * alpha + ema_prev * (1.0 - alpha)
+    }
+    
+    // Double exponential moving average
+    static func dema(_ actual : Float, _ prev : Float) -> Float {
+        let smoothed = ema(actual, prev)
+        let double_smoothed = ema(smoothed, prev)
+        return 2 * smoothed - double_smoothed
+    }
 }
- 
-// Double exponential moving average
-func dema(_ actual : Float, _ prev : Float) -> Float {
-    let smoothed = ema(actual, prev)
-    let double_smoothed = ema(smoothed, prev)
-    return 2 * smoothed - double_smoothed
-}
-
 

@@ -1,41 +1,37 @@
-//
-//  ExerciseInstructionsView.swift
-//  AR-Fitness
-//
-//  Created by Blanca Tebar on 28/11/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
-
 import SwiftUI
 import RealityKit
 import ARKit
 import Combine
 
 struct ExerciseInstructionsView: View {
-    var exercise : String
+    var exercise : Exercise
     
     var body: some View {
         return ExerciseInstructionControllerContainer(exercise: exercise)
                 .edgesIgnoringSafeArea(.bottom)
-            .navigationBarTitle("\(exercise) guide")
+                .navigationBarTitle("\(exercise.name) guide")
     }
 }
 
 struct ExerciseInstructionControllerContainer: UIViewControllerRepresentable {
-    let characterAnchor = AnchorEntity()
-    var character: BodyTrackedEntity?
-    var exercise: String
+    var exercise : Exercise
     
     func makeCoordinator() -> Coordinator {}
     
     func makeUIViewController(context: Context) -> UIViewController {
-        switch self.exercise {
+        switch self.exercise.name {
         case "Lateral Raises":
-            return LateralRaiseController()
+//            return LateralRaiseController()
+            return RepCountController(exercise: exercise, liveFeedback: false, countFirstRep: true)
+        case "Lateral Raise + Hold":
+//            return LateralRaiseHoldController()
+            return HoldingController(exercise: exercise, liveFeedback: true)
         case "Squats":
-            return SlowSquatController()
+//            return SquatController()
+            return RepCountController(exercise: exercise, liveFeedback: false)
         default:
-            return SquatController()
+            print("ERROR: No view controller found for the given exercise")
+            return RepCountController(exercise: exercise, liveFeedback: false)
         }
     }
     
@@ -44,6 +40,18 @@ struct ExerciseInstructionControllerContainer: UIViewControllerRepresentable {
 
 struct ExerciseInstructionsView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseInstructionsView(exercise: "Hello")
+        ExerciseInstructionsView(
+            exercise: Exercise(id: -1,
+                                name: "Name",
+                                intensity: .low,
+                                muscleGroup: .wholeBody,
+                                equipment: ["equipment"],
+                                className: "",
+                                duration: "0:00",
+                                startMessage: "",
+                                startState: TargetState("START"),
+                                states: [TargetState("None")],
+                                feedback: [:])
+        )
     }
 }

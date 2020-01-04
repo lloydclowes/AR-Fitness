@@ -1,11 +1,3 @@
-//
-//  EulerAngles.swift
-//  AR-Sports
-//
-//  Created by Brandon Forbes on 27/10/2019.
-//  Copyright © 2019 LV8. All rights reserved.
-//
-
 import Foundation
 
 struct EulerAngles: Codable, Hashable {

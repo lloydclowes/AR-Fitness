@@ -1,11 +1,3 @@
-//
-//  JointAngles.swift
-//  AR-Fitness
-//
-//  Created by Brandon Forbes on 29/11/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
-
 import Foundation
 
 struct JointAngles : Hashable, Codable, Sequence {

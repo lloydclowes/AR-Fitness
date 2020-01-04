@@ -1,10 +1,3 @@
-//
-//  MainPageView.swift
-//  Testing UI
-//
-//  Created by Blanca Tebar on 21/10/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
 import SwiftUI
 
 struct MainPageView: View {
@@ -14,6 +7,7 @@ struct MainPageView: View {
     var exercises: [Exercise] = exerciseData
     private var searchBarIsActive = false
     @State var audioMode: String = SpeechService.shared.isSpeechEnabled ? "on" : "off"
+    
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
     }

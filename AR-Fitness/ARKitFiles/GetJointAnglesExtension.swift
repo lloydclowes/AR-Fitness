@@ -1,11 +1,3 @@
-//
-//  GetJointAnglesExtension.swift
-//  AR-Sports
-//
-//  Created by Brandon Forbes on 21/10/2019.
-//  Copyright © 2019 LV8. All rights reserved.
-//
-
 import Foundation
 import RealityKit
 import ARKit

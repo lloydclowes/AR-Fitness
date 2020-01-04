@@ -1,25 +1,17 @@
-//
-//  Exercise.swift
-//  Testing UI
-//
-//  Created by Lloyd Clowes on 18/10/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
-
 import SwiftUI
 
 struct Exercise: Hashable, Codable, Identifiable {
-    var id: Int
-    var name: String
-    var intensity: Intensity
-    var muscleGroup: MuscleGroup
-    var equipment: [String]
-    var className: String
-    var duration: String
+    var id : Int
+    var name : String
+    var intensity : Intensity
+    var muscleGroup : MuscleGroup
+    var equipment : [String]
+    var className : String
+    var duration : String
     var startMessage : String
-    var startState: TargetState
-    var states: [TargetState]
-    var feedback: Dictionary<String, JointFeedback>
+    var startState : TargetState
+    var states : [TargetState]
+    var feedback : Dictionary<String, JointFeedback>
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {

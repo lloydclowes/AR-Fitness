@@ -1,11 +1,3 @@
-//
-//  ARUIView.swift
-//  AR-Sports
-//
-//  Created by Brandon Forbes on 15/10/2019.
-//  Copyright © 2019 LV8. All rights reserved.
-//
-
 import SwiftUI
 import RealityKit
 import ARKit
@@ -24,7 +16,7 @@ struct ARUIView : View {
                 .edgesIgnoringSafeArea(.bottom)
             .navigationBarTitle(exercise.name)
         .navigationBarItems(trailing:
-            NavigationLink(destination: ExerciseInstructionsView(exercise: exercise.name)) {
+            NavigationLink(destination: ExerciseInstructionsView(exercise: exercise)) {
                 Text(
                 "Instructions")
             }
@@ -41,17 +33,22 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
     
     func makeCoordinator() -> Coordinator {}
     
+    
+    // exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false
     func makeUIViewController(context: Context) -> UIViewController {
         switch self.exercise.name {
         case "Lateral Raises":
-            return LateralRaiseController()
+//            return LateralRaiseController()
+            return RepCountController(exercise: exercise, liveFeedback: false, countFirstRep: true)
         case "Lateral Raise + Hold":
-            return LateralRaiseHoldController()
+//            return LateralRaiseHoldController()
+            return HoldingController(exercise: exercise, liveFeedback: true)
         case "Squats":
-            return SquatController()
+//            return SquatController()
+            return RepCountController(exercise: exercise, liveFeedback: false)
         default:
             print("ERROR: No view controller found for the given exercise")
-            return SquatController()
+            return RepCountController(exercise: exercise, liveFeedback: false)
         }
     }
     

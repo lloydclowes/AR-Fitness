@@ -1,11 +1,3 @@
-//
-//  SpeechService.swift
-//  AR-Fitness
-//
-//  Created by Lloyd Clowes on 31/12/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
-
 import AVFoundation
 
 enum VoiceType: String {
@@ -61,6 +53,7 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     }
     
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
+        print("Speaking: '\(text)'")
         if !self.speechEnabled {
             return
         }

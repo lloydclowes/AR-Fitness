@@ -144,16 +144,16 @@
       "tolerances": {
         "jointAngles": {
           "left_arm_joint": {
-            "y": -15
+            "y": -30
           },
           "right_arm_joint": {
-            "y": -15
+            "y": -30
           },
           "left_forearm_joint": {
-            "z": -15
+            "z": -20
           },
           "right_forearm_joint": {
-            "z": -15
+            "z": -20
           }
         }
       }
@@ -217,10 +217,10 @@
         "tolerances": {
           "jointAngles": {
             "left_arm_joint": {
-              "y": -20
+              "y": -30
             },
             "right_arm_joint": {
-              "y": -20
+              "y": -30
             },
             "left_forearm_joint": {
               "z": -20
