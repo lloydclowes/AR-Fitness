@@ -3,9 +3,10 @@ import RealityKit
 import ARKit
 import Combine
 
+
 class ARViewController : UIViewController, ARSessionDelegate {
     
-    var arView = ARView(frame: .zero)
+    static let arView = ARView(frame: .zero)
     
     var exercise : Exercise!
     var activityMonitor : ActivityMonitor!
@@ -71,7 +72,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        arView.session.delegate = self
+        ARViewController.arView.session.delegate = self
         
         // If the iOS device doesn't support body tracking, raise a developer error
         guard ARBodyTrackingConfiguration.isSupported else {
@@ -81,8 +82,9 @@ class ARViewController : UIViewController, ARSessionDelegate {
         // Run a body tracking configration.
         let configuration = ARBodyTrackingConfiguration()
         configuration.environmentTexturing = .none
-        arView.session.run(configuration)
-        arView.scene.addAnchor(characterAnchor)
+        ARViewController.arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors, .stopTrackedRaycasts])
+        ARViewController.arView.scene.anchors.removeAll()
+        ARViewController.arView.scene.addAnchor(characterAnchor)
         
         // Asynchronously load the 3D character.
         var cancellable: AnyCancellable? = nil
@@ -157,7 +159,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        arView.session.pause()
+        ARViewController.arView.session.pause()
         speaker.cutOffSpeech()
     }
     
@@ -165,7 +167,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     func handleRewards() { print("handleRewards() not implemented") }
     
     func setupViews() {
-        view.addSubview(arView)
+        view.addSubview(ARViewController.arView)
         view.addSubview(scoreLabel)
         view.addSubview(robotButton)
         
@@ -183,11 +185,11 @@ class ARViewController : UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
         self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
-        arView.translatesAutoresizingMaskIntoConstraints = false
-        arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        ARViewController.arView.translatesAutoresizingMaskIntoConstraints = false
+        ARViewController.arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        ARViewController.arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        ARViewController.arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        ARViewController.arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 }
 
