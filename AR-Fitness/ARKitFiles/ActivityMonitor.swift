@@ -11,10 +11,12 @@ import ARKit
 
 class ActivityMonitor {
     
-    let inCoachingMode : Bool
-    var firstInstr : Bool
-    var times = 0
-    let coachingInfo : CoachModeDetail?
+    let liveFeedback : Bool
+    let countFirstRep : Bool
+    
+//    var firstInstr : Bool
+//    var times = 0
+//    let coachingInfo : CoachModeDetail?
 
     // TODO: Tune this (as low as possible)
     let turningPointTolerance = Float(1.5)
@@ -31,7 +33,7 @@ class ActivityMonitor {
     var stateSuccesses = [StateSuccess]()
     
     var index = -1
-    var lastIndex = 0
+    var lastIndex = -1
     var lastArrived = TimeInterval()
     var targetIndex = 0
     var repCount = 0
@@ -46,7 +48,7 @@ class ActivityMonitor {
     }
     
     var lastStateName : String {
-        get { return targetStates[lastIndex].name }
+        get { return lastIndex != -1 ? targetStates[lastIndex].name : "None" }
     }
     
     var currentStateName : String {
@@ -54,25 +56,33 @@ class ActivityMonitor {
     }
     
     var remainingDuration : Double {
-        get { return max(0, targetStates[lastIndex].duration - stateSuccesses[lastIndex].duration) }
+        get {
+            if lastIndex == -1 {
+                return targetStates[0].duration
+            } else {
+                return max(0, targetStates[lastIndex].duration - stateSuccesses[lastIndex].duration)
+            }
+        }
     }
     
     init() {
         self.startState = TargetState("START")
         self.targetStates = []
-        self.inCoachingMode = false
-        self.coachingInfo = nil
-        self.firstInstr = false
+        self.liveFeedback = false
+        self.countFirstRep = false
+//        self.coachingInfo = nil
+//        self.firstInstr = false
         self.exerciseFeedback = [:]
     }
 
-    init(exercise: Exercise, coachingMode : Bool = false) {
+    init(exercise: Exercise, liveFeedback : Bool = false, countFirstRep : Bool = false) {
         self.startState = exercise.startState
         self.targetStates = exercise.states
-        self.firstInstr = coachingMode
+//        self.firstInstr = coachingMode
         self.targetIndex = targetStates.count > 1 ? 1 : 0
-        self.inCoachingMode = coachingMode
-        self.coachingInfo = exercise.coachMode
+        self.liveFeedback = liveFeedback
+        self.countFirstRep = countFirstRep
+//        self.coachingInfo = exercise.coachMode
         self.exerciseFeedback = exercise.feedback
         
         for (joint, angles) in targetStates[0].jointAngles {
@@ -98,7 +108,7 @@ class ActivityMonitor {
         if joints.count == 0 {
             return "Your joints didn't reach the \(state) state at the same time"
         } else {
-            return "Your \(spokenListJoin(joints)) didn't reach the \(state) state"
+            return "Your \(spokenListJoin(joints.map(jointToName))) didn't reach the \(state) state"
         }
     }
     
@@ -130,43 +140,20 @@ class ActivityMonitor {
             repCount += 1
             print("success")
             if repCount % 3 == 1 {
-                speaker.speak(statement: SpeechSynthesizer.rewards.randomElement()!)
+                speaker.speakRandomReward()
             }
             return
         }
         
         if missedStates.count > 0 {
-            speaker.speak(statement: spokenListJoin(missedStates))
+            speaker.speak(text: spokenListJoin(missedStates))
         }
         
         if shortDurations.count == 1 {
-            speaker.speak(statement: "You didn't stay in the \(shortDurations[0]) state for long enough.")
+            speaker.speak(text: "You didn't stay in the \(shortDurations[0]) state for long enough.")
         } else if shortDurations.count > 1 {
-            speaker.speak(statement: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
+            speaker.speak(text: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
         }
-    }
-    
-    func coachingMode() {
-        // Add instructions to exerciseData to be said outloud when reaching a state, so for
-        // the target state.
-        if currentState.reaches(targetStates[targetIndex]) {
-            index = targetIndex
-            lastIndex = index
-            targetIndex = (targetIndex + 1) % targetStates.count
-            print(self.times)
-            if firstInstr {
-                speaker.speak(statement: " \(coachingInfo!.stateInstructions[targetIndex])")
-                self.times = self.times + 1
-            }
-            
-            if self.times >= targetStates.count {
-                if firstInstr {
-                    speaker.speak(statement: "That was a perfect rep! You're good to go!")
-                    self.firstInstr = false
-                }
-            }
-        }
-        return
     }
       
     func isTurningPoint() -> (Bool, [String]) {
@@ -198,7 +185,6 @@ class ActivityMonitor {
             if currentState.reaches(startState) {
                 print("START")
                 started = true
-                index = 0
             }
             return
         }
@@ -208,18 +194,21 @@ class ActivityMonitor {
         // If the index hasn't changed then ignore
         if index != -1 && currentState.reaches(targetStates[index]) {
             lastArrived = curTime
+            lastFeedback = TimeInterval()
             stateSuccesses[index].duration += delta
 //            print("remain")
             return
         }
 
         // If we returned to the same state as before, resume
-        if index == -1 && currentState.reaches(targetStates[lastIndex]) {
+        if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
             if curTime - lastArrived > 0.1 && index == 0 {
+                print("complete in return")
                 completeRep()
             }
             lastArrived = curTime
+            lastFeedback = TimeInterval()
             print("return to \(index)")
             return
         }
@@ -242,21 +231,18 @@ class ActivityMonitor {
             return
         }
       
-        if (self.inCoachingMode) {
-            self.coachingMode()
-            return
-        }
-        
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
             index = targetIndex
             stateSuccesses[index].duration += delta
-            if index < lastIndex {
+            if index < lastIndex || countFirstRep && lastIndex == -1 && index == 0 {
+                print("complete in advance")
                 completeRep()
             }
             
             lastIndex = index
             lastArrived = curTime
+            lastFeedback = TimeInterval()
             targetIndex = (targetIndex + 1) % targetStates.count
             
             print("advanced to \(targetStates[index].name)")
@@ -271,10 +257,12 @@ class ActivityMonitor {
                 index = (targetIndex + i) % targetStates.count
                 stateSuccesses[index].duration += delta
                 if index < lastIndex {
+                    print("complete in jump")
                     completeRep()
                 }
                 
                 lastIndex = index
+                lastFeedback = TimeInterval()
                 lastArrived = curTime
                 targetIndex = (index + 1) % targetStates.count
                 
@@ -296,47 +284,39 @@ class ActivityMonitor {
         
         let currentTarget = targetStates[targetIndex]
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-        if inCoachingMode {
+        if liveFeedback {
             let curTime = Date().timeIntervalSince1970
-            if stillTurning && curTime - lastFeedback > 10 {
+            if stillTurning && index == -1 && curTime - lastFeedback > 10 {
                 lastFeedback = Date().timeIntervalSince1970
                 var feedback = [String]()
                 for (joint, angles) in difference {
                     var jointFeedback = [String]()
                     if let dx = angles.x {
                         if dx > 0 {
-//                            jointFeedback.append("increase x by \(abs(Int(round(dx))))")
-//                            jointFeedback.append("increase x")
                             jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.increase)
                         } else {
-//                            jointFeedback.append("decrease x by \(abs(Int(round(dx))))")
-//                            jointFeedback.append("decrease x")
                             jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.decrease)
                         }
                     }
     
                     if let dy = angles.y {
                         if dy > 0 {
-//                            jointFeedback.append("increase y")
                             jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.increase)
                         } else {
-//                            jointFeedback.append("decrease y")
                             jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.decrease)
                         }
                     }
     
                     if let dz = angles.z {
                         if dz > 0 {
-//                            jointFeedback.append("increase z")
                             jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.increase)
                         } else {
-//                            jointFeedback.append("decrease z")
                             jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
                         }
                     }
                     feedback.append(spokenListJoin(jointFeedback))
                 }
-                speaker.speak(statement: spokenListJoin(feedback))
+                speaker.speak(text: spokenListJoin(feedback))
             }
         } else {
 //            print("-- start --")

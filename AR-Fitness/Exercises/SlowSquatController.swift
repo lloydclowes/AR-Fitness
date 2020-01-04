@@ -1,11 +1,3 @@
-//
-//  SlowSquatController.swift
-//  AR-Fitness
-//
-//  Created by Blanca Tebar on 01/12/2019.
-//  Copyright © 2019 SE Project Group 8. All rights reserved.
-//
-
 import UIKit
 import RealityKit
 import ARKit
@@ -14,20 +6,15 @@ import Combine
 class SlowSquatController: UIViewController, ARSessionDelegate {
 
     var arView = ARView(frame: .zero)
+    
     // The 3D character to display.
     var character: BodyTrackedEntity?
-    let characterOffset: SIMD3<Float> = [0, 0, 0]
     let characterAnchor = AnchorEntity()
 
     var uploaded = false
     let recordingSession = RecordingSession()
 
-    var initial = true
-    var reachedSquat = false
-    var timer = Timer()
-    var counter = 0
-    let speaker = SpeechSynthesizer.globalSpeaker
-    var rewarded = false
+    let speaker = SpeechService.shared
 
     var showRobot = false
 
@@ -35,6 +22,7 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
 
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
+        speaker.cutOffSpeech()
     }
     
     override func viewDidLoad() {
@@ -78,18 +66,17 @@ class SlowSquatController: UIViewController, ARSessionDelegate {
         })
         
         let exercise = exerciseData[Exercises.squat.rawValue]
-        self.activityMonitor = ActivityMonitor(exercise: exercise, coachingMode: true)
+        self.activityMonitor = ActivityMonitor(exercise: exercise, liveFeedback: true)
         
         self.recordingSession.startRecording()
         speaker.enableSpeech()
-        speaker.speak(statement: "In order to start the live coach session, move to the \(exerciseData[1].states[0].name) position")
+        speaker.speak(text: "In order to start the live coach session, move to the \(exerciseData[1].states[0].name) position")
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
             
-            //self.timer = atimer
             characterAnchor.transform = Transform(matrix: bodyAnchor.transform)
             // ^ or independently set .orientation and .position of characterAnchor
             

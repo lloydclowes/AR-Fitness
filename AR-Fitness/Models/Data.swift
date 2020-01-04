@@ -11,8 +11,10 @@ import UIKit
 let exerciseData: [Exercise] = load("exerciseData.json")
 
 enum Exercises : Int {
+    case lateralRaiseHold
     case lateralRaise
     case squat
+    case squatHold
 }
 
 func load<T: Decodable>(_ filename: String) -> T {

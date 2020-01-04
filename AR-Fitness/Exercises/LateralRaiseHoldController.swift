@@ -1,16 +1,9 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-The sample app's main view controller.
-*/
-
 import UIKit
 import RealityKit
 import ARKit
 import Combine
 
-class SquatController: UIViewController, ARSessionDelegate {
+class LateralRaiseHoldController: UIViewController, ARSessionDelegate {
 
     var arView = ARView(frame: .zero)
     
@@ -18,23 +11,29 @@ class SquatController: UIViewController, ARSessionDelegate {
     var character: BodyTrackedEntity?
     let characterAnchor = AnchorEntity()
     
-    var startTime = Double.greatestFiniteMagnitude
+    let speaker = SpeechService.shared
+    
+    var activityMonitor = ActivityMonitor()
+    
     var uploaded = false
     let recordingSession = RecordingSession()
     
     var started = false
-
-    var durationCounter = 0
-    let speaker = SpeechService.shared
-    var rewarded = false
-    var timer = Timer()
-    
-    var lastInstructions = Date().timeIntervalSince1970
+    var countedDown = false
+    var halfReward = false
+    var fiveReward = false
+    var completed = false
+        
+    var startTime = TimeInterval()
     var prevTime = TimeInterval()
+    var lastInstructionTime = TimeInterval()
+
+    var waitingTime : TimeInterval? = nil
     
     var showRobot = true
     
-    var activityMonitor = ActivityMonitor()
+    var durationCounter = 0
+    var timer = Timer()
     
     let infoLabel : UILabel = {
         let myLabel = UILabel()
@@ -47,29 +46,42 @@ class SquatController: UIViewController, ARSessionDelegate {
         myLabel.layer.cornerRadius = 25
         return myLabel
     }()
-        
-    let infoButton : UIButton = {
+    
+    func infoButton() -> UIButton {
         let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
         button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         button.setAttributedTitle(NSAttributedString(string: "See info", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20), NSAttributedString.Key.foregroundColor:
             UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
-        button.addTarget(nil, action: #selector(showInformation), for: UIControl.Event.touchUpInside)
+        button.addTarget(nil, action: #selector(self.showInformation), for: UIControl.Event.touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 25
         return button
-    }()
+    }
     
-    let robotButton : UIButton = {
+    func robotButton() -> UIButton {
         let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
         button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         
-        button.setAttributedTitle(NSAttributedString(string: "Toggle robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
-            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
-        button.addTarget(nil, action: #selector(toggleRobot), for: .touchUpInside)
+        button.setAttributedTitle(NSAttributedString(string: "robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+            UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: UIControl.State.normal)
+        button.addTarget(nil, action: #selector(self.toggleRobot), for: UIControl.Event.touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 15
         return button
-    }()
+    }
+    
+    @IBAction func showInformation(sender: UIButton) {
+        let modalViewController = ModalViewController()
+        modalViewController.updateInfo(nil, timer: durationCounter, exerciseName: "Lateral Raises")
+        modalViewController.modalPresentationStyle = .overCurrentContext
+        present(modalViewController, animated: true, completion: {})
+    }
+    
+    @IBAction func toggleRobot(sender: UIButton) {
+        showRobot = !showRobot
+        // TODO: Fix this
+        sender.setTitle(showRobot ? "Hide" : "Show", for: .normal)
+    }
     
     @objc func updateTimer() {
         durationCounter += 1
@@ -79,35 +91,24 @@ class SquatController: UIViewController, ARSessionDelegate {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     
-    override func viewDidLoad() {
-        infoLabel.text = "Reps: \(activityMonitor.repCount)"
-        setupViews()
-        
-        let exercise = exerciseData[Exercises.squat.rawValue]
-        self.activityMonitor = ActivityMonitor(exercise: exercise)
-        
-        speaker.speak(text: exercise.startMessage)
-        lastInstructions = Date().timeIntervalSince1970
-        
-        self.recordingSession.startRecording()
-    }
-    
-    @IBAction func showInformation(sender: UIButton) {
-        let modalViewController = ModalViewController()
-        modalViewController.updateInfo(activityMonitor.repCount, timer: durationCounter, exerciseName: "Squats")
-        modalViewController.modalPresentationStyle = .overCurrentContext
-        present(modalViewController, animated: true, completion: {})
-    }
-    
-    @IBAction func toggleRobot(sender: UIButton) {
-        self.showRobot = !self.showRobot
-        // TODO: Fix this
-        sender.setTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         arView.session.pause()
         speaker.cutOffSpeech()
+    }
+    
+    override func viewDidLoad() {
+        prevTime = Date().timeIntervalSince1970
+        
+        let exercise = exerciseData[Exercises.lateralRaiseHold.rawValue]
+        activityMonitor = ActivityMonitor(exercise: exercise, liveFeedback: true)
+        infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+        
+        speaker.speak(text: exercise.startMessage)
+        lastInstructionTime = Date().timeIntervalSince1970
+        
+//        recordingSession.startRecording()
+        
+        setupViews()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -145,11 +146,6 @@ class SquatController: UIViewController, ARSessionDelegate {
                 print("Error: Unable to load model as BodyTrackedEntity")
             }
         })
-                
-//        self.recordingSession.startRecording()
-        self.prevTime = Date().timeIntervalSince1970
-        self.startTime = Date().timeIntervalSince1970
-        self.runTimer()
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -168,45 +164,52 @@ class SquatController: UIViewController, ARSessionDelegate {
             let delta = curTime - prevTime
             prevTime = curTime
             activityMonitor.updateState(bodyAnchor, delta)
+            
+//            self.recordingSession.poll(activityMonitor.currentState)
+//            if curTime - startTime > 10 {
+//                print("uploading")
+//                self.recordingSession.upload()
+//                startTime = curTime
+//            }
+//
             if !activityMonitor.started {
-                if curTime - lastInstructions > 10 {
-                    lastInstructions = curTime
+                if curTime - lastInstructionTime > 10 {
+                    lastInstructionTime = curTime
                     speaker.speak(text: "Please assume the start position.")
                 }
                 return
             }
             
             if !started {
-                speaker.speak(text: "Good! Now hold that posture for 20 seconds.")
+                speaker.speak(text: "Good! Now hold that posture for 20 seconds")
                 startTime = Date().timeIntervalSince1970
                 started = true
             }
             
-//          self.recordingSession.poll(activityMonitor.currentState)
-//            if curTime - startTime > 10 {
-//                print("uploading")
-//                self.recordingSession.upload()
-//                startTime = curTime
-//            }
-            
-            let reps = activityMonitor.repCount
-            self.infoLabel.text = "Reps: \(reps)"
-            if reps != 0 && reps.isMultiple(of: 5) && !rewarded {
-                rewarded = true
-                speaker.speakRandomReward()
+            infoLabel.text = "Timer: \(Int(round(activityMonitor.remainingDuration)))"
+            if !halfReward && round(activityMonitor.remainingDuration) <= 10 {
+                halfReward = true
+                print("half")
+                speaker.speak(text: "Half way there!")
+            } else if !fiveReward && round(activityMonitor.remainingDuration) <= 5 {
+                fiveReward = true
+                print("five")
+                speaker.speak(text: "Only five more seconds!")
+            } else if !completed && round(activityMonitor.remainingDuration) <= 0 {
+                speaker.speak(text: "Well done! You've completed the challenge")
+                print("done")
+                completed = true
             }
-            if !reps.isMultiple(of: 5) {
-                rewarded = false
-            }            
         }
     }
     
     func setupViews() {
-        
+        let button = infoButton()
+        let toggleRobotButton = robotButton()
         view.addSubview(arView)
         view.addSubview(infoLabel)
-        view.addSubview(infoButton)
-        view.addSubview(robotButton)
+        view.addSubview(button)
+        view.addSubview(toggleRobotButton)
         
         // label constraints (position, size...)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -216,28 +219,28 @@ class SquatController: UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: infoLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         
         // button constraints
-        infoButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
-        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
-        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
-        self.view.addConstraint(NSLayoutConstraint(item: infoButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
+        self.view.addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
         
-        // toggle robot button constraints
-        robotButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
-        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
-        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
-        self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
+        toggleRobotButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 15))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -30))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
+        self.view.addConstraint(NSLayoutConstraint(item: toggleRobotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
-        
+        // arView constraints
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         arView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         arView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
     }
-}
 
+}
 
 
 

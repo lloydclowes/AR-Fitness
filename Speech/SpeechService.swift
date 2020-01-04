@@ -20,18 +20,52 @@ let APIKey = "AIzaSyDYl9FJoFbjV2d7661n67Orek6kPxGmslo"
 class SpeechService: NSObject, AVAudioPlayerDelegate {
 
     static let shared = SpeechService()
+    
+    static let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
+    
+    static let speedFocusedStatements = ["Move a bit slower", "Not so fast"]
+    
+    var isSpeechEnabled : Bool {
+        get { return speechEnabled }
+    }
+    
+    var isBusy : Bool {
+        get { return self.busy }
+    }
+    
+    private var speechEnabled : Bool
+    
     private(set) var busy: Bool = false
     
     private var player: AVAudioPlayer?
     private var completionHandler: (() -> Void)?
     
-    func speak(statement: String) {
-        speak(text: statement) {}
+    init(speechEnabled : Bool = true) {
+        self.speechEnabled = speechEnabled
+    }
+    
+    func enableSpeech() {
+        speechEnabled = true
+    }
+    
+    func disableSpeech() {
+        speechEnabled = false
+    }
+    
+    func speak(text: String) {
+        speak(text: text) {}
+    }
+    
+    func speakRandomReward() {
+        speak(text: SpeechService.rewards.randomElement()!)
     }
     
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
+        if !self.speechEnabled {
+            return
+        }
         
-        if speechServiceIsBusy() {
+        if self.busy {
             cutOffSpeech()
         }
         
@@ -70,21 +104,15 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    func speechServiceIsBusy() -> Bool {
-        return self.busy
-    }
-    
     // Returns false if nothing is currently being said; true if the speech was cut off
     @discardableResult
     func cutOffSpeech() -> Bool {
-        
-        if !speechServiceIsBusy() {
+        if !self.busy {
             return false
         }
         
         self.player?.stop()
         return true
-        
     }
     
     private func buildPostData(text: String, voiceType: VoiceType) -> Data {

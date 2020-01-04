@@ -1,18 +1,18 @@
 [
   {
-    "name": "Lateral Raises",
-    "id": 5,
+    "name": "Lateral Raise + Hold",
+    "id": 1,
     "muscleGroup": "Arms",
     "intensity": "Low",
     "equipment": [
       "Dumbbells"
     ],
-    "className": "LateralRaiseController",
-    "duration": "1:00",
+    "className": "LateralRaiseHoldController",
+    "duration": "0:20",
     "startMessage": "For this exercise you should stand upright with your arms out straight to the side so that your body forms a T shape.",
     "startState": {
       "name": "START",
-      "duration": 20,
+      "duration": 0,
       "jointAngles": {
         "jointAngles": {
           "left_arm_joint": {
@@ -22,26 +22,26 @@
             "y": 0
           },
           "left_forearm_joint": {
-            "z": -20
+            "z": -30
           },
           "right_forearm_joint": {
-            "z": -20
+            "z": -30
           }
         }
       },
       "tolerances": {
         "jointAngles": {
           "left_arm_joint": {
-            "y": 0.75
+            "y": 5
           },
           "right_arm_joint": {
-            "y": 0.75
+            "y": 5
           },
           "left_forearm_joint": {
-            "z": -10
+            "z": -15
           },
           "right_forearm_joint": {
-            "z": -10
+            "z": -15
           }
         }
       }
@@ -59,52 +59,204 @@
               "y": 0
             },
             "left_forearm_joint": {
-              "z": -20
+              "z": -30
             },
             "right_forearm_joint": {
-              "z": -20
+              "z": -30
             }
           }
         },
         "tolerances": {
           "jointAngles": {
             "left_arm_joint": {
-              "y": 0.75
+              "y": 5
             },
             "right_arm_joint": {
-              "y": 0.75
+              "y": 5
             },
             "left_forearm_joint": {
-              "z": -10
+              "z": -15
             },
             "right_forearm_joint": {
-              "z": -10
+              "z": -15
             }
           }
         }
       }
     ],
-    "feedback" : {
+    "feedback": {
+      "left_arm_joint": {
+        "yFeedback": {
+          "decrease": "Raise your left arm",
+          "increase": "Lower your left arm"
+        }
+      },
+      "right_arm_joint": {
+        "yFeedback": {
+          "decrease": "Raise your right arm",
+          "increase": "Lower your right arm"
+        }
+      },
+      "left_forearm_joint": {
+        "zFeedback": {
+          "decrease": "Bend your left arm",
+          "increase": "Straighten your left arm"
+        }
+      },
+      "right_forearm_joint": {
+        "zFeedback": {
+          "decrease": "Bend your right arm",
+          "increase": "Straighten your right arm"
+        }
+      }
+    }
+  },
+  {
+    "name": "Lateral Raises",
+    "id": 2,
+    "muscleGroup": "Arms",
+    "intensity": "Low",
+    "equipment": [
+      "Dumbbells"
+    ],
+    "className": "LateralRaiseController",
+    "duration": "any",
+    "startMessage": "For this exercise you should stand upright with your arms by your side. Then, to complete one rep, keep your elbows relatively straight and raise your arms to be horizontal with your shoulders before lowering them again.",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
           "left_arm_joint": {
-            "yFeedback": { "decrease": "Raise your left arm", "increase": "Lower your left arm" }
+            "y": 60
           },
           "right_arm_joint": {
-            "yFeedback": { "decrease": "Raise your right arm", "increase": "Lower your right arm" }
+            "y": 60
           },
           "left_forearm_joint": {
-            "zFeedback": { "decrease": "Bend your left arm", "increase": "Straighten your left arm" }
+            "z": -30
           },
           "right_forearm_joint": {
-            "zFeedback": { "decrease": "Bend your right arm", "increase": "Straighten your right arm" }
+            "z": -30
           }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "left_arm_joint": {
+            "y": -15
+          },
+          "right_arm_joint": {
+            "y": -15
+          },
+          "left_forearm_joint": {
+            "z": -15
+          },
+          "right_forearm_joint": {
+            "z": -15
+          }
+        }
+      }
     },
-    "coachMode": {
-      "transitionDuration": 2,
-      "stateDuration": 5,
-      "stateInstructions": [
-        "Stand up with your back straight",
-        "Raise your arms and keep them parallel to the floor."
-      ]
+    "states": [
+      {
+        "name": "UP",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "left_arm_joint": {
+              "y": 0
+            },
+            "right_arm_joint": {
+              "y": 0
+            },
+            "left_forearm_joint": {
+              "z": -30
+            },
+            "right_forearm_joint": {
+              "z": -30
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "left_arm_joint": {
+              "y": 5
+            },
+            "right_arm_joint": {
+              "y": 5
+            },
+            "left_forearm_joint": {
+              "z": -15
+            },
+            "right_forearm_joint": {
+              "z": -15
+            }
+          }
+        }
+      },
+      {
+        "name": "DOWN",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "left_arm_joint": {
+              "y": 60
+            },
+            "right_arm_joint": {
+              "y": 60
+            },
+            "left_forearm_joint": {
+              "z": -30
+            },
+            "right_forearm_joint": {
+              "z": -30
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "left_arm_joint": {
+              "y": -20
+            },
+            "right_arm_joint": {
+              "y": -20
+            },
+            "left_forearm_joint": {
+              "z": -20
+            },
+            "right_forearm_joint": {
+              "z": -20
+            }
+          }
+        }
+      }
+    ],
+    "feedback": {
+      "left_arm_joint": {
+        "yFeedback": {
+          "decrease": "Raise your left arm",
+          "increase": "Lower your left arm"
+        }
+      },
+      "right_arm_joint": {
+        "yFeedback": {
+          "decrease": "Raise your right arm",
+          "increase": "Lower your right arm"
+        }
+      },
+      "left_forearm_joint": {
+        "zFeedback": {
+          "decrease": "Bend your left arm",
+          "increase": "Straighten your left arm"
+        }
+      },
+      "right_forearm_joint": {
+        "zFeedback": {
+          "decrease": "Bend your right arm",
+          "increase": "Straighten your right arm"
+        }
+      }
     }
   },
   {
@@ -114,7 +266,7 @@
     "intensity": "High",
     "equipment": [],
     "className": "SquatController",
-    "duration": "1:00",
+    "duration": "any",
     "startMessage": "For this exercise start standing upright with your legs straight. Crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Push down with your legs through your heels until your legs are straight to return to the starting position.",
     "startState": {
       "name": "START",
@@ -195,10 +347,10 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "y": -80
+              "y": -75
             },
             "right_upLeg_joint": {
-              "y": 80
+              "y": 75
             },
             "left_leg_joint": {
               "z": 90
@@ -227,26 +379,30 @@
       }
     ],
     "feedback": {
-        "left_upLeg_joint": {
-          "yFeedback": { "decrease": "Squat deeper on your left", "increase": "Not so deep on your left" }
-        },
-        "right_upLeg_joint": {
-          "yFeedback": { "decrease": "Not so deep on your right", "increase": "Squat deeper on your right" }
-        },
-        "left_leg_joint": {
-          "zFeedback": { "decrease": "Straighten your left knee", "increase": "Bend your left knee" }
-        },
-        "right_leg_joint": {
-          "zFeedback": { "decrease": "Straighten your right knee", "increase": "Bend your right knee" }
+      "left_upLeg_joint": {
+        "yFeedback": {
+          "decrease": "Squat deeper on your left",
+          "increase": "Not so deep on your left"
         }
-    },
-    "coachMode": {
-      "transitionDuration": 2,
-      "stateDuration": 1,
-      "stateInstructions": [
-        "Stand up with your back straight",
-        "Keep your legs in a ninety degree angle, and keep your back straight. Your shoulders should be on top of your knees."
-      ]
+      },
+      "right_upLeg_joint": {
+        "yFeedback": {
+          "decrease": "Not so deep on your right",
+          "increase": "Squat deeper on your right"
+        }
+      },
+      "left_leg_joint": {
+        "zFeedback": {
+          "decrease": "Straighten your left knee",
+          "increase": "Bend your left knee"
+        }
+      },
+      "right_leg_joint": {
+        "zFeedback": {
+          "decrease": "Straighten your right knee",
+          "increase": "Bend your right knee"
+        }
+      }
     }
   }
 ]

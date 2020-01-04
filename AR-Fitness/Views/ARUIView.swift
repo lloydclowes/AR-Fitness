@@ -45,9 +45,12 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
         switch self.exercise.name {
         case "Lateral Raises":
             return LateralRaiseController()
+        case "Lateral Raise + Hold":
+            return LateralRaiseHoldController()
         case "Squats":
             return SquatController()
         default:
+            print("ERROR: No view controller found for the given exercise")
             return SquatController()
         }
     }

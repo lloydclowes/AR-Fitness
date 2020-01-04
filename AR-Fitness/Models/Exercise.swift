@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct Exercise: Hashable, Codable, Identifiable {
-    
     var id: Int
     var name: String
     var intensity: Intensity
@@ -21,14 +20,6 @@ struct Exercise: Hashable, Codable, Identifiable {
     var startState: TargetState
     var states: [TargetState]
     var feedback: Dictionary<String, JointFeedback>
-    var coachMode: CoachModeDetail
-    
-}
-
-struct CoachModeDetail: Hashable, Codable {
-    var transitionDuration: Int
-    var stateDuration: Int
-    var stateInstructions: [String]
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {
