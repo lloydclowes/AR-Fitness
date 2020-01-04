@@ -222,7 +222,6 @@ class LateralRaiseController: UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 80))
         self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
-        
         arView.translatesAutoresizingMaskIntoConstraints = false
         arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true

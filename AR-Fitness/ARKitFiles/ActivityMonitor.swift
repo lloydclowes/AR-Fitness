@@ -145,7 +145,10 @@ class ActivityMonitor {
             return
         }
         
-        if missedStates.count > 0 {
+//        if missedStates.count > 0 {
+//            speaker.speak(text: spokenListJoin(missedStates))
+
+        if !liveFeedback && missedStates.count > 0 {
             speaker.speak(text: spokenListJoin(missedStates))
         }
         
@@ -314,21 +317,17 @@ class ActivityMonitor {
                             jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
                         }
                     }
+                    
                     feedback.append(spokenListJoin(jointFeedback))
                 }
                 speaker.speak(text: spokenListJoin(feedback))
             }
         } else {
-//            print("-- start --")
             for joint in targetStates[targetIndex].jointAngles.keys {
                 if !difference.keys.contains(joint) {
-//                    print("reached \(joint)")
                     stateSuccesses[targetIndex].jointFailures.remove(joint)
-                } else {
-//                    print("d_\(joint): \(difference[joint]!)")
                 }
             }
-//            print("-- end --")
         }
     }
 }
