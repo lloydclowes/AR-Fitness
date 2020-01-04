@@ -21,13 +21,10 @@ struct ExerciseInstructionControllerContainer: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         switch self.exercise.name {
         case "Lateral Raises":
-//            return LateralRaiseController()
             return RepCountController(exercise: exercise, liveFeedback: false, countFirstRep: true)
         case "Lateral Raise + Hold":
-//            return LateralRaiseHoldController()
             return HoldingController(exercise: exercise, liveFeedback: true)
         case "Squats":
-//            return SquatController()
             return RepCountController(exercise: exercise, liveFeedback: false)
         default:
             print("ERROR: No view controller found for the given exercise")
