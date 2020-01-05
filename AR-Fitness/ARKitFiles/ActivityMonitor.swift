@@ -33,7 +33,7 @@ class ActivityMonitor {
     let speaker = SpeechService.shared
     
     var lastFeedback = TimeInterval()
-    let exerciseFeedback : Dictionary<String, JointFeedback>
+//    let exerciseFeedback : [Dictionary<String, JointFeedback>]
     
     var targetStateName : String {
         get { return targetStates[targetIndex].name }
@@ -66,7 +66,6 @@ class ActivityMonitor {
         self.targetStates = []
         self.liveFeedback = false
         self.countFirstRep = false
-        self.exerciseFeedback = [:]
         restart()
     }
 
@@ -75,7 +74,6 @@ class ActivityMonitor {
         self.targetStates = exercise.states
         self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
-        self.exerciseFeedback = exercise.feedback
         restart()
     }
     
@@ -307,6 +305,42 @@ class ActivityMonitor {
         }
     }
     
+    func generateFeedback(difference: Dictionary<String, EulerAngles>) -> String {
+        var feedbackDict : Dictionary<String, Dictionary<String, String?>> = [:]
+        for (joint, _) in difference {
+            let action = targetStates[targetIndex].feedback[joint]!.action
+            let side = targetStates[targetIndex].feedback[joint]!.side
+            let name = targetStates[targetIndex].feedback[joint]!.name
+            if feedbackDict.keys.contains(action) {
+                if feedbackDict[action]!.keys.contains(name) {
+                    feedbackDict[action]![name] = "both"
+                } else {
+                    feedbackDict[action]![name] = side
+                }
+            } else {
+                feedbackDict[action] = [name: side]
+            }
+        }
+        
+        var feedback = [String]()
+        for (action, nameToSides) in feedbackDict {
+            var actionJoints = [String]()
+            for (name, sides) in nameToSides {
+                var jointFeedback = ""
+                if sides == nil {
+                    jointFeedback = "your \(name)"
+                } else if sides! == "both" {
+                    jointFeedback = "both \(name)s"
+                } else {
+                    jointFeedback = "your \(sides!) \(name)"
+                }
+                actionJoints.append(jointFeedback)
+            }
+            feedback.append("\(action) " + spokenListJoin(actionJoints))
+        }
+        return spokenListJoin(feedback)
+    }
+    
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
         prevState = currentState
         let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
@@ -330,36 +364,7 @@ class ActivityMonitor {
             let curTime = Date().timeIntervalSince1970
             if index == -1 && isTurningPoint() && curTime - lastFeedback > 10 && curTime - lastArrived > noStateThreshold {
                 lastFeedback = Date().timeIntervalSince1970
-                var feedback = [String]()
-                for (joint, angles) in difference {
-                    var jointFeedback = [String]()
-                    if let dx = angles.x {
-                        if dx > 0 {
-                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.increase)
-                        } else {
-                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.decrease)
-                        }
-                    }
-    
-                    if let dy = angles.y {
-                        if dy > 0 {
-                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.increase)
-                        } else {
-                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.decrease)
-                        }
-                    }
-    
-                    if let dz = angles.z {
-                        if dz > 0 {
-                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.increase)
-                        } else {
-                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
-                        }
-                    }
-                    
-                    feedback.append(spokenListJoin(jointFeedback))
-                }
-                speaker.speak(text: spokenListJoin(feedback))
+                speaker.speak(text: generateFeedback(difference: difference.jointAngles))
             }
         } else {
             for joint in targetStates[targetIndex].jointAngles.keys {

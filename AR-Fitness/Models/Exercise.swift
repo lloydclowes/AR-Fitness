@@ -11,7 +11,6 @@ struct Exercise: Hashable, Codable, Identifiable {
     var startMessage : String
     var startState : TargetState
     var states : [TargetState]
-    var feedback : Dictionary<String, JointFeedback>
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {
