@@ -109,6 +109,9 @@ class ARViewController : UIViewController, ARSessionDelegate {
         
         self.prevTime = Date().timeIntervalSince1970
         self.startTime = Date().timeIntervalSince1970
+        if activityMonitor.liveFeedback {
+            speaker.speak(text: exercise.startMessage)
+        }
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -140,8 +143,10 @@ class ARViewController : UIViewController, ARSessionDelegate {
                 return
             }
             
+            
             if !started {
-                speaker.speak(text: "Good! Let's hit it!")
+                let startingMessage = activityMonitor.liveFeedback ? exercise.startMessage : "Good! Let's hit it!"
+                speaker.speak(text: startingMessage)
                 startTime = Date().timeIntervalSince1970
                 started = true
             }
@@ -169,15 +174,18 @@ class ARViewController : UIViewController, ARSessionDelegate {
     
     func setupViews() {
         view.addSubview(ARViewController.arView)
-        view.addSubview(scoreLabel)
+        if !activityMonitor.liveFeedback {
+            view.addSubview(scoreLabel)
+        }
         view.addSubview(robotButton)
         
         // label constraints (position, size...)
-        scoreLabel.translatesAutoresizingMaskIntoConstraints = false
+        if !activityMonitor.liveFeedback { scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: -75))
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 110))
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -110))
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
+        }
 //        self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         
         // toggle robot button constraints
