@@ -11,6 +11,7 @@ class ActivityMonitor {
     let turningPointTolerance = Float(1.5)   // TODO: Tune this (as low as possible)
     
     var started = false
+    var terminated = false
     
     let startState : TargetState
     let targetStates : [TargetState]
@@ -62,12 +63,12 @@ class ActivityMonitor {
         self.liveFeedback = false
         self.countFirstRep = false
         self.exerciseFeedback = [:]
+        restart()
     }
 
     init(exercise: Exercise, liveFeedback : Bool = false, countFirstRep : Bool = false) {
         self.startState = exercise.startState
         self.targetStates = exercise.states
-        self.targetIndex = targetStates.count > 1 ? 1 : 0
         self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
         self.exerciseFeedback = exercise.feedback
@@ -76,10 +77,11 @@ class ActivityMonitor {
     
     func restart() {
         started = false
+        terminated = false
         index = -1
         lastIndex = -1
         lastArrived = TimeInterval()
-        targetIndex = 0
+        targetIndex = targetStates.count > 1 ? 1 : 0
         repCount = 0
         
         self.currentState = ActivityState()
@@ -182,6 +184,12 @@ class ActivityMonitor {
     
 
     func updateIndex(_ delta : Double) {
+        
+        // If the exercise has terminated, don't update
+        if terminated {
+            return
+        }
+        
         // If we haven't started yet, check if we have reached the start state
         if !started {
             if currentState.reaches(startState) {
@@ -271,6 +279,7 @@ class ActivityMonitor {
         index = -1
         if liveFeedback && curTime - lastArrived > resetTimerThreshold {
             self.lastArrived = Double.greatestFiniteMagnitude
+            terminated = true
             speaker.speak(text: "Sorry you didn't complete the exercise. Better luck next time!") {
                 self.restart()
             }
