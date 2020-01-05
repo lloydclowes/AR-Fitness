@@ -5,7 +5,6 @@ import Combine
 
 class HoldingController : ARViewController {
 
-    private var countedDown = false
     private var halfReward = false
     private var fiveReward = false
     private var completed = false

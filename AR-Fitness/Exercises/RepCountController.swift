@@ -4,13 +4,13 @@ import ARKit
 import Combine
 
 class RepCountController : ARViewController {
-    
+        
     override func updateViews() {
         self.scoreLabel.text = "Reps: \(activityMonitor.repCount)"
     }
     
     override func handleRewards() {
-        if activityMonitor.repCount % 5 == 1 {
+        if activityMonitor.successCount > 0 && activityMonitor.successCount.isMultiple(of: 5) {
             if !rewarded {
                 rewarded = true
                 speaker.speakRandomReward()

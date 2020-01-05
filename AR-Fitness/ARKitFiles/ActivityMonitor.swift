@@ -7,8 +7,10 @@ class ActivityMonitor {
     let countFirstRep : Bool
     
     let noStateThreshold = 0.1
-    let resetTimerThreshold = 5.0
-    let turningPointTolerance = Float(1.5)   // TODO: Tune this (as low as possible)
+    let resetTimerThreshold = 3.0
+    
+    let turningPointTolerance : Float = 1.5
+    let maxAbsoluteSpeed : Float = 8.0
     
     var started = false
     var terminated = false
@@ -19,6 +21,8 @@ class ActivityMonitor {
     var prevState = ActivityState()
     
     var stateSuccesses = [StateSuccess]()
+    var repTooFast = false
+    var successCount = 0
     
     var index = -1
     var lastIndex = -1
@@ -83,6 +87,7 @@ class ActivityMonitor {
         lastArrived = TimeInterval()
         targetIndex = targetStates.count > 1 ? 1 : 0
         repCount = 0
+        successCount = 0
         
         self.currentState = ActivityState()
         self.prevState = ActivityState()
@@ -108,7 +113,7 @@ class ActivityMonitor {
             return "Your \(spokenListJoin(joints.map(jointToName))) didn't reach the \(state) state"
         }
     }
-    
+        
     func completeRep() {
         if !liveFeedback {
             // Find all the states that were never hit and the reason
@@ -134,47 +139,56 @@ class ActivityMonitor {
             }
             
             // Check for success by no feedback
-            if missedStates.count == 0 && shortDurations.count == 0 {
+            if !repTooFast && missedStates.count == 0 && shortDurations.count == 0 {
                 repCount += 1
-                print("success")
-                if repCount % 3 == 1 {
-                    speaker.speakRandomReward()
+                successCount += 1
+                if successCount == 1 {
+                    speaker.speak(text: "Better!")
                 }
+                print("reps: \(repCount)")
                 return
             }
-
+            
+            successCount = 0
+            
+            var allFeedback = ""
+                        
+            // If we missed some states, explain them
             if missedStates.count > 0 {
-                speaker.speak(text: spokenListJoin(missedStates))
+                allFeedback += spokenListJoin(missedStates) + "."
             }
             
+            // Vocalise if the durations were too short
             if shortDurations.count == 1 {
-                speaker.speak(text: "You didn't stay in the \(shortDurations[0]) state for long enough.")
+                allFeedback += " You didn't stay in the \(shortDurations[0]) state for long enough."
             } else if shortDurations.count > 1 {
-                speaker.speak(text: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
+                allFeedback += " You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough."
             }
+            
+            if repTooFast {
+                allFeedback += " " + SpeechService.tooFastStatements.randomElement()!
+                repTooFast = false
+            }
+            
+            speaker.speak(text: allFeedback)
         }
     }
       
     func isTurningPoint() -> Bool {
-//        var failed = [String]()
         for (joint, velocities) in currentState.jointVelocities {
             if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-//                failed.append(joint + ".x was \(abs(vcur))")
                 return false
             }
             if let vcur = velocities.y, let vprev = prevState.jointVelocities[joint]?.y,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-//                failed.append(joint + ".y was \(abs(vcur))")
                 return false
             }
             if let vcur = velocities.z, let vprev = prevState.jointVelocities[joint]?.z,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-//                failed.append(joint + ".z was \(abs(vcur))")
                 return false
             }
         }
-//        return failed.count == 0
         return true
     }
     
@@ -182,7 +196,6 @@ class ActivityMonitor {
         updateState(bodyAnchor, 0.0)
     }
     
-
     func updateIndex(_ delta : Double) {
         
         // If the exercise has terminated, don't update
@@ -235,8 +248,13 @@ class ActivityMonitor {
         
         // Only check state change if we are at a turning point
         if !isTurningPoint() {
-            if currentState.getMaxSpeed() > 30 {
-                print("TOO FAST!")
+            if currentState.getMaxSpeed() > maxAbsoluteSpeed {
+                print("Too fast: \(currentState.getMaxSpeed())")
+                if liveFeedback {
+                    speaker.speakRandomTooFast()
+                } else {
+                    repTooFast = true
+                }
             }
             index = -1
             return
@@ -282,7 +300,6 @@ class ActivityMonitor {
         
         index = -1
         if liveFeedback && curTime - lastArrived > resetTimerThreshold {
-            self.lastArrived = Double.greatestFiniteMagnitude
             terminated = true
             speaker.speak(text: "Sorry you didn't complete the exercise. Better luck next time!") {
                 self.restart()

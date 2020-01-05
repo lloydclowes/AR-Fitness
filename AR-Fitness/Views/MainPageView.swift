@@ -6,7 +6,7 @@ struct MainPageView: View {
     
     var exercises: [Exercise] = exerciseData
     private var searchBarIsActive = false
-    @State var audioMode: String = SpeechService.shared.isSpeechEnabled ? "on" : "off"
+//    @State var audioMode: String = SpeechService.shared.isSpeechEnabled ? "on" : "off"
     
     init() {
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
@@ -45,16 +45,16 @@ struct MainPageView: View {
                 Spacer()
             }
             .navigationBarTitle(Text("Exercises"))
-            .navigationBarItems(trailing:
-                Button("Audio \(self.audioMode)") {
-                    if SpeechService.shared.isSpeechEnabled {
-                        SpeechService.shared.disableSpeech()
-                    } else {
-                        SpeechService.shared.enableSpeech()
-                    }
-                    self.audioMode = SpeechService.shared.isSpeechEnabled ? "on" : "off"
-                }
-            )
+//            .navigationBarItems(trailing:
+//                Button("Audio \(self.audioMode)") {
+//                    if SpeechService.shared.isSpeechEnabled {
+//                        SpeechService.shared.disableSpeech()
+//                    } else {
+//                        SpeechService.shared.enableSpeech()
+//                    }
+//                    self.audioMode = SpeechService.shared.isSpeechEnabled ? "on" : "off"
+//                }
+//            )
             .background(Color(red: 0.95, green: 0.95, blue: 0.95))
             .edgesIgnoringSafeArea(.bottom)
         }
