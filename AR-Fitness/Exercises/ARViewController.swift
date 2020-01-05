@@ -42,7 +42,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
         let button : UIButton = UIButton(type: UIButton.ButtonType.roundedRect)
         button.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         
-        button.setAttributedTitle(NSAttributedString(string: "Toggle Robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+        button.setAttributedTitle(NSAttributedString(string: "Hide robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
             UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
         button.addTarget(nil, action: #selector(toggleRobot), for: .touchUpInside)
         button.clipsToBounds = true
@@ -58,7 +58,9 @@ class ARViewController : UIViewController, ARSessionDelegate {
     
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
-        sender.setTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)  // TODO: Fix this
+    sender.setAttributedTitle(NSAttributedString(string: showRobot ? "Hide robot" : "Show robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
+        UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
+//        sender.setAttributedTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)  // TODO: Fix this
     }
     
     override func viewDidLoad() {
