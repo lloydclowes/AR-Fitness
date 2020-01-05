@@ -1,8 +1,8 @@
 import Foundation
 
 struct Feedback : Hashable, Codable {
-    let decrease : String
-    let increase : String
+    let decrease : String?
+    let increase : String?
 }
 
 struct JointFeedback : Hashable, Codable {

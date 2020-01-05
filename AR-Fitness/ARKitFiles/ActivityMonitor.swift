@@ -332,34 +332,39 @@ class ActivityMonitor {
                 lastFeedback = Date().timeIntervalSince1970
                 var feedback = [String]()
                 for (joint, angles) in difference {
-                    var jointFeedback = [String]()
+                    var jointFeedback = [String?]()
                     if let dx = angles.x {
                         if dx > 0 {
-                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.increase)
+                            jointFeedback.append(exerciseFeedback[joint]?.xFeedback?.increase)
                         } else {
-                            jointFeedback.append(exerciseFeedback[joint]!.xFeedback!.decrease)
+                            jointFeedback.append(exerciseFeedback[joint]?.xFeedback?.decrease)
                         }
                     }
     
                     if let dy = angles.y {
                         if dy > 0 {
-                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.increase)
+                            jointFeedback.append(exerciseFeedback[joint]?.yFeedback?.increase)
                         } else {
-                            jointFeedback.append(exerciseFeedback[joint]!.yFeedback!.decrease)
+                            jointFeedback.append(exerciseFeedback[joint]?.yFeedback?.decrease)
                         }
                     }
     
                     if let dz = angles.z {
                         if dz > 0 {
-                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.increase)
+                            jointFeedback.append(exerciseFeedback[joint]?.zFeedback?.increase)
                         } else {
-                            jointFeedback.append(exerciseFeedback[joint]!.zFeedback!.decrease)
+                            jointFeedback.append(exerciseFeedback[joint]?.zFeedback?.decrease)
                         }
                     }
                     
-                    feedback.append(spokenListJoin(jointFeedback))
+                    let actualFeedback = jointFeedback.compactMap{ $0 }
+                    if actualFeedback.count > 0 {
+                        feedback.append(spokenListJoin(actualFeedback))
+                    }
                 }
-                speaker.speak(text: spokenListJoin(feedback))
+                if feedback.count > 0 {
+                    speaker.speak(text: spokenListJoin(feedback))
+                }
             }
         } else {
             for joint in targetStates[targetIndex].jointAngles.keys {
