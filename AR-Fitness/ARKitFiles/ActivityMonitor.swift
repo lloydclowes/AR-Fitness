@@ -213,16 +213,20 @@ class ActivityMonitor {
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
-            if liveFeedback {
-                if curTime - lastArrived < resetTimerThreshold {
-                    speaker.speak(text: "Okay, now hold it there!")
-                }
-            } else {
-                if curTime - lastArrived > noStateThreshold && index == 0 {
-                    completeRep()
+            
+            if curTime - lastArrived > noStateThreshold {
+                stateSuccesses[index].duration = floor(stateSuccesses[index].duration)
+                if liveFeedback {
+                    if curTime - lastArrived < resetTimerThreshold {
+                        speaker.speak(text: "Okay, now hold it there!")
+                    }
+                } else {
+                    if index == 0 {
+                        completeRep()
+                    }
                 }
             }
-            
+                        
             lastArrived = curTime
             lastFeedback = TimeInterval()
             print("return to \(index)")
