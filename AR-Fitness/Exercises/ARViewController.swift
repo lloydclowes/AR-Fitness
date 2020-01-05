@@ -126,7 +126,11 @@ class ARViewController : UIViewController, ARSessionDelegate {
             prevTime = curTime
             
             activityMonitor.updateState(bodyAnchor, delta)
+            
+            updateViews()
+            
             if !activityMonitor.started {
+                started = false
                 if curTime - lastInstructions > 10 {
                     lastInstructions = curTime
                     speaker.speak(text: "Please assume the start position.")
@@ -149,7 +153,6 @@ class ARViewController : UIViewController, ARSessionDelegate {
                 }
             }
             
-            updateViews()
             handleRewards()
         }
     }

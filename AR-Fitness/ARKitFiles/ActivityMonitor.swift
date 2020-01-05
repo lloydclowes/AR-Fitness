@@ -6,9 +6,9 @@ class ActivityMonitor {
     let liveFeedback : Bool
     let countFirstRep : Bool
     
+    let noStateThreshold = 0.1
+    let resetTimerThreshold = 5.0
     let turningPointTolerance = Float(1.5)   // TODO: Tune this (as low as possible)
-    var stillTurning = false
-    var startedTurning = TimeInterval(0)
     
     var started = false
     
@@ -71,7 +71,19 @@ class ActivityMonitor {
         self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
         self.exerciseFeedback = exercise.feedback
+        restart()
+    }
+    
+    func restart() {
+        started = false
+        index = -1
+        lastIndex = -1
+        lastArrived = TimeInterval()
+        targetIndex = 0
+        repCount = 0
         
+        self.currentState = ActivityState()
+        self.prevState = ActivityState()
         for (joint, angles) in targetStates[0].jointAngles {
             let x : Float? = angles.x != nil ? Float(0) : nil
             let y : Float? = angles.y != nil ? Float(0) : nil
@@ -81,14 +93,10 @@ class ActivityMonitor {
             self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
         }
         
+        self.stateSuccesses = []
         for targetState in targetStates {
             self.stateSuccesses.append(StateSuccess(joints: Array(targetState.jointAngles.keys)))
         }
-    }
-    
-    func restart() {
-        started = false
-        index = -1
     }
     
     func prettifyJointFailures(state : String, joints : [String]) -> String {
@@ -100,69 +108,72 @@ class ActivityMonitor {
     }
     
     func completeRep() {
-        // Find all the states that were never hit and the reason
-        var missedStates = [String]()
-        for i in 0..<targetStates.count {
-            let stateSuccess = stateSuccesses[i]
-            if stateSuccess.duration == 0 {
-                missedStates.append(prettifyJointFailures(state: targetStates[i].name, joints: Array(stateSuccess.jointFailures)))
+        if !liveFeedback {
+            // Find all the states that were never hit and the reason
+            var missedStates = [String]()
+            for i in 0..<targetStates.count {
+                let stateSuccess = stateSuccesses[i]
+                if stateSuccess.duration == 0 {
+                    missedStates.append(prettifyJointFailures(state: targetStates[i].name, joints: Array(stateSuccess.jointFailures)))
+                }
             }
-        }
-        
-        // Find all states that weren't held for long enough
-        var shortDurations = [String]()
-        for i in 0..<targetStates.count {
-            if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
-                shortDurations.append(targetStates[i].name)
+            
+            // Find all states that weren't held for long enough
+            var shortDurations = [String]()
+            for i in 0..<targetStates.count {
+                if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
+                    shortDurations.append(targetStates[i].name)
+                }
             }
-        }
-        
-        // Reset the success structs
-        for i in 0..<targetStates.count {
-            self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
-        }
-        
-        // Check for success by no feedback
-        if missedStates.count == 0 && shortDurations.count == 0 {
-            repCount += 1
-            print("success")
-            if repCount % 3 == 1 {
-                speaker.speakRandomReward()
+            
+            // Reset the success structs
+            for i in 0..<targetStates.count {
+                self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
             }
-            return
-        }
-        
-//        if missedStates.count > 0 {
-//            speaker.speak(text: spokenListJoin(missedStates))
+            
+            // Check for success by no feedback
+            if missedStates.count == 0 && shortDurations.count == 0 {
+                repCount += 1
+                print("success")
+                if repCount % 3 == 1 {
+                    speaker.speakRandomReward()
+                }
+                return
+            }
 
-        if !liveFeedback && missedStates.count > 0 {
-            speaker.speak(text: spokenListJoin(missedStates))
-        }
-        
-        if shortDurations.count == 1 {
-            speaker.speak(text: "You didn't stay in the \(shortDurations[0]) state for long enough.")
-        } else if shortDurations.count > 1 {
-            speaker.speak(text: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
+            if missedStates.count > 0 {
+                speaker.speak(text: spokenListJoin(missedStates))
+            }
+            
+            if shortDurations.count == 1 {
+                speaker.speak(text: "You didn't stay in the \(shortDurations[0]) state for long enough.")
+            } else if shortDurations.count > 1 {
+                speaker.speak(text: "You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough.")
+            }
         }
     }
       
-    func isTurningPoint() -> (Bool, [String]) {
-        var failed = [String]()
+    func isTurningPoint() -> Bool {
+//        var failed = [String]()
         for (joint, velocities) in currentState.jointVelocities {
             if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                failed.append(joint + ".x was \(abs(vcur))")
+//                failed.append(joint + ".x was \(abs(vcur))")
+                return false
             }
             if let vcur = velocities.y, let vprev = prevState.jointVelocities[joint]?.y,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                failed.append(joint + ".y was \(abs(vcur))")
+//                failed.append(joint + ".y was \(abs(vcur))")
+                return false
             }
             if let vcur = velocities.z, let vprev = prevState.jointVelocities[joint]?.z,
                 abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
-                failed.append(joint + ".z was \(abs(vcur))")
+//                failed.append(joint + ".z was \(abs(vcur))")
+                return false
             }
         }
-        return (failed.count == 0, failed)
+//        return failed.count == 0
+        return true
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor) {
@@ -193,10 +204,16 @@ class ActivityMonitor {
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
             index = lastIndex
-            if curTime - lastArrived > 0.1 && index == 0 {
-                print("complete in return")
-                completeRep()
+            if liveFeedback {
+                if curTime - lastArrived < resetTimerThreshold {
+                    speaker.speak(text: "Okay, now hold it there!")
+                }
+            } else {
+                if curTime - lastArrived > noStateThreshold && index == 0 {
+                    completeRep()
+                }
             }
+            
             lastArrived = curTime
             lastFeedback = TimeInterval()
             print("return to \(index)")
@@ -204,20 +221,11 @@ class ActivityMonitor {
         }
         
         // Only check state change if we are at a turning point
-        let res = isTurningPoint()
-        if res.0 {
-            if !stillTurning {
-                startedTurning = Date().timeIntervalSince1970
-                stillTurning = true
-            }
-        } else {
+        if !isTurningPoint() {
             if currentState.getMaxSpeed() > 30 {
-                print("TOO FAST!!")
+                print("TOO FAST!")
             }
-            if stillTurning {
-                stillTurning = false
-                index = -1
-            }
+            index = -1
             return
         }
       
@@ -226,13 +234,12 @@ class ActivityMonitor {
             index = targetIndex
             stateSuccesses[index].duration += delta
             if index < lastIndex || countFirstRep && lastIndex == -1 && index == 0 {
-                print("complete in advance")
                 completeRep()
             }
             
             lastIndex = index
-            lastArrived = curTime
             lastFeedback = TimeInterval()
+            lastArrived = curTime
             targetIndex = (targetIndex + 1) % targetStates.count
             
             print("advanced to \(targetStates[index].name)")
@@ -247,7 +254,6 @@ class ActivityMonitor {
                 index = (targetIndex + i) % targetStates.count
                 stateSuccesses[index].duration += delta
                 if index < lastIndex {
-                    print("complete in jump")
                     completeRep()
                 }
                 
@@ -262,7 +268,12 @@ class ActivityMonitor {
         }
         
         index = -1
-//        print("unknown")
+        if liveFeedback && curTime - lastArrived > resetTimerThreshold {
+            self.lastArrived = Double.greatestFiniteMagnitude
+            speaker.speak(text: "Sorry you didn't complete the exercise. Better luck next time!") {
+                self.restart()
+            }
+        }
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
@@ -271,12 +282,22 @@ class ActivityMonitor {
         currentState.update(newAngles, Augmentation.dema, 1.0)
         
         updateIndex(delta)
+        if !started {
+            return
+        }
         
         let currentTarget = targetStates[targetIndex]
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
         if liveFeedback {
+            
+            // CONDITIONS:
+            // index == -1                                =>   not in a state
+            // isTurningPoint()                           =>   not moving (much)
+            // curTime - lastArrived > noStateThreshold   =>   actually left state, not just glitch
+            // curTime - lastFeedback > 10                =>   only comment every 10 seconds
+            
             let curTime = Date().timeIntervalSince1970
-            if stillTurning && index == -1 && curTime - lastFeedback > 10 {
+            if index == -1 && isTurningPoint() && curTime - lastFeedback > 10 && curTime - lastArrived > noStateThreshold {
                 lastFeedback = Date().timeIntervalSince1970
                 var feedback = [String]()
                 for (joint, angles) in difference {

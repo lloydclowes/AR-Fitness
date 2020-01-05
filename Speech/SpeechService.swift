@@ -126,6 +126,7 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             "audioConfig": [
                 "pitch": -1.2,
                 "speakingRate": 1,
+                "volumeGainDb": 10.0,
                 "audioEncoding": "LINEAR16"
             ]
         ]
