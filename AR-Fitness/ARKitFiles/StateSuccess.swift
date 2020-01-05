@@ -2,6 +2,7 @@ import Foundation
 
 struct StateSuccess {
     var duration : Double = 0.0
+    var maxSpeed : Float = 0.0
     var jointFailures : Set<String> = []
     
     init(joints : [String]) {

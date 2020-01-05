@@ -14,8 +14,8 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     static let shared = SpeechService()
     
     static let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
-    
-    static let speedFocusedStatements = ["Move a bit slower", "Not so fast"]
+    static let improvements = ["Much Better!", "That's more like it!"]
+    static let tooFastStatements = ["Move a bit slower", "Not so fast", "You're moving too fast", "Slow down a bit"]
     
     var isSpeechEnabled : Bool {
         get { return speechEnabled }
@@ -50,6 +50,14 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     
     func speakRandomReward() {
         speak(text: SpeechService.rewards.randomElement()!)
+    }
+    
+    func speakRandomTooFast() {
+        speak(text: SpeechService.tooFastStatements.randomElement()!)
+    }
+    
+    func speakRandomImprovement() {
+        speak(text: SpeechService.improvements.randomElement()!)
     }
     
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
