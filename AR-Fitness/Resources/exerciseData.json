@@ -2,7 +2,7 @@
   {
     "name": "Lateral Raise + Hold",
     "id": 1,
-    "muscleGroup": "Arms",
+    "muscleGroup": "Shoulders",
     "intensity": "Low",
     "equipment": [
       "Dumbbells"
@@ -114,7 +114,7 @@
   {
     "name": "Lateral Raises",
     "id": 2,
-    "muscleGroup": "Arms",
+    "muscleGroup": "Shoulders",
     "intensity": "Low",
     "equipment": [
       "Dumbbells"

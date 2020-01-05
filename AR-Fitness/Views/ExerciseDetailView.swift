@@ -27,10 +27,10 @@ struct ExerciseDetailView: View {
 struct ExerciseDetailView_Previews: PreviewProvider {
     static var previews: some View {
         ExerciseDetailView(
-            title: "Core",
+            title: "Legs",
             exercises: exerciseData.filter {
                 switch $0.muscleGroup {
-                case .core: return true
+                case .legs: return true
                     default: return false
                 }
             }
