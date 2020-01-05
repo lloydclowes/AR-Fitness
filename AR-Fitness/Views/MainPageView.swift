@@ -15,9 +15,11 @@ struct MainPageView: View {
     var body: some View {
         NavigationView {
             VStack() {
+                
                 SearchBar(text: $searchQuery)
                     .padding([.horizontal], 13)
                     .padding([.top], -9)
+                if (searchQuery == "") {
                 Text("Select your type of workout:")
                     .font(.headline)
                 NavigationLink(destination: ExerciseDetailView(
@@ -42,6 +44,13 @@ struct MainPageView: View {
                 MuscleGroupsList(exercises: self.exercises)
                     .frame(height: 258)
                     .padding([.horizontal])
+                
+                } else {
+                    ForEach(exercises.filter{$0.name.lowercased().hasPrefix(searchQuery.lowercased())}, id:\.self) { exercise in
+                    ExerciseRowView(exercise: exercise,
+                                     color: Color(red: 1.00, green: 0.98, blue: 0.98)).padding()
+                    }
+                }
                 Spacer()
             }
             .navigationBarTitle(Text("Exercises"))

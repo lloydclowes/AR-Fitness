@@ -9,6 +9,8 @@ struct SearchBar: UIViewRepresentable {
         @Binding var text: String
 
         init(text: Binding<String>) {
+            print("here goes")
+            print(text)
             _text = text
         }
 
