@@ -762,28 +762,7 @@
             }
           }
         },
-        "feedback": {
-            "left_upLeg_joint" : {
-                "action" : "spread out",
-                "side" : "left",
-                "name" : "leg"
-            },
-            "right_upLeg_joint" : {
-                "action" : "spread out",
-                "side" : "right",
-                "name" : "leg"
-            },
-            "left_arm_joint" : {
-                "action" : "raise",
-                "side" : "left",
-                "name" : "arm"
-            },
-            "right_arm_joint" : {
-                "action" : "raise",
-                "side" : "right",
-                "name" : "arm"
-            }
-        }
+        "feedback": {}
       }
     ]
   }

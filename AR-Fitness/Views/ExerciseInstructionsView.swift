@@ -51,8 +51,7 @@ struct ExerciseInstructionsView_Previews: PreviewProvider {
                                 duration: "0:00",
                                 startMessage: "",
                                 startState: TargetState("START"),
-                                states: [TargetState("None")],
-                                feedback: [:])
+                                states: [TargetState("None")])
         )
     }
 }

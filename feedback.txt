@@ -1,0 +1,96 @@
+
+SQUAT.UP:
+"feedback": {
+  "left_upLeg_joint": {
+    "action": "push through",
+    "side": "both",
+    "name": "hip"
+  },
+  "right_upLeg_joint": {
+    "action": "push through",
+    "side": "both",
+    "name": "hip"
+  },
+  "left_leg_joint": {
+    "action": "straighten",
+    "side": "left",
+    "name": "knee"
+  },
+  "right_leg_joint": {
+    "action": "straighten",
+    "side": "right",
+    "name": "knee"
+  }
+}
+
+SQUAT.DOWN:
+"feedback": {
+  "left_upLeg_joint": {
+    "action": "squat deeper on",
+    "side": "left",
+    "name": "side"
+  },
+  "right_upLeg_joint": {
+    "action": "squat deeper on",
+    "side": "right",
+    "name": "side"
+  },
+  "left_leg_joint": {
+    "action": "bend",
+    "side": "left",
+    "name": "knee"
+  },
+  "right_leg_joint": {
+    "action": "bend",
+    "side": "right",
+    "name": "knee"
+  }
+}
+
+LATERAL.UP:
+"feedback": {
+  "left_arm_joint": {
+    "action": "raise",
+    "side": "left",
+    "name": "arm"
+  },
+  "right_arm_joint": {
+    "action": "raise",
+    "side": "right",
+    "name": "arm"
+  },
+  "left_forearm_joint": {
+    "action": "straighten",
+    "side": "left",
+    "name": "elbow"
+  },
+  "right_forearm_joint": {
+    "action": "straighten",
+    "side": "right",
+    "name": "elbow"
+  }
+}
+
+LATERAL.DOWN:
+"feedback": {
+  "left_arm_joint": {
+    "action": "lower",
+    "side": "left",
+    "name": "arm"
+  },
+  "right_arm_joint": {
+    "action": "lower",
+    "side": "right",
+    "name": "arm"
+  },
+  "left_forearm_joint": {
+    "action": "straighten",
+    "side": "left",
+    "name": "elbow"
+  },
+  "right_forearm_joint": {
+    "action": "straighten",
+    "side": "right",
+    "name": "elbow"
+  }
+}
