@@ -406,15 +406,15 @@
     }
   },
   {
-  "name": "Squat + Hold",
-  "id": 4,
-  "muscleGroup": "Legs",
-  "intensity": "Low",
-  "equipment": [],
-  "className": "SquatHoldController",
-  "duration": "0:20",
-  "startMessage": "For this exercise start crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Maintain your body in this position for the time set.",
-  "startState": {
+    "name": "Squat + Hold",
+    "id": 4,
+    "muscleGroup": "Legs",
+    "intensity": "Low",
+    "equipment": [],
+    "className": "SquatHoldController",
+    "duration": "0:20",
+    "startMessage": "For this exercise start crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Maintain your body in this position for the time set.",
+    "startState": {
       "name": "START",
       "duration": 0,
       "jointAngles": {
@@ -514,5 +514,138 @@
         }
       }
     }
+  },
+  {
+    "name": "Jumping Jacks",
+    "id": 5,
+    "muscleGroup": "Whole body",
+    "intensity": "High",
+    "equipment": [],
+    "className": "JumpingJackController",
+    "duration": "1:00",
+    "startMessage": "In this exercise start with your legs together and arms by your sides. Then jump in the air and as you do so, keeping your arms fairly straight, raise them to a 45 degree angle and spread your legs apart. In this state your body should for a star shape. Then jump again and return to the starting position.",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "right_arm_joint": {
+            "x": 40,
+            "y": 50
+          },
+          "left_arm_joint": {
+            "x": 40,
+            "y": 50
+          },
+          "right_upLeg_joint": {
+            "z": 80
+          },
+          "left_upLeg_joint": {
+            "z": -80
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+          "right_arm_joint": {
+            "x": -10,
+            "y": -10
+          },
+          "left_arm_joint": {
+            "x": -10,
+            "y": -10
+          },
+          "right_upLeg_joint": {
+            "z": -10
+          },
+          "left_upLeg_joint": {
+            "z": 10
+          }
+        }
+      }
+    },
+    "states": [
+      {
+        "name": "DOWN",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": 40,
+              "y": 50
+            },
+            "left_arm_joint": {
+              "x": 40,
+              "y": 50
+            },
+            "right_upLeg_joint": {
+              "z": 85
+            },
+            "left_upLeg_joint": {
+              "z": -85
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": -15,
+              "y": -15
+            },
+            "left_arm_joint": {
+              "x": -15,
+              "y": -15
+            },
+            "right_upLeg_joint": {
+              "z": -5
+            },
+            "left_upLeg_joint": {
+              "z": 5
+            }
+          }
+        }
+      },
+      {
+        "name": "UP",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": -60,
+              "y": -40
+            },
+            "left_arm_joint": {
+              "x": -60,
+              "y": -40
+            },
+            "right_upLeg_joint": {
+              "z": 65
+            },
+            "left_upLeg_joint": {
+              "z": -65
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+            "right_arm_joint": {
+              "x": 15,
+              "y": 15
+            },
+            "left_arm_joint": {
+              "x": 15,
+              "y": 15
+            },
+            "right_upLeg_joint": {
+              "z": -5
+            },
+            "left_upLeg_joint": {
+              "z": 5
+            }
+          }
+        }
+      }
+    ],
+    "feedback": {}
   }
 ]

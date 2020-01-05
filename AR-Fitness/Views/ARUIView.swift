@@ -38,9 +38,10 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
         case "Lateral Raise + Hold":
             return HoldingController(exercise: exercise, liveFeedback: true)
         case "Squat + Hold":
-            return HoldingController(exercise: exercise,
-            liveFeedback: true)
+            return HoldingController(exercise: exercise, liveFeedback: true)
         case "Squats":
+            return RepCountController(exercise: exercise, liveFeedback: false)
+        case "Jumping Jacks":
             return RepCountController(exercise: exercise, liveFeedback: false)
         default:
             print("ERROR: No view controller found for the given exercise")

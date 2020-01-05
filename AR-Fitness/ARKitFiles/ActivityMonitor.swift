@@ -180,6 +180,7 @@ class ActivityMonitor {
         updateState(bodyAnchor, 0.0)
     }
     
+
     func updateIndex(_ delta : Double) {
         // If we haven't started yet, check if we have reached the start state
         if !started {
