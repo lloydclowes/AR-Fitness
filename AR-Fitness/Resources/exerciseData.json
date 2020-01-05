@@ -646,6 +646,19 @@
         }
       }
     ],
-    "feedback": {}
+    "feedback": {
+        "left_upLeg_joint": {
+          "zFeedback": {
+            "decrease": "Put your feet together",
+            "increase": "Spread your legs further apart"
+          }
+        },
+        "left_arm_joint": {
+          "xFeedback": {
+            "decrease": "Raise your arms higher",
+            "increase": "Bring down your arms to your sides"
+          }
+        }
+    }
   }
 ]
