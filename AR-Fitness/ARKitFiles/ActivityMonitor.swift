@@ -361,7 +361,7 @@ class ActivityMonitor {
             if currentState.reaches(targetStates[newIndex]) {
                 // Update index variables
                 jump(to: newIndex)
-                advanceTarget(to: newIndex + 1)
+                advanceTarget(to: (newIndex + 1) % targetStates.count)
                 return
             }
         }
