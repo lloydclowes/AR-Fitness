@@ -17,10 +17,10 @@
       "jointAngles": {
         "jointAngles": {
           "left_arm_joint": {
-            "y": 0
+            "y": 60
           },
           "right_arm_joint": {
-            "y": 0
+            "y": 60
           },
           "left_forearm_joint": {
             "z": -30
@@ -33,27 +33,27 @@
       "tolerances": {
         "jointAngles": {
           "left_arm_joint": {
-            "y": 5
+            "y": -30
           },
           "right_arm_joint": {
-            "y": 5
+            "y": -30
           },
           "left_forearm_joint": {
-            "z": -15
+            "z": -20
           },
           "right_forearm_joint": {
-            "z": -15
+            "z": -20
           }
         }
       },
       "feedback": {
         "left_arm_joint": {
-          "action": "raise",
+          "action": "lower",
           "side": "left",
           "name": "arm"
         },
         "right_arm_joint": {
-          "action": "raise",
+          "action": "lower",
           "side": "right",
           "name": "arm"
         },
@@ -522,53 +522,53 @@
       "jointAngles": {
         "jointAngles": {
           "left_upLeg_joint": {
-            "y": -75
+            "y": 0
           },
           "right_upLeg_joint": {
-            "y": 75
+            "y": 0
           },
           "left_leg_joint": {
-            "z": 90
+            "z": 15
           },
           "right_leg_joint": {
-            "z": 90
+            "z": 15
           }
         }
       },
       "tolerances": {
         "jointAngles": {
           "left_upLeg_joint": {
-            "y": 25
+            "y": -20
           },
           "right_upLeg_joint": {
-            "y": -25
+            "y": 20
           },
           "left_leg_joint": {
-            "z": -20
+            "z": 25
           },
           "right_leg_joint": {
-            "z": -20
+            "z": 25
           }
         }
       },
       "feedback": {
         "left_upLeg_joint": {
-          "action": "squat deeper on",
-          "side": "left",
-          "name": "side"
+          "action": "push through",
+          "side": "both",
+          "name": "hip"
         },
         "right_upLeg_joint": {
-          "action": "squat deeper on",
-          "side": "right",
-          "name": "side"
+          "action": "push through",
+          "side": "both",
+          "name": "hip"
         },
         "left_leg_joint": {
-          "action": "bend",
+          "action": "straighten",
           "side": "left",
           "name": "knee"
         },
         "right_leg_joint": {
-          "action": "bend",
+          "action": "straighten",
           "side": "right",
           "name": "knee"
         }

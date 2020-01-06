@@ -1,6 +1,6 @@
 import Foundation
 
-class HoldingFeedbackGenerator : BaseFeedbackGenerator {
+class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     
     override func started(finished: @escaping () -> Void) {
         speaker.speak(text: "Start instructions will go here.") {
@@ -15,7 +15,7 @@ class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func completeSuccess(finished: @escaping () -> Void) {
-        speaker.speak(text: "You completed the challenge!") {
+        speaker.speak(text: "Nice one! You're ready for the real thing.") {
             finished()
         }
     }
@@ -30,17 +30,6 @@ class HoldingFeedbackGenerator : BaseFeedbackGenerator {
         if curTime - lastNoState > noStateRegularity {
             lastNoState = curTime
             speaker.speak(text: generateNoStateFeedback(targetName: targetName, difference: difference)) {
-                finished()
-            }
-            return
-        }
-        finished()
-    }
-    
-    override func expired(finished: @escaping () -> Void) {
-        if curTime - lastExpired > expiredRegularity {
-            lastExpired = curTime
-            speaker.speak(text: "Failed. When you're ready, try again.") {
                 finished()
             }
             return

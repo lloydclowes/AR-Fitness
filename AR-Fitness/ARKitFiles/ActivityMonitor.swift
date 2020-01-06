@@ -13,7 +13,6 @@ class ActivityMonitor {
     
     let feedbackGenerator : FeedbackGenerator
     
-    let liveFeedback : Bool
     let countFirstRep : Bool
     
     let exerciseType : ExerciseType
@@ -72,17 +71,15 @@ class ActivityMonitor {
         self.feedbackGenerator = PrintingFeedbackGenerator.shared
         self.startState = TargetState("START")
         self.targetStates = []
-        self.liveFeedback = false
         self.countFirstRep = false
         self.exerciseType = .rep
         self.restart()
     }
     
-    init(exercise : Exercise, feedbackGenerator : FeedbackGenerator, liveFeedback : Bool = false, countFirstRep : Bool = false) {
+    init(exercise : Exercise, feedbackGenerator : FeedbackGenerator, countFirstRep : Bool = false) {
         self.feedbackGenerator = feedbackGenerator
         self.startState = exercise.startState
         self.targetStates = exercise.states
-        self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
         self.exerciseType = exercise.type
         self.restart()
@@ -161,7 +158,6 @@ class ActivityMonitor {
     private func started() {
         hasStarted = true
         feedbackGenerator.started() {}
-//        print("started")
     }
     
     private func advanceTarget(to : Int) {
@@ -176,8 +172,9 @@ class ActivityMonitor {
         }
         hitFirstTarget = true
         
-        feedbackGenerator.advanced() {}
-//        print("advanced to \(to)")
+        if targetIndex != 1 {
+            feedbackGenerator.advanced() {}
+        }
     }
     
     private func complete() {
@@ -210,7 +207,12 @@ class ActivityMonitor {
         } else {
             feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {}
         }
-                
+        
+        // TODO:   vv or similar
+        // if exercise.type == .hold {
+        //     restart()
+        // }
+        
         // Reset the success info
         for i in 0..<targetStates.count {
             self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
@@ -316,7 +318,7 @@ class ActivityMonitor {
         if currentState.reaches(targetStates[targetIndex]) {
 //            print("advancing")
             jump(to: targetIndex)
-            advanceTarget(to: (targetIndex + 1) % targetStates.count)
+//            advanceTarget(to: (targetIndex + 1) % targetStates.count)
             return
         }
         

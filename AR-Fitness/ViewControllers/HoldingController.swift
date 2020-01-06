@@ -9,15 +9,22 @@ class HoldingController : ARViewController {
     private var fiveReward = false
     private var completed = false
     
-    convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
+    convenience init(exercise : Exercise, instructions : Bool = false, countFirstRep : Bool = false) {
         self.init(nibName: nil, bundle: nil)
         self.exercise = exercise
         var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
         for targetState in exercise.states {
             feedbackDict[targetState.name] = targetState.feedback
         }
-        let gen = HoldingFeedbackGenerator(feedbackDict: feedbackDict)
-        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
+        
+        let gen : FeedbackGenerator
+        if instructions {
+            gen = HoldingInstructionsFeedbackGenerator(feedbackDict: feedbackDict)
+        } else {
+            gen = HoldingFeedbackGenerator(feedbackDict: feedbackDict)
+        }
+        
+        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, countFirstRep: countFirstRep)
     }
     
     override func updateViews() {

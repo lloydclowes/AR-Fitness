@@ -134,11 +134,11 @@ class ARViewController : UIViewController, ARSessionDelegate {
                 return
             }
             
-            if !started {
-                speaker.speak(text: "Good! Let's hit it!")
-                startTime = Date().timeIntervalSince1970
-                started = true
-            }
+//            if !started {
+//                speaker.speak(text: "Good! Let's hit it!")
+//                startTime = Date().timeIntervalSince1970
+//                started = true
+//            }
             
             if recordHistory {
                 self.recordingSession.poll(activityMonitor.currentState)

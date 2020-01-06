@@ -5,15 +5,20 @@ import Combine
 
 class RepCountController : ARViewController {
         
-    convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
+    convenience init(exercise : Exercise, instructions : Bool = false, countFirstRep : Bool = false) {
         self.init(nibName: nil, bundle: nil)
         self.exercise = exercise
         var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
         for targetState in exercise.states {
             feedbackDict[targetState.name] = targetState.feedback
         }
-        let gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
-        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
+        let gen : FeedbackGenerator
+        if instructions {
+            gen = RepCountInstructionsFeedbackGenerator(feedbackDict: feedbackDict)
+        } else {
+            gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
+        }
+        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, countFirstRep: countFirstRep)
     }
     
     override func updateViews() {
