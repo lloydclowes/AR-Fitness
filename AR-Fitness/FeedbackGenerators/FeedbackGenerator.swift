@@ -2,15 +2,15 @@ import Foundation
 
 protocol FeedbackGenerator {
     
-    func started(finished: () -> Void)
-    func advanced(finished: () -> Void)
-    func completeSuccess(finished: () -> Void)
-    func completeFail(tooFast: Bool, missedStates: Dictionary<String, Set<String>>, shortStates: [String], finished: () -> Void)
-    func jumped(to : Int, finished: () -> Void)
-    func retry(finished: () -> Void)
-    func tooFast(finished: () -> Void)
-    func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: () -> Void)
-    func expired(finished: () -> Void)
+    func started(finished: @escaping () -> Void)
+    func advanced(finished: @escaping () -> Void)
+    func completeSuccess(finished: @escaping () -> Void)
+    func completeFail(tooFast: Bool, missedStates: Dictionary<String, Set<String>>, shortStates: [String], finished: @escaping () -> Void)
+    func jumped(to : Int, finished: @escaping () -> Void)
+    func retry(finished: @escaping () -> Void)
+    func tooFast(finished: @escaping () -> Void)
+    func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void)
+    func expired(finished: @escaping () -> Void)
     
 }
 
@@ -42,21 +42,21 @@ class BaseFeedbackGenerator : FeedbackGenerator {
         self.expiredRegularity = expiredRegularity
     }
     
-    func started(finished: () -> Void) {}
+    func started(finished: @escaping () -> Void) {}
     
-    func advanced(finished: () -> Void) {}
+    func advanced(finished: @escaping () -> Void) {}
     
-    func completeSuccess(finished: () -> Void) {}
+    func completeSuccess(finished: @escaping () -> Void) {}
     
-    func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: () -> Void) {}
+    func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: @escaping () -> Void) {}
     
-    func jumped(to: Int, finished: () -> Void) {}
+    func jumped(to: Int, finished: @escaping () -> Void) {}
     
-    func retry(finished: () -> Void) {}
+    func retry(finished: @escaping () -> Void) {}
     
-    func tooFast(finished: () -> Void) {}
+    func tooFast(finished: @escaping () -> Void) {}
     
-    func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: () -> Void) {}
+    func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void) {}
     
-    func expired(finished: () -> Void) {}
+    func expired(finished: @escaping () -> Void) {}
 }

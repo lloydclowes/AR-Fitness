@@ -17,6 +17,8 @@
 		18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF1B64238E6CD200CDFC2D /* StateHistory.swift */; };
 		18DF531123C3558E002678B9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531023C3558E002678B9 /* FeedbackGenerator.swift */; };
 		18DF531423C37B86002678B9 /* PrintingFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531323C37B86002678B9 /* PrintingFeedbackGenerator.swift */; };
+		18DF531823C3939D002678B9 /* RepCountFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531723C3939D002678B9 /* RepCountFeedbackGenerator.swift */; };
+		18DF531A23C39405002678B9 /* HoldingFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531923C39405002678B9 /* HoldingFeedbackGenerator.swift */; };
 		18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275623BF929E00EE53AD /* JointFeedback.swift */; };
 		18EC275F23C0E8A500EE53AD /* RepCountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275E23C0E8A500EE53AD /* RepCountController.swift */; };
 		18EC276123C0F31000EE53AD /* HoldingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC276023C0F31000EE53AD /* HoldingController.swift */; };
@@ -61,6 +63,8 @@
 		18DF1B64238E6CD200CDFC2D /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
 		18DF531023C3558E002678B9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
 		18DF531323C37B86002678B9 /* PrintingFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintingFeedbackGenerator.swift; sourceTree = "<group>"; };
+		18DF531723C3939D002678B9 /* RepCountFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepCountFeedbackGenerator.swift; sourceTree = "<group>"; };
+		18DF531923C39405002678B9 /* HoldingFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingFeedbackGenerator.swift; sourceTree = "<group>"; };
 		18EC275623BF929E00EE53AD /* JointFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointFeedback.swift; sourceTree = "<group>"; };
 		18EC275E23C0E8A500EE53AD /* RepCountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepCountController.swift; sourceTree = "<group>"; };
 		18EC276023C0F31000EE53AD /* HoldingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingController.swift; sourceTree = "<group>"; };
@@ -130,6 +134,8 @@
 			children = (
 				18DF531023C3558E002678B9 /* FeedbackGenerator.swift */,
 				18DF531323C37B86002678B9 /* PrintingFeedbackGenerator.swift */,
+				18DF531723C3939D002678B9 /* RepCountFeedbackGenerator.swift */,
+				18DF531923C39405002678B9 /* HoldingFeedbackGenerator.swift */,
 			);
 			path = FeedbackGenerators;
 			sourceTree = "<group>";
@@ -340,6 +346,7 @@
 				18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */,
 				6EAF45C1236AE6E500710465 /* ARUIView.swift in Sources */,
 				6E438043235A197A001A557A /* ExerciseDetailView.swift in Sources */,
+				18DF531A23C39405002678B9 /* HoldingFeedbackGenerator.swift in Sources */,
 				18DF531123C3558E002678B9 /* FeedbackGenerator.swift in Sources */,
 				6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */,
 				18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */,
@@ -364,6 +371,7 @@
 				6E43804E23624133001A557A /* IconView.swift in Sources */,
 				185F1C9723857F6E005CF226 /* TimedStateHistory.swift in Sources */,
 				187B5358238D7DC7008C4CF0 /* PeakFinder.swift in Sources */,
+				18DF531823C3939D002678B9 /* RepCountFeedbackGenerator.swift in Sources */,
 				6E86FC8C2362FCC900810FE6 /* MuscleGroupRow.swift in Sources */,
 				6EB7C5FA23BB627B00CF03D5 /* SpeechService.swift in Sources */,
 				18EC276123C0F31000EE53AD /* HoldingController.swift in Sources */,

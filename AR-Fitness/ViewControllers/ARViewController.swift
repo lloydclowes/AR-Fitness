@@ -53,7 +53,14 @@ class ARViewController : UIViewController, ARSessionDelegate {
     convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
         self.init(nibName: nil, bundle: nil)
         self.exercise = exercise
-        self.activityMonitor = ActivityMonitor(exercise: exercise, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
+        
+        var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
+        for targetState in exercise.states {
+            feedbackDict[targetState.name] = targetState.feedback
+        }
+        let gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
+        
+        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
     }
     
     @IBAction func toggleRobot(sender: UIButton) {

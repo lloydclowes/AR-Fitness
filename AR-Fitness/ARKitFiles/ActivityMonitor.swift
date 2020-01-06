@@ -75,12 +75,8 @@ class ActivityMonitor {
         self.restart()
     }
     
-    init(exercise: Exercise, liveFeedback : Bool = false, countFirstRep : Bool = false) {
-        var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
-        for targetState in exercise.states {
-            feedbackDict[targetState.name] = targetState.feedback
-        }
-        self.feedbackGenerator = PrintingFeedbackGenerator(feedbackDict: feedbackDict)
+    init(exercise : Exercise, feedbackGenerator : FeedbackGenerator, liveFeedback : Bool = false, countFirstRep : Bool = false) {
+        self.feedbackGenerator = feedbackGenerator
         self.startState = exercise.startState
         self.targetStates = exercise.states
         self.liveFeedback = liveFeedback
@@ -114,7 +110,7 @@ class ActivityMonitor {
         self.index = -1
         self.lastIndex = -1
         self.lastArrived = TimeInterval()
-        self.targetIndex = targetStates.count > 1 ? 1 : 0
+        self.targetIndex = 0
         self.repCount = 0
     }
     
@@ -166,15 +162,15 @@ class ActivityMonitor {
     
     private func advanceTarget(to : Int) {
         targetIndex = to
-        
+
         if targetIndex == 0 {
             if targetStates.count == 1 {
                 complete()
             }
-            hitFirstTarget = true
         } else if targetIndex == 1 {
             complete()
         }
+        hitFirstTarget = true
         
         feedbackGenerator.advanced() {}
 //        print("advanced to \(to)")
@@ -307,6 +303,7 @@ class ActivityMonitor {
             }
             
             jump(to: lastIndex)
+            advanceTarget(to: targetIndex)
             return
         }
         

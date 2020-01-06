@@ -4,22 +4,22 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
     
     static let shared = PrintingFeedbackGenerator(feedbackDict: [:])
     
-    override func started(finished: () -> Void) {
+    override func started(finished: @escaping () -> Void) {
         print("started")
         finished()
     }
     
-    override func advanced(finished: () -> Void) {
+    override func advanced(finished: @escaping () -> Void) {
         print("advanced")
         finished()
     }
     
-    override func completeSuccess(finished: () -> Void) {
+    override func completeSuccess(finished: @escaping () -> Void) {
         print("complete - success")
         finished()
     }
     
-    override func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: () -> Void) {
+    override func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: @escaping () -> Void) {
         
         let fastMessage = tooFast ? "You moved too quickly" : ""
         
@@ -45,17 +45,17 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
         finished()
     }
     
-    override func jumped(to: Int, finished: () -> Void) {
+    override func jumped(to: Int, finished: @escaping () -> Void) {
         print("jumped to \(to)")
         finished()
     }
     
-    override func retry(finished: () -> Void) {
+    override func retry(finished: @escaping () -> Void) {
         print("retry")
         finished()
     }
     
-    override func tooFast(finished: () -> Void) {
+    override func tooFast(finished: @escaping () -> Void) {
         if curTime - lastTooFast > tooFastRegularity {
             lastTooFast = curTime
             print("too fast")
@@ -63,7 +63,7 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
         finished()
     }
     
-    override func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: () -> Void) {
+    override func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void) {
         if curTime - lastNoState > noStateRegularity {
             lastNoState = curTime
             print(generateNoStateFeedback(targetName: targetName, difference: difference))
@@ -71,7 +71,7 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
         finished()
     }
     
-    override func expired(finished: () -> Void) {
+    override func expired(finished: @escaping () -> Void) {
         if curTime - lastExpired > expiredRegularity {
             print("expired")
             lastExpired = curTime
