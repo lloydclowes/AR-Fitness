@@ -75,8 +75,12 @@ class ActivityMonitor {
         self.restart()
     }
     
-    init(exercise: Exercise, generator : FeedbackGenerator, liveFeedback : Bool = false, countFirstRep : Bool = false) {
-        self.feedbackGenerator = generator
+    init(exercise: Exercise, liveFeedback : Bool = false, countFirstRep : Bool = false) {
+        var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
+        for targetState in exercise.states {
+            feedbackDict[targetState.name] = targetState.feedback
+        }
+        self.feedbackGenerator = PrintingFeedbackGenerator(feedbackDict: feedbackDict)
         self.startState = exercise.startState
         self.targetStates = exercise.states
         self.liveFeedback = liveFeedback
@@ -255,7 +259,7 @@ class ActivityMonitor {
             }
         }
         
-        feedbackGenerator.noState(difference: difference) {}
+        feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
         
         if curTime - lastArrived > retryThreshold {
             feedbackGenerator.expired() {}
