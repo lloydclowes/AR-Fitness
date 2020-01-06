@@ -308,6 +308,11 @@ class ActivityMonitor {
     func generateFeedback(difference: Dictionary<String, EulerAngles>) -> String {
         var feedbackDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for (joint, _) in difference {
+
+            if targetStates[targetIndex].feedback[joint] == nil {
+                continue
+            }
+
             let action = targetStates[targetIndex].feedback[joint]!.action
             let side = targetStates[targetIndex].feedback[joint]!.side
             let name = targetStates[targetIndex].feedback[joint]!.name
