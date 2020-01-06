@@ -33,28 +33,35 @@ class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func completeSuccess(finished: @escaping () -> Void) {
-        speaker.speak(text: "Keep it up!") {
+        speaker.speak(text: "You did it!") {
             finished()
         }
     }
     
     override func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: @escaping () -> Void) {
-        print("complete - fail")
-        finished()
+        speaker.speak(text: "Okay, let's try again!") {
+            finished()
+        }
     }
     
     override func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void) {
         if curTime - lastNoState > noStateRegularity {
             lastNoState = curTime
-            print(generateNoStateFeedback(targetName: targetName, difference: difference))
+            speaker.speak(text: generateNoStateFeedback(targetName: targetName, difference: difference)) {
+                finished()
+            }
+            return
         }
         finished()
     }
     
     override func expired(finished: @escaping () -> Void) {
         if curTime - lastExpired > expiredRegularity {
-            print("expired")
             lastExpired = curTime
+            speaker.speak(text: "Failed. When you're ready, try again.") {
+                finished()
+            }
+            return
         }
         finished()
     }

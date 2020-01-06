@@ -58,7 +58,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
         for targetState in exercise.states {
             feedbackDict[targetState.name] = targetState.feedback
         }
-        let gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
+        let gen = HoldingFeedbackGenerator(feedbackDict: feedbackDict)
         
         self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
     }
