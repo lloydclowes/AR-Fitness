@@ -3,6 +3,7 @@ import SwiftUI
 struct Exercise: Hashable, Codable, Identifiable {
     var id : Int
     var name : String
+    var type : ExerciseType
     var intensity : Intensity
     var muscleGroup : MuscleGroup
     var equipment : [String]
@@ -11,6 +12,11 @@ struct Exercise: Hashable, Codable, Identifiable {
     var startMessage : String
     var startState : TargetState
     var states : [TargetState]
+}
+
+enum ExerciseType : String, Hashable, Codable {
+    case hold = "Holding"
+    case rep = "Repetition"
 }
 
 enum Intensity: String, CaseIterable, Codable, Hashable {

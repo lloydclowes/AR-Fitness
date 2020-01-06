@@ -16,6 +16,8 @@ class ActivityMonitor {
     let liveFeedback : Bool
     let countFirstRep : Bool
     
+    let exerciseType : ExerciseType
+    
     let startState : TargetState
     let targetStates : [TargetState]
     
@@ -72,6 +74,7 @@ class ActivityMonitor {
         self.targetStates = []
         self.liveFeedback = false
         self.countFirstRep = false
+        self.exerciseType = .rep
         self.restart()
     }
     
@@ -81,6 +84,7 @@ class ActivityMonitor {
         self.targetStates = exercise.states
         self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
+        self.exerciseType = exercise.type
         self.restart()
     }
     
@@ -217,13 +221,8 @@ class ActivityMonitor {
         print("reps: \(repCount!)")
     }
     
-    private func retry() {
-        stateSuccesses[lastIndex].duration = 0
-        if lastIndex == 0 {
-            complete()
-        }
-        feedbackGenerator.retry() {}
-//        print("retried")
+    private func resume() {
+        feedbackGenerator.resume() {}
     }
     
     private func tooFast() {
@@ -297,13 +296,14 @@ class ActivityMonitor {
 //            print("returning")
             if curTime - lastArrived > noStateThreshold {
                 stateSuccesses[lastIndex].duration = floor(stateSuccesses[lastIndex].duration)
-                if curTime - lastArrived > retryThreshold {
-                    retry()
+                if exerciseType == .hold && curTime - lastArrived <= retryThreshold {
+                    resume()
+                } else {
+                    advanceTarget(to: targetIndex)
                 }
             }
             
             jump(to: lastIndex)
-            advanceTarget(to: targetIndex)
             return
         }
         

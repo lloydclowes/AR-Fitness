@@ -7,7 +7,7 @@ protocol FeedbackGenerator {
     func completeSuccess(finished: @escaping () -> Void)
     func completeFail(tooFast: Bool, missedStates: Dictionary<String, Set<String>>, shortStates: [String], finished: @escaping () -> Void)
     func jumped(to : Int, finished: @escaping () -> Void)
-    func retry(finished: @escaping () -> Void)
+    func resume(finished: @escaping () -> Void)
     func tooFast(finished: @escaping () -> Void)
     func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void)
     func expired(finished: @escaping () -> Void)
@@ -52,7 +52,7 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     
     func jumped(to: Int, finished: @escaping () -> Void) {}
     
-    func retry(finished: @escaping () -> Void) {}
+    func resume(finished: @escaping () -> Void) {}
     
     func tooFast(finished: @escaping () -> Void) {}
     

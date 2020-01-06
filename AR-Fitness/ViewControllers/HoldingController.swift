@@ -9,6 +9,17 @@ class HoldingController : ARViewController {
     private var fiveReward = false
     private var completed = false
     
+    convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
+        self.init(nibName: nil, bundle: nil)
+        self.exercise = exercise
+        var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
+        for targetState in exercise.states {
+            feedbackDict[targetState.name] = targetState.feedback
+        }
+        let gen = HoldingFeedbackGenerator(feedbackDict: feedbackDict)
+        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
+    }
+    
     override func updateViews() {
         scoreLabel.text = "Timer: \(Int(ceil(activityMonitor.remainingDuration)))"
     }

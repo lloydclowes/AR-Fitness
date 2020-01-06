@@ -50,8 +50,8 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
         finished()
     }
     
-    override func retry(finished: @escaping () -> Void) {
-        print("retry")
+    override func resume(finished: @escaping () -> Void) {
+        print("resume")
         finished()
     }
     

@@ -50,19 +50,6 @@ class ARViewController : UIViewController, ARSessionDelegate {
         return button
     }()
     
-    convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
-        self.init(nibName: nil, bundle: nil)
-        self.exercise = exercise
-        
-        var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
-        for targetState in exercise.states {
-            feedbackDict[targetState.name] = targetState.feedback
-        }
-        let gen = HoldingFeedbackGenerator(feedbackDict: feedbackDict)
-        
-        self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
-    }
-    
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
     sender.setAttributedTitle(NSAttributedString(string: showRobot ? "Hide robot" : "Show robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:

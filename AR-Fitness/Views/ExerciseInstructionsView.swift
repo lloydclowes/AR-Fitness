@@ -44,6 +44,7 @@ struct ExerciseInstructionsView_Previews: PreviewProvider {
         ExerciseInstructionsView(
             exercise: Exercise(id: -1,
                                 name: "Name",
+                                type: .rep,
                                 intensity: .low,
                                 muscleGroup: .wholeBody,
                                 equipment: ["equipment"],

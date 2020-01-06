@@ -16,9 +16,10 @@ func expired(finished: () -> Void)
 
 class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     
-    override func retry(finished: @escaping () -> Void) {
-        print("retry")
-        finished()
+    override func resume(finished: @escaping () -> Void) {
+        speaker.speak(text: "Good recovery!") {
+            finished()
+        }
     }
     
     override func tooFast(finished: @escaping () -> Void) {

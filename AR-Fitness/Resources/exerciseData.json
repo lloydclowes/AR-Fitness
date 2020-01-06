@@ -2,6 +2,7 @@
   {
     "name": "Lateral Raise + Hold",
     "id": 1,
+    "type": "Holding",
     "muscleGroup": "Shoulders",
     "intensity": "Low",
     "equipment": [
@@ -132,6 +133,7 @@
   {
     "name": "Lateral Raises",
     "id": 2,
+    "type": "Repetition",
     "muscleGroup": "Shoulders",
     "intensity": "Low",
     "equipment": [
@@ -320,6 +322,7 @@
   {
     "name": "Squats",
     "id": 3,
+    "type": "Repetition",
     "muscleGroup": "Legs",
     "intensity": "High",
     "equipment": [],
@@ -506,6 +509,7 @@
   {
     "name": "Squat + Hold",
     "id": 4,
+    "type": "Holding",
     "muscleGroup": "Legs",
     "intensity": "Low",
     "equipment": [],
@@ -634,6 +638,7 @@
   {
     "name": "Jumping Jacks",
     "id": 5,
+    "type": "Repetition",
     "muscleGroup": "Whole body",
     "intensity": "High",
     "equipment": [],
