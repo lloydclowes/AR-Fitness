@@ -16,6 +16,7 @@
 		189D135023917CE9006F9030 /* JointAngles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189D134F23917CE9006F9030 /* JointAngles.swift */; };
 		18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF1B64238E6CD200CDFC2D /* StateHistory.swift */; };
 		18DF531123C3558E002678B9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531023C3558E002678B9 /* FeedbackGenerator.swift */; };
+		18DF531423C37B86002678B9 /* PrintingFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531323C37B86002678B9 /* PrintingFeedbackGenerator.swift */; };
 		18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275623BF929E00EE53AD /* JointFeedback.swift */; };
 		18EC275F23C0E8A500EE53AD /* RepCountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275E23C0E8A500EE53AD /* RepCountController.swift */; };
 		18EC276123C0F31000EE53AD /* HoldingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC276023C0F31000EE53AD /* HoldingController.swift */; };
@@ -59,6 +60,7 @@
 		189D134F23917CE9006F9030 /* JointAngles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointAngles.swift; sourceTree = "<group>"; };
 		18DF1B64238E6CD200CDFC2D /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
 		18DF531023C3558E002678B9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
+		18DF531323C37B86002678B9 /* PrintingFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintingFeedbackGenerator.swift; sourceTree = "<group>"; };
 		18EC275623BF929E00EE53AD /* JointFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointFeedback.swift; sourceTree = "<group>"; };
 		18EC275E23C0E8A500EE53AD /* RepCountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepCountController.swift; sourceTree = "<group>"; };
 		18EC276023C0F31000EE53AD /* HoldingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingController.swift; sourceTree = "<group>"; };
@@ -123,13 +125,21 @@
 			path = DataAnalysis;
 			sourceTree = "<group>";
 		};
+		18DF531223C37B6C002678B9 /* FeedbackGenerators */ = {
+			isa = PBXGroup;
+			children = (
+				18DF531023C3558E002678B9 /* FeedbackGenerator.swift */,
+				18DF531323C37B86002678B9 /* PrintingFeedbackGenerator.swift */,
+			);
+			path = FeedbackGenerators;
+			sourceTree = "<group>";
+		};
 		6E30CA8A236A353A00AADAF2 /* ARKitFiles */ = {
 			isa = PBXGroup;
 			children = (
 				6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */,
 				6E30CA8B236A356200AADAF2 /* ActivityState.swift */,
 				6E30CA91236A35C100AADAF2 /* EulerAngles.swift */,
-				18DF531023C3558E002678B9 /* FeedbackGenerator.swift */,
 				6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */,
 				189D134F23917CE9006F9030 /* JointAngles.swift */,
 				18EC275623BF929E00EE53AD /* JointFeedback.swift */,
@@ -141,14 +151,14 @@
 			path = ARKitFiles;
 			sourceTree = "<group>";
 		};
-		6E3277362379BD1100C700C9 /* Exercises */ = {
+		6E3277362379BD1100C700C9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				18EC275E23C0E8A500EE53AD /* RepCountController.swift */,
 				18EC276023C0F31000EE53AD /* HoldingController.swift */,
 				18EC276223C104A500EE53AD /* ARViewController.swift */,
 			);
-			path = Exercises;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		6E4195C8236622010093FDD1 /* Models */ = {
@@ -198,7 +208,8 @@
 				6E9004D12359BCAD0070AECC /* Assets.xcassets */,
 				6E9004D62359BCAD0070AECC /* LaunchScreen.storyboard */,
 				6E9004D92359BCAD0070AECC /* Info.plist */,
-				6E3277362379BD1100C700C9 /* Exercises */,
+				18DF531223C37B6C002678B9 /* FeedbackGenerators */,
+				6E3277362379BD1100C700C9 /* ViewControllers */,
 				6E30CA8A236A353A00AADAF2 /* ARKitFiles */,
 				6E4195C92366222E0093FDD1 /* Resources */,
 				6E9004D32359BCAD0070AECC /* Preview Content */,
@@ -332,6 +343,7 @@
 				18DF531123C3558E002678B9 /* FeedbackGenerator.swift in Sources */,
 				6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */,
 				18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */,
+				18DF531423C37B86002678B9 /* PrintingFeedbackGenerator.swift in Sources */,
 				6E30CA89236A352A00AADAF2 /* ActivityMonitor.swift in Sources */,
 				6E30CA8C236A356200AADAF2 /* ActivityState.swift in Sources */,
 				6E4195CC236622D20093FDD1 /* Data.swift in Sources */,

@@ -15,9 +15,7 @@ protocol FeedbackGenerator {
 }
 
 class BaseFeedbackGenerator : FeedbackGenerator {
-    
-    static let shared = BaseFeedbackGenerator()
-    
+        
     let speaker = SpeechService.shared
     
     func started() {}
