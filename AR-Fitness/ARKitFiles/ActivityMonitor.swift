@@ -10,7 +10,7 @@ class ActivityMonitor {
     let resetTimerThreshold = 3.0
     
     let turningPointTolerance : Float = 1.5
-    let maxAbsoluteSpeed : Float = 8.0
+    let maxAbsoluteSpeed : Float = 20
     
     var started = false
     var terminated = false
