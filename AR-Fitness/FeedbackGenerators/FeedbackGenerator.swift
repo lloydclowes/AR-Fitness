@@ -22,20 +22,24 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     
     let tooFastRegularity : TimeInterval
     let noStateRegularity : TimeInterval
+    let expiredRegularity : TimeInterval
     
     var lastTooFast = TimeInterval()
     var lastNoState = TimeInterval()
-    
+    var lastExpired = TimeInterval()
+
     internal var curTime : TimeInterval {
         return Date().timeIntervalSince1970
     }
     
     init(feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>>,
          tooFastRegularity : TimeInterval = 1,
-         noStateRegularity : TimeInterval = 10) {
+         noStateRegularity : TimeInterval = 5,
+         expiredRegularity : TimeInterval = 10) {
         self.feedbackDict = feedbackDict
         self.tooFastRegularity = tooFastRegularity
         self.noStateRegularity = noStateRegularity
+        self.expiredRegularity = expiredRegularity
     }
     
     func started(finished: () -> Void) {}

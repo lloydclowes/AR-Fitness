@@ -72,7 +72,10 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func expired(finished: () -> Void) {
-        print("expired")
+        if curTime - lastExpired > expiredRegularity {
+            print("expired")
+            lastExpired = curTime
+        }
         finished()
     }
     
