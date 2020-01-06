@@ -642,8 +642,8 @@
     "muscleGroup": "Whole body",
     "intensity": "High",
     "equipment": [],
+    "duration": "any",
     "className": "JumpingJackController",
-    "duration": "1:00",
     "startMessage": "In this exercise start with your legs together and arms by your sides. Then jump in the air and as you do so, keeping your arms fairly straight, raise them to a 45 degree angle and spread your legs apart. In this state your body should for a star shape. Then jump again and return to the starting position.",
     "startState": {
       "name": "START",
@@ -789,6 +789,166 @@
                 "name" : "arm"
             }
         }
+      }
+    ]
+  },
+  {
+    "name": "Lunges",
+    "id": 6,
+    "muscleGroup": "Legs",
+    "intensity": "High",
+    "equipment": [],
+    "duration": "any",
+    "className": "LungeController",
+    "startMessage": "Stand tall with your feet hip width apart. Take a big step forward with your left leg. Lower your body until your left thigh is parallel to the floor. Press into your left heel to push yourself back up and repeat with the right leg.",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "right_leg_joint": {
+              "z": 35
+          },
+          "left_leg_joint": {
+              "z": 35
+          },
+          "right_upLeg_joint": {
+              "y": 20
+          },
+          "left_upLeg_joint": {
+              "y": -30
+          }
+        }
+      },
+      "tolerances": {
+        "jointAngles": {
+            "right_leg_joint": {
+                "z": 10
+            },
+            "left_leg_joint": {
+                "z": 10
+            },
+            "right_upLeg_joint": {
+                "y": 10
+            },
+            "left_upLeg_joint": {
+                "y": 10
+            }
+        }
+      },
+      "feedback": {}
+    },
+    "states": [
+        {
+          "name": "LEFT",
+          "duration": 0,
+          "jointAngles": {
+              "jointAngles": {
+                  "right_leg_joint": {
+                      "z": 70
+                  },
+                  "left_leg_joint": {
+                      "z": 70
+                  },
+                  "right_upLeg_joint": {
+                      "y": 0
+                  },
+                  "left_upLeg_joint": {
+                      "y": -60
+                  }
+              }
+          },
+          "tolerances": {
+              "jointAngles": {
+                  "right_leg_joint": {
+                      "z": -10
+                  },
+                  "left_leg_joint": {
+                      "z": -10
+                  },
+                  "right_upLeg_joint": {
+                      "y": 10
+                  },
+                  "left_upLeg_joint": {
+                      "y": 10
+                  }
+              }
+          },
+          "feedback": {}
+      },
+      {
+        "name": "UP",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "right_leg_joint": {
+                "z": 35
+            },
+            "left_leg_joint": {
+                "z": 35
+            },
+            "right_upLeg_joint": {
+                "y": 20
+            },
+            "left_upLeg_joint": {
+                "y": -30
+            }
+          }
+        },
+        "tolerances": {
+          "jointAngles": {
+              "right_leg_joint": {
+                  "z": 10
+              },
+              "left_leg_joint": {
+                  "z": 10
+              },
+              "right_upLeg_joint": {
+                  "y": 10
+              },
+              "left_upLeg_joint": {
+                  "y": 10
+              }
+          }
+        },
+        "feedback": {}
+      },
+      {
+          "name": "RIGHT",
+          "duration": 0,
+          "jointAngles": {
+              "jointAngles": {
+                  "right_leg_joint": {
+                      "z": 70
+                  },
+                  "left_leg_joint": {
+                      "z": 70
+                  },
+                  "right_upLeg_joint": {
+                      "y": 60
+                  },
+                  "left_upLeg_joint": {
+                      "y": 10
+                  }
+              }
+          },
+          "tolerances": {
+              "jointAngles": {
+                  "right_leg_joint": {
+                      "z": -10
+                  },
+                  "left_leg_joint": {
+                      "z": -10
+                  },
+                  "right_upLeg_joint": {
+                      "y": -10
+                  },
+                  "left_upLeg_joint": {
+                      "y": -10
+                  }
+              }
+          },
+          "feedback": {}
       }
     ]
   }

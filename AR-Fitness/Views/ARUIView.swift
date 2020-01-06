@@ -43,6 +43,8 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
             return RepCountController(exercise: exercise)
         case "Jumping Jacks":
             return RepCountController(exercise: exercise)
+        case "Lunges":
+            return RepCountController(exercise: exercise)
         default:
             print("ERROR: No view controller found for the given exercise")
             return RepCountController(exercise: exercise)

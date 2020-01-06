@@ -10,7 +10,7 @@ class ActivityMonitor {
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 20
-    
+
     let startPromptDuration = 10.0
     
     let feedbackGenerator : FeedbackGenerator
