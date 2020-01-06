@@ -15,6 +15,7 @@
 		187B5358238D7DC7008C4CF0 /* PeakFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187B5357238D7DC7008C4CF0 /* PeakFinder.swift */; };
 		189D135023917CE9006F9030 /* JointAngles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189D134F23917CE9006F9030 /* JointAngles.swift */; };
 		18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF1B64238E6CD200CDFC2D /* StateHistory.swift */; };
+		18DF531123C3558E002678B9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DF531023C3558E002678B9 /* FeedbackGenerator.swift */; };
 		18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275623BF929E00EE53AD /* JointFeedback.swift */; };
 		18EC275F23C0E8A500EE53AD /* RepCountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC275E23C0E8A500EE53AD /* RepCountController.swift */; };
 		18EC276123C0F31000EE53AD /* HoldingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EC276023C0F31000EE53AD /* HoldingController.swift */; };
@@ -57,6 +58,7 @@
 		187B5357238D7DC7008C4CF0 /* PeakFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeakFinder.swift; sourceTree = "<group>"; };
 		189D134F23917CE9006F9030 /* JointAngles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointAngles.swift; sourceTree = "<group>"; };
 		18DF1B64238E6CD200CDFC2D /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
+		18DF531023C3558E002678B9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
 		18EC275623BF929E00EE53AD /* JointFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JointFeedback.swift; sourceTree = "<group>"; };
 		18EC275E23C0E8A500EE53AD /* RepCountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepCountController.swift; sourceTree = "<group>"; };
 		18EC276023C0F31000EE53AD /* HoldingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingController.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				6E30CA88236A352A00AADAF2 /* ActivityMonitor.swift */,
 				6E30CA8B236A356200AADAF2 /* ActivityState.swift */,
 				6E30CA91236A35C100AADAF2 /* EulerAngles.swift */,
+				18DF531023C3558E002678B9 /* FeedbackGenerator.swift */,
 				6EAF45C2236AE8D900710465 /* GetJointAnglesExtension.swift */,
 				189D134F23917CE9006F9030 /* JointAngles.swift */,
 				18EC275623BF929E00EE53AD /* JointFeedback.swift */,
@@ -326,6 +329,7 @@
 				18EC275723BF929E00EE53AD /* JointFeedback.swift in Sources */,
 				6EAF45C1236AE6E500710465 /* ARUIView.swift in Sources */,
 				6E438043235A197A001A557A /* ExerciseDetailView.swift in Sources */,
+				18DF531123C3558E002678B9 /* FeedbackGenerator.swift in Sources */,
 				6739F17A238FDF50000F6B18 /* ExerciseInstructionsView.swift in Sources */,
 				18DF1B65238E6CD200CDFC2D /* StateHistory.swift in Sources */,
 				6E30CA89236A352A00AADAF2 /* ActivityMonitor.swift in Sources */,

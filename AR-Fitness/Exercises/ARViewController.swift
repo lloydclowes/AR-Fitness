@@ -53,7 +53,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
         self.init(nibName: nil, bundle: nil)
         self.exercise = exercise
-        self.activityMonitor = ActivityMonitor(exercise: exercise, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
+        self.activityMonitor = ActivityMonitor(exercise: exercise, generator: BaseFeedbackGenerator.shared, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
     }
     
     @IBAction func toggleRobot(sender: UIButton) {
@@ -131,7 +131,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
             
             updateViews()
             
-            if !activityMonitor.started {
+            if !activityMonitor.hasStarted {
                 started = false
                 if curTime - lastInstructions > 10 {
                     lastInstructions = curTime

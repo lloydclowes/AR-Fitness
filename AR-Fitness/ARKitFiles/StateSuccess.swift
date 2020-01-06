@@ -2,6 +2,7 @@ import Foundation
 
 struct StateSuccess {
     var duration : Double = 0.0
+    var expired : Bool = false
     var maxSpeed : Float = 0.0
     var jointFailures : Set<String> = []
     

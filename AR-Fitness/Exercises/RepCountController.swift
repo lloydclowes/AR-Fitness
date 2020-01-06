@@ -6,11 +6,12 @@ import Combine
 class RepCountController : ARViewController {
         
     override func updateViews() {
-        self.scoreLabel.text = "Reps: \(activityMonitor.repCount)"
+        self.scoreLabel.text = "Reps: \(activityMonitor.repCount!)"
     }
     
     override func handleRewards() {
-        if activityMonitor.successCount > 0 && activityMonitor.successCount.isMultiple(of: 5) {
+        // successCount
+        if activityMonitor.repCount > 0 && activityMonitor.repCount.isMultiple(of: 5) {
             if !rewarded {
                 rewarded = true
                 speaker.speakRandomReward()
