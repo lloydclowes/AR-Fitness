@@ -797,6 +797,7 @@
     "id": 6,
     "muscleGroup": "Legs",
     "intensity": "High",
+    "type": "Repetition",
     "equipment": [],
     "duration": "any",
     "className": "LungeController",

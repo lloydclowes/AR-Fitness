@@ -29,9 +29,9 @@ struct ExerciseInstructionControllerContainer: UIViewControllerRepresentable {
         case "Squat + Hold":
             return HoldingController(exercise: exercise, instructions: true)
         case "Jumping Jacks":
-            return RepCountController(exercise: exercise, liveFeedback: true)
+            return RepCountController(exercise: exercise, instructions: true)
         case "Lunges":
-            return RepCountController(exercise: exercise, liveFeedback: true)
+            return RepCountController(exercise: exercise, instructions: true)
         default:
             print("ERROR: No view controller found for the given exercise")
             return RepCountController(exercise: exercise, instructions: true)
