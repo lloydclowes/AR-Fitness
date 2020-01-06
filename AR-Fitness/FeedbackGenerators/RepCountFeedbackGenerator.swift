@@ -56,6 +56,9 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator {
     private func generateMissedFeedback(stateName : String, joints : Set<String>) -> String {
         var stateDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for joint in joints {
+            if feedbackDict[stateName] == nil || feedbackDict[stateName]![joint] == nil {
+                continue
+            }
             let action = feedbackDict[stateName]![joint]!.action
             let side = feedbackDict[stateName]![joint]!.side
             let name = feedbackDict[stateName]![joint]!.name

@@ -82,6 +82,11 @@ class RepCountInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     private func generateMissedFeedback(stateName : String, joints : Set<String>) -> String {
         var stateDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for joint in joints {
+            
+            if feedbackDict[stateName] == nil || feedbackDict[stateName]![joint] == nil {
+                continue
+            }
+            
             let action = feedbackDict[stateName]![joint]!.action
             let side = feedbackDict[stateName]![joint]!.side
             let name = feedbackDict[stateName]![joint]!.name
@@ -119,6 +124,11 @@ class RepCountInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     private func generateNoStateFeedback(targetName : String, difference: Dictionary<String, EulerAngles>) -> String {
         var diffDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for (joint, _) in difference {
+            
+            if feedbackDict[targetName] == nil || feedbackDict[targetName]![joint] == nil {
+                continue
+            }
+            
             let action = feedbackDict[targetName]![joint]!.action
             let side = feedbackDict[targetName]![joint]!.side
             let name = feedbackDict[targetName]![joint]!.name
