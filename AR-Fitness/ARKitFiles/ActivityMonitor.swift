@@ -156,7 +156,7 @@ class ActivityMonitor {
     
     private func started() {
         hasStarted = true
-        feedbackGenerator.started()
+        feedbackGenerator.started() {}
 //        print("started")
     }
     
@@ -172,7 +172,7 @@ class ActivityMonitor {
             complete()
         }
         
-        feedbackGenerator.advanced()
+        feedbackGenerator.advanced() {}
 //        print("advanced to \(to)")
     }
     
@@ -202,9 +202,9 @@ class ActivityMonitor {
         // Submit completion to feedback generator
         if !repTooFast && missedStates.count == 0 && shortDurations.count == 0 {
             repCount += 1
-            feedbackGenerator.completeSuccess()
+            feedbackGenerator.completeSuccess() {}
         } else {
-            feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations)
+            feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {}
         }
                 
         // Reset the success info
@@ -222,13 +222,13 @@ class ActivityMonitor {
         if lastIndex == 0 {
             complete()
         }
-        feedbackGenerator.retry()
+        feedbackGenerator.retry() {}
 //        print("retried")
     }
     
     private func tooFast() {
         repTooFast = true
-        feedbackGenerator.tooFast()
+        feedbackGenerator.tooFast() {}
 //        print("too fast: \(currentState.getMaxSpeed())")
     }
     
@@ -255,10 +255,10 @@ class ActivityMonitor {
             }
         }
         
-        feedbackGenerator.noState(difference: difference)
+        feedbackGenerator.noState(difference: difference) {}
         
         if curTime - lastArrived > retryThreshold {
-            feedbackGenerator.expired()
+            feedbackGenerator.expired() {}
         }
         
 //        print("no state")
