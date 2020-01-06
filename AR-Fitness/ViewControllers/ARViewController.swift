@@ -50,12 +50,6 @@ class ARViewController : UIViewController, ARSessionDelegate {
         return button
     }()
     
-    convenience init(exercise : Exercise, liveFeedback : Bool, countFirstRep : Bool = false) {
-        self.init(nibName: nil, bundle: nil)
-        self.exercise = exercise
-        self.activityMonitor = ActivityMonitor(exercise: exercise, liveFeedback: liveFeedback, countFirstRep: countFirstRep)
-    }
-    
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
     sender.setAttributedTitle(NSAttributedString(string: showRobot ? "Hide robot" : "Show robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
@@ -130,21 +124,6 @@ class ARViewController : UIViewController, ARSessionDelegate {
             activityMonitor.updateState(bodyAnchor, delta)
             
             updateViews()
-            
-            if !activityMonitor.started {
-                started = false
-                if curTime - lastInstructions > 10 {
-                    lastInstructions = curTime
-                    speaker.speak(text: "Please assume the start position.")
-                }
-                return
-            }
-            
-            if !started {
-                speaker.speak(text: "Good! Let's hit it!")
-                startTime = Date().timeIntervalSince1970
-                started = true
-            }
             
             if recordHistory {
                 self.recordingSession.poll(activityMonitor.currentState)
