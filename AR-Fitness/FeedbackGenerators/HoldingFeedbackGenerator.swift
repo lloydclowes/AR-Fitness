@@ -3,7 +3,7 @@ import Foundation
 class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     
     override func started(finished: @escaping () -> Void) {
-        speaker.speak(text: "Start instructions will go here.") {
+        speaker.speak(text: "Good. Now get to the hold position.") {
             finished()
         }
     }

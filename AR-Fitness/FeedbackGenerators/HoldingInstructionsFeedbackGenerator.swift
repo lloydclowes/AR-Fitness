@@ -3,7 +3,7 @@ import Foundation
 class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     
     override func started(finished: @escaping () -> Void) {
-        speaker.speak(text: "Start instructions will go here.") {
+        speaker.speak(text: "Good. Now get to the hold position.") {
             finished()
         }
     }
@@ -21,7 +21,7 @@ class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: @escaping () -> Void) {
-        speaker.speak(text: "Okay, let's try again!") {
+        speaker.speak(text: "Not quite. Let's try again!") {
             finished()
         }
     }
@@ -30,6 +30,17 @@ class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
         if curTime - lastNoState > noStateRegularity {
             lastNoState = curTime
             speaker.speak(text: generateNoStateFeedback(targetName: targetName, difference: difference)) {
+                finished()
+            }
+            return
+        }
+        finished()
+    }
+    
+    override func expired(finished: @escaping () -> Void) {
+        if curTime - lastExpired > expiredRegularity {
+            lastExpired = curTime
+            speaker.speak(text: "Failed. When you're ready, try again.") {
                 finished()
             }
             return

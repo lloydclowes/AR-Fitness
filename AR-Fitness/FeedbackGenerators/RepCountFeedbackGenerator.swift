@@ -3,7 +3,7 @@ import Foundation
 class RepCountFeedbackGenerator : BaseFeedbackGenerator {
     
     override func started(finished: @escaping () -> Void) {
-        speaker.speak(text: "Start instructions will go here.") {
+        speaker.speak(text: "Good. Now hit the reps!") {
             finished()
         }
     }

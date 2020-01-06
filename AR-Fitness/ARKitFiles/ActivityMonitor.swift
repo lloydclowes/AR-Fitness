@@ -5,11 +5,13 @@ class ActivityMonitor {
     
     let speaker = SpeechService.shared
     
-    let noStateThreshold = 0.1
+    let noStateThreshold = 0.15
     let retryThreshold = 3.0
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 20
+    
+    let startPromptDuration = 10.0
     
     let feedbackGenerator : FeedbackGenerator
     
@@ -20,7 +22,9 @@ class ActivityMonitor {
     let startState : TargetState
     let targetStates : [TargetState]
     
-    var hasStarted : Bool!
+    var startReached : Bool!
+    var ready : Bool!
+    
     var paused : Bool!
     var hitFirstTarget : Bool!
     
@@ -37,6 +41,8 @@ class ActivityMonitor {
     var repCount : Int!
     
     var curTime : TimeInterval!
+    var lastStartPrompt : TimeInterval!
+    
     var lastArrived : TimeInterval!
     
     var lastFeedback : TimeInterval!
@@ -86,7 +92,8 @@ class ActivityMonitor {
     }
     
     func restart() {
-        self.hasStarted = false
+        self.startReached = false
+        self.ready = false
         self.paused = false
         self.hitFirstTarget = false
         
@@ -111,6 +118,7 @@ class ActivityMonitor {
         self.index = -1
         self.lastIndex = -1
         self.lastArrived = TimeInterval()
+        self.lastStartPrompt = TimeInterval()
         self.targetIndex = 0
         self.repCount = 0
     }
@@ -150,29 +158,41 @@ class ActivityMonitor {
 
         prevState = currentState
         let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
-        currentState.update(newAngles, Augmentation.dema, 1.0)
         
+        if currentState == ActivityState() {
+            currentState.jointAngles = newAngles
+        } else if prevState == ActivityState() {
+            prevState = currentState
+            currentState.jointAngles = newAngles
+        } else {
+            currentState.update(newAngles, Augmentation.dema, 1.0)
+        }
+            
         updateIndex(delta)
     }
     
-    private func started() {
-        hasStarted = true
-        feedbackGenerator.started() {}
-    }
+//    private func started() {
+//        if !speakingStart {
+//            speakingStart = true
+//            speaker.speak(text: "") {
+//                self.speakingStart = false
+//                self.hasStarted = true
+//            }
+//        }
+//    }
     
     private func advanceTarget(to : Int) {
-        targetIndex = to
-
-        if targetIndex == 0 {
-            if targetStates.count == 1 {
-                complete()
-            }
-        } else if targetIndex == 1 {
+        if to == 1 || to == 0 && targetStates.count == 1 {
             complete()
         }
         hitFirstTarget = true
         
-        if targetIndex != 1 {
+        if targetIndex == to {
+            return
+        }
+        
+        targetIndex = to
+        if targetIndex != 1  {
             feedbackGenerator.advanced() {}
         }
     }
@@ -258,8 +278,9 @@ class ActivityMonitor {
         
         feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
         
-        if curTime - lastArrived > retryThreshold {
+        if exerciseType == .hold && curTime - lastArrived > retryThreshold {
             feedbackGenerator.expired() {}
+            restart()
         }
         
 //        print("no state")
@@ -272,11 +293,23 @@ class ActivityMonitor {
             return
         }
         
-        // If we haven't started yet, check if we have reached the start state
-        if !hasStarted {
+        if !startReached {
             if currentState.reaches(startState) {
-                started()
+                self.startReached = true
+                self.lastArrived = curTime
+                feedbackGenerator.started {
+                    self.ready = true
+                }
+                return
             }
+            if curTime - lastStartPrompt > startPromptDuration {
+                lastStartPrompt = curTime
+                speaker.speak(text: "Please assume the start position.")
+            }
+            return
+        }
+        
+        if !ready {
             return
         }
                 
@@ -318,7 +351,6 @@ class ActivityMonitor {
         if currentState.reaches(targetStates[targetIndex]) {
 //            print("advancing")
             jump(to: targetIndex)
-//            advanceTarget(to: (targetIndex + 1) % targetStates.count)
             return
         }
         
