@@ -62,8 +62,8 @@ class ARViewController : UIViewController, ARSessionDelegate {
         UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
 //        sender.setAttributedTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)  // TODO: Fix this
     }
-    
-    override func viewDidLoad() {
+
+    override func viewWillAppear(_ animated: Bool) {
         setupViews()
         updateViews()
     }
@@ -168,6 +168,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     func handleRewards() { print("handleRewards() not implemented") }
     
     func setupViews() {
+        print("setting up view")
         view.addSubview(ARViewController.arView)
         view.addSubview(scoreLabel)
         view.addSubview(robotButton)
