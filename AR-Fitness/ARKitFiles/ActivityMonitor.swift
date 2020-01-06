@@ -3,37 +3,49 @@ import ARKit
 
 class ActivityMonitor {
     
-    let liveFeedback : Bool
-    let countFirstRep : Bool
+    let speaker = SpeechService.shared
     
-    let noStateThreshold = 0.1
-    let resetTimerThreshold = 3.0
+    let noStateThreshold = 0.15
+    let retryThreshold = 3.0
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 20
+
+    let startPromptDuration = 10.0
     
-    var started = false
-    var terminated = false
+    let feedbackGenerator : FeedbackGenerator
+    
+    let countFirstRep : Bool
+    
+    let exerciseType : ExerciseType
     
     let startState : TargetState
     let targetStates : [TargetState]
-    var currentState = ActivityState()
-    var prevState = ActivityState()
     
-    var stateSuccesses = [StateSuccess]()
-    var repTooFast = false
-    var successCount = 0
+    var startReached : Bool!
+    var ready : Bool!
     
-    var index = -1
-    var lastIndex = -1
-    var lastArrived = TimeInterval()
-    var targetIndex = 0
-    var repCount = 0
+    var paused : Bool!
+    var hitFirstTarget : Bool!
     
-    let speaker = SpeechService.shared
+    var currentState : ActivityState!
+    var prevState : ActivityState!
     
-    var lastFeedback = TimeInterval()
-//    let exerciseFeedback : [Dictionary<String, JointFeedback>]
+    var stateSuccesses : [StateSuccess]!
+    var repTooFast : Bool!
+//    var successCount : Int!
+    
+    var index : Int!
+    var lastIndex : Int!
+    var targetIndex : Int!
+    var repCount : Int!
+    
+    var curTime : TimeInterval!
+    var lastStartPrompt : TimeInterval!
+    
+    var lastArrived : TimeInterval!
+    
+    var lastFeedback : TimeInterval!
     
     var targetStateName : String {
         get { return targetStates[targetIndex].name }
@@ -62,33 +74,30 @@ class ActivityMonitor {
     }
     
     init() {
+        self.feedbackGenerator = PrintingFeedbackGenerator.shared
         self.startState = TargetState("START")
         self.targetStates = []
-        self.liveFeedback = false
         self.countFirstRep = false
-        restart()
+        self.exerciseType = .rep
+        self.restart()
     }
-
-    init(exercise: Exercise, liveFeedback : Bool = false, countFirstRep : Bool = false) {
+    
+    init(exercise : Exercise, feedbackGenerator : FeedbackGenerator, countFirstRep : Bool = false) {
+        self.feedbackGenerator = feedbackGenerator
         self.startState = exercise.startState
         self.targetStates = exercise.states
-        self.liveFeedback = liveFeedback
         self.countFirstRep = countFirstRep
-        restart()
+        self.exerciseType = exercise.type
+        self.restart()
     }
     
     func restart() {
-        started = false
-        terminated = false
-        index = -1
-        lastIndex = -1
-        lastArrived = TimeInterval()
-        targetIndex = targetStates.count > 1 ? 1 : 0
-        repCount = 0
-        successCount = 0
+        self.startReached = false
+        self.ready = false
+        self.paused = false
+        self.hitFirstTarget = false
         
         self.currentState = ActivityState()
-        self.prevState = ActivityState()
         for (joint, angles) in targetStates[0].jointAngles {
             let x : Float? = angles.x != nil ? Float(0) : nil
             let y : Float? = angles.y != nil ? Float(0) : nil
@@ -97,11 +106,21 @@ class ActivityMonitor {
             self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
         }
+        self.prevState = ActivityState()
         
         self.stateSuccesses = []
         for targetState in targetStates {
             self.stateSuccesses.append(StateSuccess(joints: Array(targetState.jointAngles.keys)))
         }
+        
+        self.repTooFast = false
+        
+        self.index = -1
+        self.lastIndex = -1
+        self.lastArrived = TimeInterval()
+        self.lastStartPrompt = TimeInterval()
+        self.targetIndex = 0
+        self.repCount = 0
     }
     
     func prettifyJointFailures(state : String, joints : [String]) -> String {
@@ -109,66 +128,6 @@ class ActivityMonitor {
             return "Your joints didn't reach the \(state) state at the same time"
         } else {
             return "Your \(spokenListJoin(joints.map(jointToName))) didn't reach the \(state) state"
-        }
-    }
-        
-    func completeRep() {
-        if !liveFeedback {
-            // Find all the states that were never hit and the reason
-            var missedStates = [String]()
-            for i in 0..<targetStates.count {
-                let stateSuccess = stateSuccesses[i]
-                if stateSuccess.duration == 0 {
-                    missedStates.append(prettifyJointFailures(state: targetStates[i].name, joints: Array(stateSuccess.jointFailures)))
-                }
-            }
-            
-            // Find all states that weren't held for long enough
-            var shortDurations = [String]()
-            for i in 0..<targetStates.count {
-                if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
-                    shortDurations.append(targetStates[i].name)
-                }
-            }
-            
-            // Reset the success structs
-            for i in 0..<targetStates.count {
-                self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
-            }
-            
-            // Check for success by no feedback
-            if !repTooFast && missedStates.count == 0 && shortDurations.count == 0 {
-                repCount += 1
-                successCount += 1
-                if successCount == 1 {
-                    speaker.speak(text: "Better!")
-                }
-                print("reps: \(repCount)")
-                return
-            }
-            
-            successCount = 0
-            
-            var allFeedback = ""
-                        
-            // If we missed some states, explain them
-            if missedStates.count > 0 {
-                allFeedback += spokenListJoin(missedStates) + "."
-            }
-            
-            // Vocalise if the durations were too short
-            if shortDurations.count == 1 {
-                allFeedback += " You didn't stay in the \(shortDurations[0]) state for long enough."
-            } else if shortDurations.count > 1 {
-                allFeedback += " You didn't stay in the \(spokenListJoin(shortDurations)) states for long enough."
-            }
-            
-            if repTooFast {
-                allFeedback += " " + SpeechService.tooFastStatements.randomElement()!
-                repTooFast = false
-            }
-            
-            speaker.speak(text: allFeedback)
         }
     }
       
@@ -194,118 +153,223 @@ class ActivityMonitor {
         updateState(bodyAnchor, 0.0)
     }
     
-    func updateIndex(_ delta : Double) {
+    func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
+        curTime = Date().timeIntervalSince1970
+
+        prevState = currentState
+        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
         
-        // If the exercise has terminated, don't update
-        if terminated {
+        if currentState == ActivityState() {
+            currentState.jointAngles = newAngles
+        } else if prevState == ActivityState() {
+            prevState = currentState
+            currentState.jointAngles = newAngles
+        } else {
+            currentState.update(newAngles, Augmentation.dema, 1.0)
+        }
+            
+        updateIndex(delta)
+    }
+    
+//    private func started() {
+//        if !speakingStart {
+//            speakingStart = true
+//            speaker.speak(text: "") {
+//                self.speakingStart = false
+//                self.hasStarted = true
+//            }
+//        }
+//    }
+    
+    private func advanceTarget(to : Int) {
+        if to == 1 || to == 0 && targetStates.count == 1 {
+            complete()
+        }
+        hitFirstTarget = true
+        
+        if targetIndex == to {
             return
         }
         
-        // If we haven't started yet, check if we have reached the start state
-        if !started {
+        targetIndex = to
+        if targetIndex != 1  {
+            feedbackGenerator.advanced() {}
+        }
+    }
+    
+    private func complete() {
+        if !hitFirstTarget && !countFirstRep {
+            print("complete - ignore")
+            return
+        }
+        
+        // Find all the states that were never hit and the reason
+        var missedStates : Dictionary<String, Set<String>> = [:]
+        for i in 0..<targetStates.count {
+            let stateSuccess = stateSuccesses[i]
+            if stateSuccess.duration == 0 {
+                missedStates[targetStates[i].name] = stateSuccess.jointFailures
+            }
+        }
+        
+        // Find all states that weren't held for long enough
+        var shortDurations = [String]()
+        for i in 0..<targetStates.count {
+            if 0 < stateSuccesses[i].duration && stateSuccesses[i].duration < targetStates[i].duration {
+                shortDurations.append(targetStates[i].name)
+            }
+        }
+        
+        // Submit completion to feedback generator
+        if !repTooFast && missedStates.count == 0 && shortDurations.count == 0 {
+            repCount += 1
+            feedbackGenerator.completeSuccess() {}
+        } else {
+            feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {}
+        }
+        
+        // TODO:   vv or similar
+        // if exercise.type == .hold {
+        //     restart()
+        // }
+        
+        // Reset the success info
+        for i in 0..<targetStates.count {
+            self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
+        }
+        
+        repTooFast = false
+        
+        print("reps: \(repCount!)")
+    }
+    
+    private func resume() {
+        feedbackGenerator.resume() {}
+    }
+    
+    private func tooFast() {
+        repTooFast = true
+        feedbackGenerator.tooFast() {}
+//        print("too fast: \(currentState.getMaxSpeed())")
+    }
+    
+    private func jump(to : Int) {
+        index = to
+        lastIndex = index
+        lastFeedback = TimeInterval()
+        lastArrived = curTime
+//        print("jumped to \(to)")
+    }
+    
+    private func noState() {
+        index = -1
+        if curTime - lastArrived <= noStateThreshold {
+            return
+        }
+        
+        // use    isTurningPoint()      ??????
+        let currentTarget = targetStates[targetIndex]
+        let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+        for joint in targetStates[targetIndex].jointAngles.keys {
+            if !difference.keys.contains(joint) {
+                stateSuccesses[targetIndex].jointFailures.remove(joint)
+            }
+        }
+        
+        feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
+        
+        if exerciseType == .hold && curTime - lastArrived > retryThreshold {
+            feedbackGenerator.expired() {}
+            restart()
+        }
+        
+//        print("no state")
+    }
+    
+    private func updateIndex(_ delta : Double) {
+        
+        // If the exercise has terminated, don't update
+        if paused {
+            return
+        }
+        
+        if !startReached {
             if currentState.reaches(startState) {
-                print("START")
-                started = true
+                self.startReached = true
+                self.lastArrived = curTime
+                feedbackGenerator.started {
+                    self.ready = true
+                }
+                return
+            }
+            if curTime - lastStartPrompt > startPromptDuration {
+                lastStartPrompt = curTime
+                speaker.speak(text: "Please assume the start position.")
             }
             return
         }
         
-        let curTime = Date().timeIntervalSince1970
-        
+        if !ready {
+            return
+        }
+                
         // If the index hasn't changed then ignore
         if index != -1 && currentState.reaches(targetStates[index]) {
             lastArrived = curTime
             lastFeedback = TimeInterval()
             stateSuccesses[index].duration += delta
+            // If we have completed this state, move target
+            if index == targetIndex && stateSuccesses[index].duration > targetStates[index].duration {
+                advanceTarget(to: (targetIndex + 1) % targetStates.count)
+            }
 //            print("remain")
             return
         }
 
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
-            index = lastIndex
-            
+//            print("returning")
             if curTime - lastArrived > noStateThreshold {
-                stateSuccesses[index].duration = floor(stateSuccesses[index].duration)
-                if liveFeedback {
-                    if curTime - lastArrived < resetTimerThreshold {
-                        speaker.speak(text: "Okay, now hold it there!")
-                    }
+                stateSuccesses[lastIndex].duration = floor(stateSuccesses[lastIndex].duration)
+                if exerciseType == .hold && curTime - lastArrived <= retryThreshold {
+                    resume()
                 } else {
-                    if index == 0 {
-                        completeRep()
-                    }
+                    advanceTarget(to: targetIndex)
                 }
             }
-                        
-            lastArrived = curTime
-            lastFeedback = TimeInterval()
-            print("return to \(index)")
+            
+            jump(to: lastIndex)
             return
         }
         
-        // Only check state change if we are at a turning point
-        if !isTurningPoint() {
-            if currentState.getMaxSpeed() > maxAbsoluteSpeed {
-                print("Too fast: \(currentState.getMaxSpeed())")
-                if liveFeedback {
-                    speaker.speakRandomTooFast()
-                } else {
-                    repTooFast = true
-                }
-            }
-            index = -1
-            return
+        
+        if currentState.getMaxSpeed() > maxAbsoluteSpeed {
+            tooFast()
         }
-      
+        
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
-            index = targetIndex
-            stateSuccesses[index].duration += delta
-            if index < lastIndex || countFirstRep && lastIndex == -1 && index == 0 {
-                completeRep()
-            }
-            
-            lastIndex = index
-            lastFeedback = TimeInterval()
-            lastArrived = curTime
-            targetIndex = (targetIndex + 1) % targetStates.count
-            
-            print("advanced to \(targetStates[index].name)")
+//            print("advancing")
+            jump(to: targetIndex)
             return
         }
         
         // Check any following states for matches
         for i in 1..<targetStates.count {
             // If we have reached a future state
-            if currentState.reaches(targetStates[(targetIndex + i) % targetStates.count]) {
+            let newIndex = (targetIndex + i) % targetStates.count
+            if currentState.reaches(targetStates[newIndex]) {
                 // Update index variables
-                index = (targetIndex + i) % targetStates.count
-                stateSuccesses[index].duration += delta
-                if index < lastIndex {
-                    completeRep()
-                }
-                
-                lastIndex = index
-                lastFeedback = TimeInterval()
-                lastArrived = curTime
-                targetIndex = (index + 1) % targetStates.count
-                
-                print("jumped to \(index)")
+                jump(to: newIndex)
+                advanceTarget(to: (newIndex + 1) % targetStates.count)
                 return
             }
         }
-        
-        index = -1
-        if liveFeedback && curTime - lastArrived > resetTimerThreshold {
-            terminated = true
-            speaker.speak(text: "Sorry you didn't complete the exercise. Better luck next time!") {
-                self.restart()
-            }
-        }
+                
+        noState()
     }
     
-    func generateFeedback(difference: Dictionary<String, EulerAngles>) -> String {
+    private func generateFeedback(difference: Dictionary<String, EulerAngles>) -> String {
         var feedbackDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for (joint, _) in difference {
 
@@ -344,39 +408,5 @@ class ActivityMonitor {
             feedback.append("\(action) " + spokenListJoin(actionJoints))
         }
         return spokenListJoin(feedback)
-    }
-    
-    func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
-        prevState = currentState
-        let newAngles = bodyAnchor.getBodyJointAngles(Array(currentState.jointAngles.keys))
-        currentState.update(newAngles, Augmentation.dema, 1.0)
-        
-        updateIndex(delta)
-        if !started {
-            return
-        }
-        
-        let currentTarget = targetStates[targetIndex]
-        let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
-        if liveFeedback {
-            
-            // CONDITIONS:
-            // index == -1                                =>   not in a state
-            // isTurningPoint()                           =>   not moving (much)
-            // curTime - lastArrived > noStateThreshold   =>   actually left state, not just glitch
-            // curTime - lastFeedback > 10                =>   only comment every 10 seconds
-            
-            let curTime = Date().timeIntervalSince1970
-            if index == -1 && isTurningPoint() && curTime - lastFeedback > 10 && curTime - lastArrived > noStateThreshold {
-                lastFeedback = Date().timeIntervalSince1970
-                speaker.speak(text: generateFeedback(difference: difference.jointAngles))
-            }
-        } else {
-            for joint in targetStates[targetIndex].jointAngles.keys {
-                if !difference.keys.contains(joint) {
-                    stateSuccesses[targetIndex].jointFailures.remove(joint)
-                }
-            }
-        }
     }
 }

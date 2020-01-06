@@ -52,7 +52,7 @@ func getRotationXYZ(quatf: simd_quatf) -> EulerAngles {
 }
 
 // Joins a list of strings as if they were spoken in english
-func spokenListJoin(_ arr : [String]) -> String {
+func spokenListJoin(_ arr : [String], delim : String = ",") -> String {
     if arr.count == 0 {
         return ""
     }
@@ -62,7 +62,7 @@ func spokenListJoin(_ arr : [String]) -> String {
     
     var joined = "\(arr[0])"
     for i in 1..<arr.count - 1 {
-        joined += ", \(arr[i])"
+        joined += delim + " \(arr[i])"
     }
     return joined + " and \(arr[arr.count - 1])"
 }
