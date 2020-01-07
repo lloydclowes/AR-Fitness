@@ -734,12 +734,12 @@
         "jointAngles": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": -60,
-              "y": -40
+              "x": -50,
+              "y": -30
             },
             "left_arm_joint": {
-              "x": -60,
-              "y": -40
+              "x": -50,
+              "y": -30
             },
             "right_upLeg_joint": {
               "z": 65

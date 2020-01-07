@@ -10,7 +10,7 @@ class ActivityMonitor {
     let maxFrameTime = 0.1
     
     let turningPointTolerance : Float = 1.5
-    let maxAbsoluteSpeed : Float = 20
+    let maxAbsoluteSpeed : Float = 30
 
     let startPromptDuration = 10.0
     
