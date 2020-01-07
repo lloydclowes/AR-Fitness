@@ -27,8 +27,8 @@ class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void) {
-        if curTime - lastNoState > noStateRegularity {
-            lastNoState = curTime
+        if curTime - lastNextPrompt > nextPromptRegularity {
+            lastNextPrompt = curTime
             speaker.speak(text: generateNoStateFeedback(targetName: targetName, difference: difference)) {
                 finished()
             }

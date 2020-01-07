@@ -62,11 +62,13 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
         if text == "" {
+            completion()
             return
         }
         
         print("Speaking: '\(text)'")
         if !self.speechEnabled {
+            completion()
             return
         }
         
@@ -115,7 +117,9 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         if !self.busy {
             return false
         }
-        
+        if let completion = completionHandler {
+            completion()
+        }
         self.player?.stop()
         return true
     }

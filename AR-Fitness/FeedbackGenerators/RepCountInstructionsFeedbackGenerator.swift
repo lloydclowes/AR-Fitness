@@ -9,7 +9,7 @@ class RepCountInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func advanced(finished: @escaping () -> Void) {
-        lastNoState = TimeInterval()
+        lastNextPrompt = TimeInterval()
         lastTooFast = TimeInterval()
         lastExpired = TimeInterval()
         speaker.speak(text: "Nice. Now the next state") {
@@ -68,9 +68,20 @@ class RepCountInstructionsFeedbackGenerator : BaseFeedbackGenerator {
         }
     }
     
+    override func next(targetName : String, difference : Dictionary<String, EulerAngles>, finished : @escaping () -> Void) {
+        if curTime - lastNextPrompt > nextPromptRegularity {
+            lastNextPrompt = curTime
+            speaker.speak(text: generateNoStateFeedback(targetName: targetName, difference: difference)) {
+                finished()
+            }
+            return
+        }
+        finished()
+    }
+    
     override func noState(targetName : String, difference: Dictionary<String, EulerAngles>, finished: @escaping () -> Void) {
-        if curTime - lastNoState > noStateRegularity {
-            lastNoState = curTime
+        if curTime - lastNextPrompt > nextPromptRegularity {
+            lastNextPrompt = curTime
             speaker.speak(text: generateNoStateFeedback(targetName: targetName, difference: difference)) {
                 finished()
             }

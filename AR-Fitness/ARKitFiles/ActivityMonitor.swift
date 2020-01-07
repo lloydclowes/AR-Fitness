@@ -185,6 +185,7 @@ class ActivityMonitor {
         if to == 1 || to == 0 && targetStates.count == 1 {
             complete()
         }
+        
         hitFirstTarget = true
         
         if targetIndex == to {
@@ -193,7 +194,10 @@ class ActivityMonitor {
         
         targetIndex = to
         if targetIndex != 1  {
-            feedbackGenerator.advanced() {}
+            paused = true
+            feedbackGenerator.advanced() {
+                self.paused = false
+            }
         }
     }
     
@@ -223,9 +227,15 @@ class ActivityMonitor {
         // Submit completion to feedback generator
         if !repTooFast && missedStates.count == 0 && shortDurations.count == 0 {
             repCount += 1
-            feedbackGenerator.completeSuccess() {}
+            paused = true
+            feedbackGenerator.completeSuccess() {
+                self.paused = false
+            }
         } else {
-            feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {}
+            paused = true
+            feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {
+                self.paused = false
+            }
         }
         
         // TODO:   vv or similar
@@ -319,10 +329,17 @@ class ActivityMonitor {
             lastFeedback = TimeInterval()
             stateSuccesses[index].duration += delta
             // If we have completed this state, move target
-            if index == targetIndex && stateSuccesses[index].duration > targetStates[index].duration {
-                advanceTarget(to: (targetIndex + 1) % targetStates.count)
+            if index == targetIndex {
+                if stateSuccesses[index].duration > targetStates[index].duration {
+                    advanceTarget(to: (targetIndex + 1) % targetStates.count)
+                } else {
+                    feedbackGenerator.stay() {}
+                }
+            } else {
+                let currentTarget = targetStates[targetIndex]
+                let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+                feedbackGenerator.next(targetName: currentTarget.name, difference: difference.jointAngles) {}
             }
-//            print("remain")
             return
         }
 
