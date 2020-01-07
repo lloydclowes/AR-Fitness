@@ -669,12 +669,12 @@
       "tolerances": {
         "jointAngles": {
           "right_arm_joint": {
-            "x": -10,
-            "y": -10
+            "x": -15,
+            "y": -15
           },
           "left_arm_joint": {
-            "x": -10,
-            "y": -10
+            "x": -15,
+            "y": -15
           },
           "right_upLeg_joint": {
             "z": -10
