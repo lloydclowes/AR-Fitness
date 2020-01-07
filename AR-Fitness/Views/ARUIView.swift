@@ -34,7 +34,7 @@ struct ARViewControllerContainer: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         switch self.exercise.name {
         case "Lateral Raises":
-            return RepCountController(exercise: exercise, countFirstRep: true)
+            return RepCountController(exercise: exercise)
         case "Lateral Raise + Hold":
             return HoldingController(exercise: exercise)
         case "Squat + Hold":
