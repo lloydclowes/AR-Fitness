@@ -515,7 +515,7 @@
     "equipment": [],
     "className": "SquatHoldController",
     "duration": "0:20",
-    "startMessage": "For this exercise start crouch down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Maintain your body in this position for the time set.",
+    "startMessage": "For this exercise, start crouched down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Maintain your body in this position for the time set.",
     "startState": {
       "name": "START",
       "duration": 0,
