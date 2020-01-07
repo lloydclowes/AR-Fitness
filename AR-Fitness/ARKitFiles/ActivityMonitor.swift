@@ -7,6 +7,7 @@ class ActivityMonitor {
     
     let noStateThreshold = 0.15
     let retryThreshold = 3.0
+    let maxFrameTime = 0.1
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 20
@@ -41,6 +42,7 @@ class ActivityMonitor {
     var repCount : Int!
     
     var curTime : TimeInterval!
+    var prevTime = TimeInterval()
     var lastStartPrompt : TimeInterval!
     
     var lastArrived : TimeInterval!
@@ -154,6 +156,9 @@ class ActivityMonitor {
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
+        if let ct = curTime {
+            prevTime = ct
+        }
         curTime = Date().timeIntervalSince1970
 
         prevState = currentState
@@ -280,10 +285,10 @@ class ActivityMonitor {
                 stateSuccesses[targetIndex].jointFailures.remove(joint)
             }
         }
-        
+                
         feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
         
-        if exerciseType == .hold && curTime - lastArrived > retryThreshold {
+        if exerciseType == .hold && lastIndex == 0 && curTime - lastArrived > retryThreshold && curTime - prevTime < maxFrameTime {
             self.paused = true
             feedbackGenerator.expired() {
                 self.restart()
@@ -343,7 +348,7 @@ class ActivityMonitor {
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
 //            print("returning")
-            if curTime - lastArrived > noStateThreshold {
+            if curTime - lastArrived > noStateThreshold && curTime - prevTime < maxFrameTime {
                 stateSuccesses[lastIndex].duration = floor(stateSuccesses[lastIndex].duration)
                 if exerciseType == .hold && curTime - lastArrived <= retryThreshold {
                     resume()
@@ -366,6 +371,7 @@ class ActivityMonitor {
         if currentState.reaches(targetStates[targetIndex]) {
 //            print("advancing")
             jump(to: targetIndex)
+            feedbackGenerator.reached() {}
             return
         }
         

@@ -14,6 +14,12 @@ class HoldingFeedbackGenerator : BaseFeedbackGenerator {
         }
     }
     
+    override func reached(finished: @escaping () -> Void)  {
+        speaker.speak(text: "Nice, now hold it there.") {
+           finished()
+        }
+    }
+    
     override func completeSuccess(finished: @escaping () -> Void) {
         speaker.speak(text: "You completed the challenge!") {
             finished()
@@ -40,7 +46,7 @@ class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     override func expired(finished: @escaping () -> Void) {
         if curTime - lastExpired > expiredRegularity {
             lastExpired = curTime
-            speaker.speak(text: "Failed. When you're ready, try again.") {
+            speaker.speak(text: "Failed. When you're ready, go back to the start position.") {
                 finished()
             }
             return

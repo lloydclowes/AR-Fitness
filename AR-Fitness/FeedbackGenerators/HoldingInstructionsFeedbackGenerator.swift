@@ -8,6 +8,12 @@ class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
         }
     }
     
+    override func reached(finished: @escaping () -> Void)  {
+        speaker.speak(text: "Nice, now hold it there.") {
+           finished()
+        }
+    }
+    
     override func resume(finished: @escaping () -> Void) {
         speaker.speak(text: "Good recovery!") {
             finished()
@@ -26,16 +32,16 @@ class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
         }
     }
     
-    override func stay(finished : @escaping () -> Void) {
-        if curTime - lastStay > stayRegularity {
-            lastStay = curTime
-            speaker.speak(text: "Okay, keep holding.") {
-                finished()
-            }
-            return
-        }
-        finished()
-    }
+//    override func stay(finished : @escaping () -> Void) {
+//        if curTime - lastStay > stayRegularity {
+//            lastStay = curTime
+//            speaker.speak(text: "Okay, keep holding.") {
+//                finished()
+//            }
+//            return
+//        }
+//        finished()
+//    }
     
     override func next(targetName : String, difference : Dictionary<String, EulerAngles>, finished : @escaping () -> Void) {
         if curTime - lastNextPrompt > nextPromptRegularity {
@@ -62,7 +68,7 @@ class HoldingInstructionsFeedbackGenerator : BaseFeedbackGenerator {
     override func expired(finished: @escaping () -> Void) {
         if curTime - lastExpired > expiredRegularity {
             lastExpired = curTime
-            speaker.speak(text: "Failed. When you're ready, try again.") {
+            speaker.speak(text: "Failed. When you're ready, go back to the start position.") {
                 finished()
             }
             return

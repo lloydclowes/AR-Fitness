@@ -538,16 +538,16 @@
       "tolerances": {
         "jointAngles": {
           "left_upLeg_joint": {
-            "y": -20
+            "y": -10
           },
           "right_upLeg_joint": {
-            "y": 20
+            "y": 10
           },
           "left_leg_joint": {
-            "z": 25
+            "z": 15
           },
           "right_leg_joint": {
-            "z": 25
+            "z": 15
           }
         }
       },

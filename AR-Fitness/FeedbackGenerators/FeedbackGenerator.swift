@@ -3,6 +3,7 @@ import Foundation
 protocol FeedbackGenerator {
     
     func started(finished: @escaping () -> Void)
+    func reached(finished: @escaping () -> Void)
     func advanced(finished: @escaping () -> Void)
     func completeSuccess(finished: @escaping () -> Void)
     func completeFail(tooFast: Bool, missedStates: Dictionary<String, Set<String>>, shortStates: [String], finished: @escaping () -> Void)
@@ -50,6 +51,10 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     
     func started(finished: @escaping () -> Void) {
         finished()
+    }
+    
+    func reached(finished: @escaping () -> Void)  {
+           finished()
     }
     
     func advanced(finished: @escaping () -> Void)  {
