@@ -10,7 +10,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     
     var exercise : Exercise!
     var activityMonitor : ActivityMonitor!
-
+    var isInstructionsView : Bool = false
     var recordHistory = false
     var uploaded = false
     let recordingSession = RecordingSession()

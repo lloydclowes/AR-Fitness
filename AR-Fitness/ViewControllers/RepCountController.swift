@@ -4,7 +4,7 @@ import ARKit
 import Combine
 
 class RepCountController : ARViewController {
-        
+    
     convenience init(exercise : Exercise, instructions : Bool = false, countFirstRep : Bool = false) {
         self.init(nibName: nil, bundle: nil)
         self.exercise = exercise
@@ -13,6 +13,7 @@ class RepCountController : ARViewController {
             feedbackDict[targetState.name] = targetState.feedback
         }
         let gen : FeedbackGenerator
+        isInstructionsView = instructions
         if instructions {
             gen = RepCountInstructionsFeedbackGenerator(feedbackDict: feedbackDict)
         } else {
@@ -22,7 +23,11 @@ class RepCountController : ARViewController {
     }
     
     override func updateViews() {
-        self.scoreLabel.text = "Reps: \(activityMonitor.repCount!)"
+        if !isInstructionsView {
+            self.scoreLabel.text = "Reps: \(activityMonitor.repCount!)"
+        } else {
+            self.scoreLabel.removeFromSuperview()
+        }
     }
     
     override func handleRewards() {
