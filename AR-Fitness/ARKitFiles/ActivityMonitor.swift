@@ -194,10 +194,7 @@ class ActivityMonitor {
         
         targetIndex = to
         if targetIndex != 1  {
-            paused = true
-            feedbackGenerator.advanced() {
-                self.paused = false
-            }
+            feedbackGenerator.advanced() {}
         }
     }
     
@@ -227,10 +224,7 @@ class ActivityMonitor {
         // Submit completion to feedback generator
         if !repTooFast && missedStates.count == 0 && shortDurations.count == 0 {
             repCount += 1
-            paused = true
-            feedbackGenerator.completeSuccess() {
-                self.paused = false
-            }
+            feedbackGenerator.completeSuccess() {}
         } else {
             paused = true
             feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {
@@ -268,6 +262,7 @@ class ActivityMonitor {
         lastIndex = index
         lastFeedback = TimeInterval()
         lastArrived = curTime
+        stateSuccesses[index].jointFailures = []
 //        print("jumped to \(to)")
     }
     
@@ -289,8 +284,10 @@ class ActivityMonitor {
         feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
         
         if exerciseType == .hold && curTime - lastArrived > retryThreshold {
-            feedbackGenerator.expired() {}
-            restart()
+            self.paused = true
+            feedbackGenerator.expired() {
+                self.restart()
+            }
         }
         
 //        print("no state")
@@ -351,10 +348,11 @@ class ActivityMonitor {
                 if exerciseType == .hold && curTime - lastArrived <= retryThreshold {
                     resume()
                 } else {
+                    jump(to: lastIndex)
                     advanceTarget(to: targetIndex)
+                    return
                 }
             }
-            
             jump(to: lastIndex)
             return
         }

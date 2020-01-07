@@ -31,9 +31,11 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator {
         
         var missed = [String]()
         for (stateName, joints) in missedStates {
-            var stateMessage = "To hit the \(stateName) state you should "
-            stateMessage += generateMissedFeedback(stateName: stateName, joints: joints)
-            missed.append(stateMessage)
+            let stateMessage = "To hit the \(stateName) state you should "
+            let fb = generateMissedFeedback(stateName: stateName, joints: joints)
+            if fb != "" {
+                missed.append(stateMessage + fb)
+            }
         }
         let missedMessage = spokenListJoin(missed, delim: ".")
         
