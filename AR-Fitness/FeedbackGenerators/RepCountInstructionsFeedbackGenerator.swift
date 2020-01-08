@@ -7,16 +7,19 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
     }
     
     override func advanced(newState: String, finished: @escaping () -> Void) {
-        lastNextPrompt = TimeInterval()
-        lastTooFast = TimeInterval()
-        lastExpired = TimeInterval()
-        speaker.speakWithRandomPositivePrefix(text: "Now the \(newState) state", completion: finished)
+        lastNextPrompt = curTime
+        speaker.speakWithRandomPositivePrefix(text: "Now the \(newState) state") {
+            self.lastNextPrompt = TimeInterval()
+        }
     }
     
     override func completeSuccess(finished: @escaping () -> Void) {
         successiveReps += 1
         if successiveReps % 3 == 1 {
-            speaker.speakRandomReward(completion: finished)
+            speaker.speakRandomReward() {
+                self.lastNextPrompt = TimeInterval()
+                finished()
+            }
         }
     }
     

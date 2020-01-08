@@ -20,7 +20,10 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator {
     override func completeSuccess(finished: @escaping () -> Void) {
         successiveReps += 1
         if successiveReps % 3 == 1 {
-            speaker.speakRandomReward(completion: finished)
+            speaker.speakRandomReward() {
+                self.lastNextPrompt = TimeInterval()
+                finished()
+            }
         }
     }
     
