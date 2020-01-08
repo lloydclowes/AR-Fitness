@@ -930,14 +930,14 @@
             "x": {
               "val": 40,
               "tol": {
-                "tol": -15,
+                "tol": -20,
                 "type": ">"
               }
             },
             "y": {
               "val": 50,
               "tol": {
-                "tol": -15,
+                "tol": -20,
                 "type": ">"
               }
             }
@@ -946,14 +946,14 @@
             "x": {
               "val": 40,
               "tol": {
-                "tol": -15,
+                "tol": -20,
                 "type": ">"
               }
             },
             "y": {
               "val": 50,
               "tol": {
-                "tol": -15,
+                "tol": -20,
                 "type": ">"
               }
             }
@@ -962,7 +962,7 @@
             "z": {
               "val": 80,
               "tol": {
-                "tol": -10,
+                "tol": -15,
                 "type": ">"
               }
             }
@@ -971,14 +971,71 @@
             "z": {
               "val": -80,
               "tol": {
-                "tol": 10,
+                "tol": 15,
                 "type": "<"
               }
             }
           }
         }
       },
-      "feedback": {}
+      "feedback": {
+        "left_arm_joint": {
+            "x": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "left",
+              "name": "arm"
+            },
+            "y": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "left",
+              "name": "arm"
+            }
+        },
+        "right_arm_joint": {
+          "x": {
+            "action": [
+                "bring in",
+                "spread"
+            ],
+            "side": "right",
+            "name": "arm"
+          },
+          "y": {
+            "action": [
+                "bring in",
+                "spread"
+            ],
+            "side": "right",
+            "name": "arm"
+          }
+        },
+        "left_upLeg_joint": {
+          "z": {
+               "action": [
+                   "spread",
+                   "bring in"
+               ],
+               "side": "left",
+               "name": "leg"
+          }
+        },
+        "right_upLeg_joint": {
+          "z": {
+               "action": [
+                   "bring in",
+                   "spread"
+               ],
+               "side": "right",
+               "name": "leg"
+          }
+        }
+      }
     },
     "states": [
       {
@@ -1038,7 +1095,64 @@
             }
           }
         },
-        "feedback": {}
+        "feedback": {
+          "left_arm_joint": {
+              "x": {
+                "action": [
+                    "bring in",
+                    "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              },
+              "y": {
+                "action": [
+                    "bring in",
+                    "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              }
+          },
+          "right_arm_joint": {
+            "x": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "right",
+              "name": "arm"
+            },
+            "y": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "right",
+              "name": "arm"
+            }
+          },
+          "left_upLeg_joint": {
+            "z": {
+                 "action": [
+                     "spread",
+                     "bring in"
+                 ],
+                 "side": "left",
+                 "name": "leg"
+            }
+          },
+          "right_upLeg_joint": {
+            "z": {
+                 "action": [
+                     "bring in",
+                     "spread"
+                 ],
+                 "side": "right",
+                 "name": "leg"
+            }
+          }
+        }
       },
       {
         "name": "UP",
@@ -1082,7 +1196,7 @@
                 "val": 65,
                 "tol": {
                   "tol": -5,
-                  "type": ">"
+                  "type": "<"
                 }
               }
             },
@@ -1091,7 +1205,7 @@
                 "val": -65,
                 "tol": {
                   "tol": 5,
-                  "type": "<"
+                  "type": ">"
                 }
               }
             }
@@ -1101,14 +1215,16 @@
           "left_arm_joint": {
               "x": {
                 "action": [
-                  "spread"
+                    "bring in",
+                    "spread"
                 ],
                 "side": "left",
                 "name": "arm"
               },
               "y": {
                 "action": [
-                  "spread"
+                    "bring in",
+                    "spread"
                 ],
                 "side": "left",
                 "name": "arm"
@@ -1117,14 +1233,16 @@
           "right_arm_joint": {
             "x": {
               "action": [
-                "spread"
+                  "bring in",
+                  "spread"
               ],
               "side": "right",
               "name": "arm"
             },
             "y": {
               "action": [
-                "spread"
+                  "bring in",
+                  "spread"
               ],
               "side": "right",
               "name": "arm"
@@ -1133,7 +1251,8 @@
           "left_upLeg_joint": {
             "z": {
                  "action": [
-                   "spread"
+                     "spread",
+                     "bring in"
                  ],
                  "side": "left",
                  "name": "leg"
@@ -1142,7 +1261,8 @@
           "right_upLeg_joint": {
             "z": {
                  "action": [
-                   "spread"
+                     "bring in",
+                     "spread"
                  ],
                  "side": "right",
                  "name": "leg"

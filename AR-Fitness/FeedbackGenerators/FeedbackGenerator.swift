@@ -172,6 +172,9 @@ class BaseFeedbackGenerator : FeedbackGenerator {
             }
             feedback.append("\(action) " + spokenListJoin(actionJoints))
         }
+        if feedback.count > 0 {
+            print(difference)
+        }
         return spokenListJoin(feedback)
     }
     
