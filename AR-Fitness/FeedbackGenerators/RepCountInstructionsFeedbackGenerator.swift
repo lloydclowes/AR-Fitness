@@ -14,13 +14,10 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
     }
     
     override func completeSuccess(finished: @escaping () -> Void) {
-        // TODO: if consecutive reps > 3
-        /*
-         speaker.speak(text: "Nice one! You're ready for the real thing.") {
-             finished()
-         }
-         */
-        speaker.speakRandomReward(completion: finished)
+        successiveReps += 1
+        if successiveReps % 3 == 1 {
+            speaker.speakRandomReward(completion: finished)
+        }
     }
     
     override func next(targetName : String, difference : Dictionary<String, EulerAngles>, finished : @escaping () -> Void) {
