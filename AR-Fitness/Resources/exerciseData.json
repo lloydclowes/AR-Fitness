@@ -1419,6 +1419,51 @@
           "feedback": {}
       },
       {
+        "name": "UP-MID",
+        "duration": 0,
+        "jointAngles": {
+          "jointAngles": {
+            "right_leg_joint": {
+                "z": {
+                    "val": 10,
+                    "tol": {
+                        "tol": 40,
+                        "type": "<"
+                    }
+                }
+            },
+            "left_leg_joint": {
+                "z": {
+                    "val": 10,
+                    "tol": {
+                        "tol": 40,
+                        "type": "<"
+                    }
+                }
+            },
+            "right_upLeg_joint": {
+                "y": {
+                    "val": 0,
+                    "tol": {
+                        "tol": 20,
+                        "type": "<"
+                    }
+                }
+            },
+            "left_upLeg_joint": {
+                "y": {
+                    "val": -20,
+                    "tol": {
+                        "tol": -20,
+                        "type": ">"
+                    }
+                }
+            }
+          }
+        },
+        "feedback": {}
+      },
+      {
           "name": "RIGHT",
           "duration": 0,
           "jointAngles": {
