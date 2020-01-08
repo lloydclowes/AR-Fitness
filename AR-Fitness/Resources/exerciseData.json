@@ -515,7 +515,7 @@
               "push through",
               "lower"
             ],
-            "side": "both",
+            "side": "left",
             "name": "hip"
           }
         },
@@ -525,7 +525,7 @@
               "lower",
               "push through"
             ],
-            "side": "both",
+            "side": "right",
             "name": "hip"
           }
         },
@@ -602,7 +602,7 @@
                 "push through",
                 "lower"
               ],
-              "side": "both",
+              "side": "left",
               "name": "hip"
             }
           },
@@ -612,7 +612,7 @@
                 "lower",
                 "push through"
               ],
-              "side": "both",
+              "side": "right",
               "name": "hip"
             }
           },
@@ -688,7 +688,7 @@
                 "push through",
                 "lower"
               ],
-              "side": "both",
+              "side": "left",
               "name": "hip"
             }
           },
@@ -698,7 +698,7 @@
                 "lower",
                 "push through"
               ],
-              "side": "both",
+              "side": "right",
               "name": "hip"
             }
           },
@@ -786,7 +786,7 @@
               "push through",
               "lower"
             ],
-            "side": "both",
+            "side": "left",
             "name": "hip"
           }
         },
@@ -796,7 +796,7 @@
               "lower",
               "push through"
             ],
-            "side": "both",
+            "side": "right",
             "name": "hip"
           }
         },
@@ -873,7 +873,7 @@
                 "push through",
                 "lower"
               ],
-              "side": "both",
+              "side": "left",
               "name": "hip"
             }
           },
@@ -883,7 +883,7 @@
                 "lower",
                 "push through"
               ],
-              "side": "both",
+              "side": "right",
               "name": "hip"
             }
           },

@@ -20,8 +20,14 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator {
     override func completeSuccess(finished: @escaping () -> Void) {
         successiveReps += 1
         if successiveReps % 3 == 1 {
+            successSpeaking = true
+            advancedSpeaking = false
             speaker.speakRandomReward() {
-                self.lastNextPrompt = TimeInterval()
+                self.successSpeaking = false
+                if !self.advancedSpeaking {
+                    print("reset lastNext")
+                    self.lastNextPrompt = TimeInterval()
+                }
                 finished()
             }
         }
@@ -35,7 +41,7 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator {
         
         var missed = [String]()
         for (stateName, joints) in missedStates {
-            let stateMessage = "" // "To hit the \(stateName) state you should "
+            let stateMessage = "To hit the \(stateName) state you should "
             let fb = generateMissedFeedback(stateName: stateName, joints: joints)
             if fb != "" {
                 missed.append(stateMessage + fb)

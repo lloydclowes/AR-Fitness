@@ -318,7 +318,7 @@ class ActivityMonitor {
                 return
             }
             
-            if curTime - lastStartPrompt > startPromptDuration {
+            if !startedSpoken && curTime - lastStartPrompt > startPromptDuration {
                 lastStartPrompt = curTime
                 speaker.speak(text: "Please assume the start position.") {}
             }

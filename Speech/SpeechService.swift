@@ -96,9 +96,7 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             return
         }
         
-        if self.busy {
-            cutOffSpeech()
-        }
+        cutOffSpeech()
         
         print("Speaking: '\(text)'")
         
@@ -140,14 +138,15 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     // Returns false if nothing is currently being said; true if the speech was cut off
     @discardableResult
     func cutOffSpeech() -> Bool {
-        print("cut")
-        if !self.busy {
-            return false
-        }
+//        if !self.busy {
+//            print("not busy")
+//            return false
+//        }
         self.player?.stop()
         if let completion = completionHandler {
             completion()
         }
+        print("cut")
         return true
     }
     

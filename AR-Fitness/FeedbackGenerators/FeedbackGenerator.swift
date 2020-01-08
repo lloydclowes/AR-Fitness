@@ -32,6 +32,9 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     var lastStay = TimeInterval()
     var lastNextPrompt = TimeInterval()
     var lastExpired = TimeInterval()
+    
+    var advancedSpeaking = false
+    var successSpeaking = false
 
     internal var curTime : TimeInterval {
         return Date().timeIntervalSince1970
@@ -172,9 +175,6 @@ class BaseFeedbackGenerator : FeedbackGenerator {
             }
             feedback.append("\(action) " + spokenListJoin(actionJoints))
         }
-        if feedback.count > 0 {
-            print(difference)
-        }
         return spokenListJoin(feedback)
     }
     
@@ -191,7 +191,7 @@ class BaseFeedbackGenerator : FeedbackGenerator {
                 let side = fbx.side
                 let name = fbx.name
                 if stateDict.keys.contains(action) {
-                    if stateDict[action]!.keys.contains(name) {
+                    if stateDict[action]!.keys.contains(name) && stateDict[action]![name] != side {
                         stateDict[action]![name] = "both"
                     } else {
                         stateDict[action]![name] = side
@@ -202,11 +202,17 @@ class BaseFeedbackGenerator : FeedbackGenerator {
             }
             
             if let fby = feedbackDict[stateName]?[joint]?.y {
-                let action = fby.action[0]
                 let side = fby.side
                 let name = fby.name
+                
+                let action : String
+                if name == "hip" && side == "left" {
+                    action = fby.action[1]
+                } else {
+                    action = fby.action[0]
+                }
                 if stateDict.keys.contains(action) {
-                    if stateDict[action]!.keys.contains(name) {
+                    if stateDict[action]!.keys.contains(name) && stateDict[action]![name] != side {
                         stateDict[action]![name] = "both"
                     } else {
                         stateDict[action]![name] = side
@@ -221,7 +227,7 @@ class BaseFeedbackGenerator : FeedbackGenerator {
                 let side = fbz.side
                 let name = fbz.name
                 if stateDict.keys.contains(action) {
-                    if stateDict[action]!.keys.contains(name) {
+                    if stateDict[action]!.keys.contains(name) && stateDict[action]![name] != side  {
                         stateDict[action]![name] = "both"
                     } else {
                         stateDict[action]![name] = side
