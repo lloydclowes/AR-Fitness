@@ -927,33 +927,19 @@
       "jointAngles": {
         "jointAngles": {
           "right_arm_joint": {
-            "x": {
-              "val": 40,
-              "tol": {
-                "tol": -20,
-                "type": ">"
-              }
-            },
             "y": {
               "val": 50,
               "tol": {
-                "tol": -20,
+                "tol": -15,
                 "type": ">"
               }
             }
           },
           "left_arm_joint": {
-            "x": {
-              "val": 40,
-              "tol": {
-                "tol": -20,
-                "type": ">"
-              }
-            },
             "y": {
               "val": 50,
               "tol": {
-                "tol": -20,
+                "tol": -15,
                 "type": ">"
               }
             }
@@ -980,14 +966,6 @@
       },
       "feedback": {
         "left_arm_joint": {
-            "x": {
-              "action": [
-                  "bring in",
-                  "spread"
-              ],
-              "side": "left",
-              "name": "arm"
-            },
             "y": {
               "action": [
                   "bring in",
@@ -998,14 +976,6 @@
             }
         },
         "right_arm_joint": {
-          "x": {
-            "action": [
-                "bring in",
-                "spread"
-            ],
-            "side": "right",
-            "name": "arm"
-          },
           "y": {
             "action": [
                 "bring in",
@@ -1044,13 +1014,6 @@
         "jointAngles": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": {
-                "val": 40,
-                "tol": {
-                  "tol": -15,
-                  "type": ">"
-                }
-              },
               "y": {
                 "val": 50,
                 "tol": {
@@ -1060,13 +1023,6 @@
               }
             },
             "left_arm_joint": {
-              "x": {
-                "val": 40,
-                "tol": {
-                  "tol": -15,
-                  "type": ">"
-                }
-              },
               "y": {
                 "val": 50,
                 "tol": {
@@ -1097,14 +1053,6 @@
         },
         "feedback": {
           "left_arm_joint": {
-              "x": {
-                "action": [
-                    "bring in",
-                    "spread"
-                ],
-                "side": "left",
-                "name": "arm"
-              },
               "y": {
                 "action": [
                     "bring in",
@@ -1115,14 +1063,6 @@
               }
           },
           "right_arm_joint": {
-            "x": {
-              "action": [
-                  "bring in",
-                  "spread"
-              ],
-              "side": "right",
-              "name": "arm"
-            },
             "y": {
               "action": [
                   "bring in",
@@ -1163,7 +1103,7 @@
               "y": {
                 "val": -30,
                 "tol": {
-                  "tol": 15,
+                  "tol": 10,
                   "type": "<"
                 }
               }
@@ -1172,25 +1112,25 @@
               "y": {
                 "val": -30,
                 "tol": {
-                  "tol": 15,
+                  "tol": 10,
                   "type": "<"
                 }
               }
             },
             "right_upLeg_joint": {
               "z": {
-                "val": 65,
+                "val": 70,
                 "tol": {
-                  "tol": -5,
+                  "tol": -20,
                   "type": "<"
                 }
               }
             },
             "left_upLeg_joint": {
               "z": {
-                "val": -65,
+                "val": -60,
                 "tol": {
-                  "tol": 5,
+                  "tol": -20,
                   "type": ">"
                 }
               }
@@ -1209,8 +1149,8 @@
               },
               "y": {
                 "action": [
-                    "bring in",
-                    "spread"
+                    "spread",
+                    "bring in"
                 ],
                 "side": "left",
                 "name": "arm"

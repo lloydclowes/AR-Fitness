@@ -17,7 +17,11 @@ class RepCountController : ARViewController {
         if instructions {
             gen = RepCountInstructionsFeedbackGenerator(feedbackDict: feedbackDict)
         } else {
-            gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
+            if (exercise.name == "Lunges" || exercise.name == "Jumping Jacks") {
+                gen = BaseFeedbackGenerator(feedbackDict: feedbackDict)
+            } else {
+                gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
+            }
         }
         self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, countFirstRep: countFirstRep)
     }
