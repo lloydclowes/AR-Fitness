@@ -474,7 +474,7 @@
             "y": {
               "val": 0,
               "tol": {
-                "tol": -20,
+                "tol": -25,
                 "type": ">"
               }
             }
@@ -483,7 +483,7 @@
             "y": {
               "val": 0,
               "tol": {
-                "tol": 20,
+                "tol": 25,
                 "type": "<"
               }
             }
@@ -561,7 +561,7 @@
               "y": {
                 "val": 0,
                 "tol": {
-                  "tol": -20,
+                  "tol": -25,
                   "type": ">"
                 }
               }
@@ -570,7 +570,7 @@
               "y": {
                 "val": 0,
                 "tol": {
-                  "tol": 20,
+                  "tol": 25,
                   "type": "<"
                 }
               }
@@ -737,48 +737,48 @@
     "duration": "0:20",
     "startMessage": "For this exercise, start crouched down into the squat position by bending your knees until they are at a 90 degree angle, keeping your back straight throughout. Maintain your body in this position for the time set.",
     "startState": {
-      "name": "START",
-      "duration": 0,
+    "name": "START",
+    "duration": 0,
+    "jointAngles": {
       "jointAngles": {
-        "jointAngles": {
-          "left_upLeg_joint": {
-            "y": {
-              "val": 0,
-              "tol": {
-                "tol": -10,
-                "type": ">"
-              }
+        "left_upLeg_joint": {
+          "y": {
+            "val": 0,
+            "tol": {
+              "tol": -25,
+              "type": ">"
             }
-          },
-          "right_upLeg_joint": {
-            "y": {
-              "val": 0,
-              "tol": {
-                "tol": 10,
-                "type": "<"
-              }
+          }
+        },
+        "right_upLeg_joint": {
+          "y": {
+            "val": 0,
+            "tol": {
+              "tol": 25,
+              "type": "<"
             }
-          },
-          "left_leg_joint": {
-            "z": {
-              "val": 15,
-              "tol": {
-                "tol": 15,
-                "type": "<"
-              }
+          }
+        },
+        "left_leg_joint": {
+          "z": {
+            "val": 15,
+            "tol": {
+              "tol": 25,
+              "type": "<"
             }
-          },
-          "right_leg_joint": {
-            "z": {
-              "val": 15,
-              "tol": {
-                "tol": 15,
-                "type": "<"
-              }
+          }
+        },
+        "right_leg_joint": {
+          "z": {
+            "val": 15,
+            "tol": {
+              "tol": 25,
+              "type": "<"
             }
           }
         }
-      },
+      }
+    },
       "feedback": {
         "left_upLeg_joint": {
           "y": {
@@ -1160,13 +1160,6 @@
         "jointAngles": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": {
-                "val": -50,
-                "tol": {
-                  "tol": 15,
-                  "type": "<"
-                }
-              },
               "y": {
                 "val": -30,
                 "tol": {
@@ -1176,13 +1169,6 @@
               }
             },
             "left_arm_joint": {
-              "x": {
-                "val": -50,
-                "tol": {
-                  "tol": 15,
-                  "type": "<"
-                }
-              },
               "y": {
                 "val": -30,
                 "tol": {

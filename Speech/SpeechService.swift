@@ -132,6 +132,9 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             }
             
             DispatchQueue.main.async {
+                if let comp = self.completionHandler {
+                    comp()
+                }
                 self.completionHandler = completion
                 self.player = try! AVAudioPlayer(data: audioData)
                 self.player?.delegate = self

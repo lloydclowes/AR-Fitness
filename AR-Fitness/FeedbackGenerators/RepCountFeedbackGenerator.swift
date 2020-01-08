@@ -26,7 +26,7 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator
             speaker.speakRandomReward() {
                 self.successSpeaking = false
                 if !self.advancedSpeaking {
-                    print("reset lastNext")
+//                    print("reset lastNext")
                     self.lastNextPrompt = TimeInterval()
                 }
                 finished()
@@ -56,8 +56,11 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator
         }
         
         speaker.speak(text: missedMessage) {
+            print("complete1")
             self.speaker.speak(text: shortMessage) {
+                print("complete2")
                 self.speaker.speak(text: fastMessage) {
+                    print("complete3")
                     finished()
                 }
             }

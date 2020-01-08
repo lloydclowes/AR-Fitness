@@ -5,9 +5,8 @@ class ActivityMonitor {
     
     let speaker = SpeechService.shared
     
-    let noStateThreshold = 0.2
+    let noStateThreshold = 0.3
     let retryThreshold = 3.0
-    let maxFrameTime = 0.2
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 30
@@ -98,6 +97,7 @@ class ActivityMonitor {
     func restart() {
         self.startSpoken = false
         self.startedSpoken = false
+        print("paused = false")
         self.ready = false
         self.paused = false
         self.hitFirstTarget = false
@@ -159,9 +159,9 @@ class ActivityMonitor {
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
-        if let ct = curTime {
-            prevTime = ct
-        }
+//        if let ct = curTime {
+//            prevTime = ct
+//        }
         curTime = Date().timeIntervalSince1970
 
         prevState = currentState
@@ -196,6 +196,7 @@ class ActivityMonitor {
         
         hitFirstTarget = true
         
+        print("advanced \(to)")
         if targetIndex == to {
             return
         }
@@ -234,8 +235,10 @@ class ActivityMonitor {
             repCount += 1
             feedbackGenerator.completeSuccess() {}
         } else {
+            print("paused = true")
             paused = true
             feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {
+                print("paused = false")
                 self.paused = false
             }
         }
@@ -271,7 +274,7 @@ class ActivityMonitor {
         lastFeedback = TimeInterval()
         lastArrived = curTime
         stateSuccesses[index].jointFailures = []
-//        print("jumped to \(to)")
+        print("jumped to \(to)")
     }
     
     private func noState() {
@@ -291,19 +294,22 @@ class ActivityMonitor {
                 
         feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
         
-        if exerciseType == .hold && lastIndex == 0 && curTime - lastArrived > retryThreshold && curTime - prevTime < maxFrameTime {
+        if exerciseType == .hold && lastIndex == 0 && curTime - lastArrived > retryThreshold {
+            print("paused = true")
             self.paused = true
             feedbackGenerator.expired() {
                 self.restart()
             }
         }
         
+//        print("no state")
     }
     
     private func updateIndex(_ delta : Double) {
         
         // If the exercise has terminated, don't update
         if paused {
+            print("paused")
             return
         }
         
@@ -355,7 +361,8 @@ class ActivityMonitor {
 
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
-            if curTime - lastArrived > noStateThreshold && curTime - prevTime < maxFrameTime {
+//            print("returning")
+            if curTime - lastArrived > noStateThreshold {
                 stateSuccesses[lastIndex].duration = floor(stateSuccesses[lastIndex].duration)
                 if exerciseType == .hold && curTime - lastArrived <= retryThreshold {
                     resume()
