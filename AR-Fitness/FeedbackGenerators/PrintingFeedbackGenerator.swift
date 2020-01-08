@@ -9,8 +9,8 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
         finished()
     }
     
-    override func advanced(finished: @escaping () -> Void) {
-        print("advanced")
+    override func advanced(newState: String, finished: @escaping () -> Void) {
+        print("advanced to " + newState)
         finished()
     }
     
@@ -78,86 +78,4 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
         }
         finished()
     }
-    
-    private func generateMissedFeedback(stateName : String, joints : Set<String>) -> String {
-        var stateDict : Dictionary<String, Dictionary<String, String?>> = [:]
-        for joint in joints {
-            
-            if feedbackDict[stateName] == nil || feedbackDict[stateName]![joint] == nil {
-                continue
-            }
-            
-            let action = feedbackDict[stateName]![joint]!.action
-            let side = feedbackDict[stateName]![joint]!.side
-            let name = feedbackDict[stateName]![joint]!.name
-            if stateDict.keys.contains(action) {
-                if stateDict[action]!.keys.contains(name) {
-                    stateDict[action]![name] = "both"
-                } else {
-                    stateDict[action]![name] = side
-                }
-            } else {
-                stateDict[action] = [name: side]
-            }
-        }
-        
-        var feedback = [String]()
-        for (action, nameToSides) in stateDict {
-            var actionJoints = [String]()
-            for (name, sides) in nameToSides {
-                var jointFeedback = ""
-                if sides == nil {
-                    jointFeedback = "your \(name)"
-                } else if sides! == "both" {
-                    jointFeedback = "both \(name)s"
-                } else {
-                    jointFeedback = "your \(sides!) \(name)"
-                }
-                actionJoints.append(jointFeedback)
-            }
-            feedback.append("\(action) " + spokenListJoin(actionJoints))
-        }
-        
-        return spokenListJoin(feedback)
-    }
-    
-    private func generateNoStateFeedback(targetName : String, difference: Dictionary<String, EulerAngles>) -> String {
-        var diffDict : Dictionary<String, Dictionary<String, String?>> = [:]
-        for (joint, _) in difference {
-            if feedbackDict[targetName] == nil || feedbackDict[targetName]![joint] == nil {
-                continue
-            }
-            let action = feedbackDict[targetName]![joint]!.action
-            let side = feedbackDict[targetName]![joint]!.side
-            let name = feedbackDict[targetName]![joint]!.name
-            if diffDict.keys.contains(action) {
-                if diffDict[action]!.keys.contains(name) {
-                    diffDict[action]![name] = "both"
-                } else {
-                    diffDict[action]![name] = side
-                }
-            } else {
-                diffDict[action] = [name: side]
-            }
-        }
-        
-        var feedback = [String]()
-        for (action, nameToSides) in diffDict {
-            var actionJoints = [String]()
-            for (name, sides) in nameToSides {
-                var jointFeedback = ""
-                if sides == nil {
-                    jointFeedback = "your \(name)"
-                } else if sides! == "both" {
-                    jointFeedback = "both \(name)s"
-                } else {
-                    jointFeedback = "your \(sides!) \(name)"
-                }
-                actionJoints.append(jointFeedback)
-            }
-            feedback.append("\(action) " + spokenListJoin(actionJoints))
-        }
-        return spokenListJoin(feedback)
-    }
-    
 }

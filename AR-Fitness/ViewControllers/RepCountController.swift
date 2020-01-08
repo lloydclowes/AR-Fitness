@@ -35,7 +35,7 @@ class RepCountController : ARViewController {
         if activityMonitor.repCount > 0 && activityMonitor.repCount.isMultiple(of: 5) {
             if !rewarded {
                 rewarded = true
-                speaker.speakRandomReward()
+                speaker.speakRandomReward() {}
             }
         } else {
             rewarded = false

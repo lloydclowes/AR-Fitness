@@ -12,9 +12,15 @@ struct JointHistory {
     }
     
     mutating func append(jointAngles: EulerAngles) {
-        self.xs.append(jointAngles.x)
-        self.ys.append(jointAngles.y)
-        self.zs.append(jointAngles.z)
+        if let x = jointAngles.x?.val {
+            self.xs.append(x)
+        }
+        if let y = jointAngles.y?.val {
+            self.ys.append(y)
+        }
+        if let z = jointAngles.z?.val {
+            self.zs.append(z)
+        }
     }
     
     mutating func remove(at: Int) {

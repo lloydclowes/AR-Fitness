@@ -26,8 +26,8 @@ class ActivityState: Hashable, Codable {
         self.jointAngles = JointAngles()
         self.jointVelocities = JointAngles()
         for joint in joints {
-            jointAngles[joint] = EulerAngles()
-            jointVelocities[joint] = EulerAngles()
+            jointAngles[joint] = EulerAngles(x: nil as EulerAngle?)
+            jointVelocities[joint] = EulerAngles(x: nil as EulerAngle?)
         }
     }
     
@@ -87,58 +87,29 @@ class ActivityState: Hashable, Codable {
             var newX : Float? = nil, newY : Float? = nil, newZ : Float? = nil
             var vX : Float? = nil, vY : Float? = nil, vZ : Float? = nil
                         
-            if let cur = angles.x {
-                let curV = velocities.x!
-                let newAngle = newJointAngles.x!
+            if let cur = angles.x?.val {
+                let curV = velocities.x!.val
+                let newAngle = newJointAngles.x!.val
                 newX = augmentation(newAngle, cur)
                 vX = augmentation((newX! - cur) / delta, curV)
             }
             
-            if let cur = angles.y {
-                let curV = velocities.y!
-                let newAngle = newJointAngles.y!
+            if let cur = angles.y?.val {
+                let curV = velocities.y!.val
+                let newAngle = newJointAngles.y!.val
                 newY = augmentation(newAngle, cur)
                 vY = augmentation((newY! - cur) / delta, curV)
             }
             
-            if let cur = angles.z {
-                let curV = velocities.z!
-                let newAngle = newJointAngles.z!
+            if let cur = angles.z?.val {
+                let curV = velocities.z!.val
+                let newAngle = newJointAngles.z!.val
                 newZ = augmentation(newAngle, cur)
                 vZ = augmentation((newZ! - cur) / delta, curV)
             }
             
             jointAngles[joint] = EulerAngles(x: newX, y: newY, z: newZ)
             jointVelocities[joint] = EulerAngles(x: vX, y: vY, z: vZ)
-            
-//                if  {
-//                    newX = augmentation(cur, prev)
-//                    vX = augmentation((newX! - prev) / delta, prevV)
-//                } else {
-//                    newX = prev
-//                    vX = 0
-//                }
-//            }
-//
-//            if let prev = prevAngles.y {
-//                if let cur = angles.y, let prevV = prevVelocities.y {
-//                    newY = augmentation(cur, prev)
-//                    vY = augmentation((newY! - prev) / delta, prevV)
-//                } else {
-//                    newY = prev
-//                    vY = 0
-//                }
-//            }
-//
-//            if let prev = prevAngles.z {
-//                if let cur = angles.z, let prevV = prevVelocities.z {
-//                    newZ = augmentation(cur, prev)
-//                    vZ = augmentation((newZ! - prev) / delta, prevV)
-//                } else {
-//                    newZ = prev
-//                    vZ = 0
-//                }
-//            }
         }
     }
 }

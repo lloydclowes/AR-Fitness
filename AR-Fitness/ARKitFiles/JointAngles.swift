@@ -32,20 +32,23 @@ struct JointAngles : Hashable, Codable, Sequence {
         return lhs.jointAngles == rhs.jointAngles
     }
     
+    public var count : Int {
+        get { return jointAngles.count }
+    }
+    
     func makeIterator() -> Dictionary<String, EulerAngles>.Iterator {
         return jointAngles.makeIterator()
     }
     
-    func difference(_ other : JointAngles, _ tolerances : JointAngles) -> JointAngles {
+    func difference(_ other : JointAngles) -> JointAngles {
         var diff = JointAngles()
         for (joint, angles) in jointAngles {
-            let otherAngles = other.jointAngles[joint] ?? EulerAngles()
-            let jointDiff = angles.difference(otherAngles, tolerances[joint]!)
+//            let otherAngles = other.jointAngles[joint] ?? EulerAngles()
+            let jointDiff = angles.difference(other.jointAngles[joint]!)
             if jointDiff != EulerAngles() {
                 diff[joint] = jointDiff
             }
         }
-
         return diff
     }
 }

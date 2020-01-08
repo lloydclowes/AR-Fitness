@@ -14,6 +14,8 @@ class HoldingController : ARViewController {
         self.exercise = exercise
         var feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>> = [:]
         for targetState in exercise.states {
+            print(targetState.name)
+            print(targetState.feedback)
             feedbackDict[targetState.name] = targetState.feedback
         }
         
