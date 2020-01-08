@@ -1087,7 +1087,7 @@
               }
             },
             "left_upLeg_joint": {
-              "y": {
+              "z": {
                 "val": -65,
                 "tol": {
                   "tol": 5,
@@ -1098,54 +1098,54 @@
           }
         },
         "feedback": {
-          "left_upLeg_joint": {
+          "left_arm_joint": {
+              "x": {
+                "action": [
+                  "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              },
+              "y": {
+                "action": [
+                  "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              }
+          },
+          "right_arm_joint": {
             "x": {
               "action": [
-                "spread out"
+                "spread"
               ],
-              "side": "left",
-              "name": "leg"
+              "side": "right",
+              "name": "arm"
             },
             "y": {
               "action": [
-                "spread out"
+                "spread"
               ],
-              "side": "left",
-              "name": "leg"
+              "side": "right",
+              "name": "arm"
+            }
+          },
+          "left_upLeg_joint": {
+            "z": {
+                 "action": [
+                   "spread"
+                 ],
+                 "side": "left",
+                 "name": "leg"
             }
           },
           "right_upLeg_joint": {
-            "x": {
-              "action": [
-                "spread out"
-              ],
-              "side": "right",
-              "name": "leg"
-            },
-            "y": {
-              "action": [
-                "spread out"
-              ],
-              "side": "right",
-              "name": "leg"
-            }
-          },
-          "left_arm_joint": {
             "z": {
-              "action": [
-                "raise"
-              ],
-              "side": "left",
-              "name": "arm"
-            }
-          },
-          "right_arm_joint": {
-            "z": {
-              "action": [
-                "raise"
-              ],
-              "side": "right",
-              "name": "arm"
+                 "action": [
+                   "spread"
+                 ],
+                 "side": "right",
+                 "name": "leg"
             }
           }
         }
