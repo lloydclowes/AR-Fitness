@@ -4,7 +4,7 @@ class PrintingFeedbackGenerator : BaseFeedbackGenerator {
     
     static let shared = PrintingFeedbackGenerator(feedbackDict: [:])
     
-    override func started(finished: @escaping () -> Void) {
+    override func started(startMsg: String, finished: @escaping () -> Void) {
         print("started")
         finished()
     }

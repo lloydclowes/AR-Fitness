@@ -2,6 +2,9 @@ import Foundation
 
 class HoldingInstructionsFeedbackGenerator : HoldingFeedbackGenerator {
         
+    override func started(startMsg: String, finished: @escaping () -> Void) {
+        speaker.speak(text: startMsg, completion: finished)
+    }
     override func completeSuccess(finished: @escaping () -> Void) {
         speaker.speakWithRandomCompletionPrefix(text: "You're ready for the real thing!", completion: finished)
     }

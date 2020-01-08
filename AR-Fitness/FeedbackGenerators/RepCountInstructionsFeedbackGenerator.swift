@@ -2,8 +2,8 @@ import Foundation
 
 class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
     
-    override func started(finished: @escaping () -> Void) {
-        speaker.speakWithRandomPositivePrefix(text: "Now get to the first state.", completion: finished)
+    override func started(startMsg : String, finished: @escaping () -> Void) {
+        speaker.speak(text: startMsg, completion: finished)
     }
     
     override func advanced(newState: String, finished: @escaping () -> Void) {
@@ -18,6 +18,7 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
                 self.lastNextPrompt = TimeInterval()
             }
             finished()
+
         }
     }
     

@@ -2,7 +2,7 @@ import Foundation
 
 protocol FeedbackGenerator {
     
-    func started(finished: @escaping () -> Void)
+    func started(startMsg: String, finished: @escaping () -> Void)
     func reached(finished: @escaping () -> Void)
     func advanced(newState: String, finished: @escaping () -> Void)
     func completeSuccess(finished: @escaping () -> Void)
@@ -52,7 +52,7 @@ class BaseFeedbackGenerator : FeedbackGenerator {
         self.expiredRegularity = expiredRegularity
     }
     
-    func started(finished: @escaping () -> Void) {
+    func started(startMsg: String, finished: @escaping () -> Void) {
         finished()
     }
     
@@ -108,10 +108,10 @@ class BaseFeedbackGenerator : FeedbackGenerator {
                 continue
             }
             
-//            print(joint)
+
             
             if let dx = angles.x?.val {
-//                print("x")
+
                 let action = feedbackDict[targetName]![joint]!.x!.action[dx > 0 ? 0 : 1]
                 let side = feedbackDict[targetName]![joint]!.x!.side
                 let name = feedbackDict[targetName]![joint]!.x!.name
@@ -174,6 +174,9 @@ class BaseFeedbackGenerator : FeedbackGenerator {
                 actionJoints.append(jointFeedback)
             }
             feedback.append("\(action) " + spokenListJoin(actionJoints))
+        }
+        if feedback.count > 0 {
+            print(difference)
         }
         return spokenListJoin(feedback)
     }

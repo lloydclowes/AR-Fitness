@@ -2,7 +2,7 @@ import Foundation
 
 class HoldingFeedbackGenerator : BaseFeedbackGenerator {
     
-    override func started(finished: @escaping () -> Void) {
+    override func started(startMsg: String, finished: @escaping () -> Void) {
         speaker.speakWithRandomPositivePrefix(text: "Now get to the hold position.", completion: finished)
     }
     

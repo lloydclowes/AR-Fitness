@@ -64,6 +64,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         ARViewController.arView.session.delegate = self
         
         // If the iOS device doesn't support body tracking, raise a developer error
@@ -134,7 +135,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
                 }
             }
             
-            handleRewards()
+            //handleRewards()
         }
     }
     

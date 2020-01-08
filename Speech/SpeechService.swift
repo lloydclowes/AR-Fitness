@@ -33,7 +33,7 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     private var speechEnabled : Bool
     
     private(set) var busy: Bool = false
-    
+    private var isExplainingExercise: Bool = false
     private var player: AVAudioPlayer?
     private var completionHandler: (() -> Void)?
     
@@ -51,6 +51,11 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     
     func speak(text: String) {
         speak(text: text) {}
+    }
+    
+    func sayStartSentence(exercise: Exercise) {
+        self.isExplainingExercise = true
+        speak(text: exercise.startMessage)
     }
     
     func speakRandomReward(completion: @escaping () -> Void) {
@@ -142,6 +147,7 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
 //            print("not busy")
 //            return false
 //        }
+
         self.player?.stop()
         if let completion = completionHandler {
             completion()

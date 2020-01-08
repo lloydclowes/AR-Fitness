@@ -26,6 +26,7 @@ class ActivityMonitor {
     var startSpoken : Bool!
     var startedSpoken : Bool!
     var ready : Bool!
+    var startMessage : String = ""
     
     var paused : Bool!
     var hitFirstTarget : Bool!
@@ -35,7 +36,6 @@ class ActivityMonitor {
     
     var stateSuccesses : [StateSuccess]!
     var repTooFast : Bool!
-//    var successCount : Int!
     
     var index : Int!
     var lastIndex : Int!
@@ -91,6 +91,7 @@ class ActivityMonitor {
         self.targetStates = exercise.states
         self.countFirstRep = countFirstRep
         self.exerciseType = exercise.type
+        self.startMessage = exercise.startMessage
         self.restart()
     }
     
@@ -297,7 +298,6 @@ class ActivityMonitor {
             }
         }
         
-//        print("no state")
     }
     
     private func updateIndex(_ delta : Double) {
@@ -325,7 +325,7 @@ class ActivityMonitor {
             
             if !startedSpoken && currentState.reaches(startState) {
                 startedSpoken = true
-                feedbackGenerator.started {
+                feedbackGenerator.started(startMsg: startMessage) {
                     self.ready = true
                 }
             } else {
@@ -355,7 +355,6 @@ class ActivityMonitor {
 
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
-//            print("returning")
             if curTime - lastArrived > noStateThreshold && curTime - prevTime < maxFrameTime {
                 stateSuccesses[lastIndex].duration = floor(stateSuccesses[lastIndex].duration)
                 if exerciseType == .hold && curTime - lastArrived <= retryThreshold {

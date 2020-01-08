@@ -1,10 +1,11 @@
 import Foundation
 
-class RepCountFeedbackGenerator : BaseFeedbackGenerator {
-    
+class RepCountFeedbackGenerator : BaseFeedbackGenerator
+
+    {
     var successiveReps = 0
     
-    override func started(finished: @escaping () -> Void) {
+    override func started(startMsg: String, finished: @escaping () -> Void) {
         speaker.speakWithRandomPositivePrefix(text: "Let's get started!", completion: finished)
     }
     
@@ -34,9 +35,7 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator {
     }
     
     override func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: @escaping () -> Void) {
-        
-        successiveReps = 0
-        
+
         let fastMessage = tooFast ? "You moved too quickly" : ""
         
         var missed = [String]()
