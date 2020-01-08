@@ -808,32 +808,32 @@
       "jointAngles": {
         "jointAngles": {
           "right_leg_joint": {
-              "z": 35
+              "z": 10
           },
           "left_leg_joint": {
-              "z": 35
+              "z": 10
           },
           "right_upLeg_joint": {
-              "y": 20
+              "y": 0
           },
           "left_upLeg_joint": {
-              "y": -30
+              "y": -20
           }
         }
       },
       "tolerances": {
         "jointAngles": {
             "right_leg_joint": {
-                "z": 10
+                "z": 40
             },
             "left_leg_joint": {
-                "z": 10
+                "z": 40
             },
             "right_upLeg_joint": {
-                "y": 10
+                "y": 20
             },
             "left_upLeg_joint": {
-                "y": 10
+                "y": -20
             }
         }
       },
@@ -841,18 +841,55 @@
     },
     "states": [
         {
+          "name": "UP-START",
+          "duration": 0,
+          "jointAngles": {
+            "jointAngles": {
+              "right_leg_joint": {
+                  "z": 10
+              },
+              "left_leg_joint": {
+                  "z": 10
+              },
+              "right_upLeg_joint": {
+                  "y": 0
+              },
+              "left_upLeg_joint": {
+                  "y": -20
+              }
+            }
+          },
+          "tolerances": {
+            "jointAngles": {
+                "right_leg_joint": {
+                    "z": 40
+                },
+                "left_leg_joint": {
+                    "z": 40
+                },
+                "right_upLeg_joint": {
+                    "y": 20
+                },
+                "left_upLeg_joint": {
+                    "y": -20
+                }
+            }
+          },
+          "feedback": {}
+        },
+        {
           "name": "LEFT",
           "duration": 0,
           "jointAngles": {
               "jointAngles": {
                   "right_leg_joint": {
-                      "z": 70
+                      "z": 40
                   },
                   "left_leg_joint": {
                       "z": 70
                   },
                   "right_upLeg_joint": {
-                      "y": 0
+                      "y": -10
                   },
                   "left_upLeg_joint": {
                       "y": -60
@@ -868,7 +905,7 @@
                       "z": -10
                   },
                   "right_upLeg_joint": {
-                      "y": 10
+                      "y": 30
                   },
                   "left_upLeg_joint": {
                       "y": 10
@@ -876,43 +913,6 @@
               }
           },
           "feedback": {}
-      },
-      {
-        "name": "UP",
-        "duration": 0,
-        "jointAngles": {
-          "jointAngles": {
-            "right_leg_joint": {
-                "z": 35
-            },
-            "left_leg_joint": {
-                "z": 35
-            },
-            "right_upLeg_joint": {
-                "y": 20
-            },
-            "left_upLeg_joint": {
-                "y": -30
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-              "right_leg_joint": {
-                  "z": 10
-              },
-              "left_leg_joint": {
-                  "z": 10
-              },
-              "right_upLeg_joint": {
-                  "y": 10
-              },
-              "left_upLeg_joint": {
-                  "y": 10
-              }
-          }
-        },
-        "feedback": {}
       },
       {
           "name": "RIGHT",
@@ -923,7 +923,7 @@
                       "z": 70
                   },
                   "left_leg_joint": {
-                      "z": 70
+                      "z": 40
                   },
                   "right_upLeg_joint": {
                       "y": 60
