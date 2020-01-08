@@ -23,7 +23,8 @@ class ActivityMonitor {
     let startState : TargetState
     let targetStates : [TargetState]
     
-    var startReached : Bool!
+    var startSpoken : Bool!
+    var startedSpoken : Bool!
     var ready : Bool!
     
     var paused : Bool!
@@ -94,7 +95,8 @@ class ActivityMonitor {
     }
     
     func restart() {
-        self.startReached = false
+        self.startSpoken = false
+        self.startedSpoken = false
         self.ready = false
         self.paused = false
         self.hitFirstTarget = false
@@ -305,24 +307,30 @@ class ActivityMonitor {
             return
         }
         
-        if !startReached {
-            if currentState.reaches(startState) {
-                self.startReached = true
-                self.lastArrived = curTime
-                feedbackGenerator.started {
-                    self.ready = true
+        if !ready {
+            if !startSpoken {
+                if curTime - lastStartPrompt > startPromptDuration {
+                    lastStartPrompt = curTime
+                    speaker.speak(text: "Please assume the start position.") {
+                        self.startSpoken = true
+                    }
                 }
                 return
             }
+            
             if curTime - lastStartPrompt > startPromptDuration {
                 lastStartPrompt = curTime
-                speaker.speak(text: "Please assume the start position.")
+                speaker.speak(text: "Please assume the start position.") {}
             }
-            return
-        }
-        
-        if !ready {
-            return
+            
+            if !startedSpoken && currentState.reaches(startState) {
+                startedSpoken = true
+                feedbackGenerator.started {
+                    self.ready = true
+                }
+            } else {
+                return
+            }
         }
                 
         // If the index hasn't changed then ignore
