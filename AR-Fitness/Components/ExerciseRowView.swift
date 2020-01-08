@@ -45,9 +45,10 @@ struct ExerciseRowView: View {
                     Text("START")
                         .bold()
                         .font(.system(size:15))
+                        .foregroundColor(Color.white)
                     Text(self.exercise.duration)
                         .font(.system(size:13))
-                        .foregroundColor(Color.black)
+                        .foregroundColor(Color.white)
                 }
             }
             .foregroundColor(Color.black)
