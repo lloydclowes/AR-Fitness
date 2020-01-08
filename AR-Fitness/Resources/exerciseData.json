@@ -1271,5 +1271,198 @@
         }
       }
     ]
+  },
+  {
+    "name": "Lunges",
+    "id": 6,
+    "muscleGroup": "Legs",
+    "intensity": "High",
+    "type": "Repetition",
+    "equipment": [],
+    "duration": "any",
+    "className": "LungeController",
+    "startMessage": "Stand tall with your feet hip width apart. Take a big step forward with your left leg. Lower your body until your left thigh is parallel to the floor. Press into your left heel to push yourself back up and repeat with the right leg.",
+    "startState": {
+      "name": "START",
+      "duration": 0,
+      "jointAngles": {
+        "jointAngles": {
+          "right_leg_joint": {
+              "z": {
+                  "val": 10,
+                  "tol": {
+                      "tol": 40,
+                      "type": "<"
+                  }
+              }
+          },
+          "left_leg_joint": {
+              "z": {
+                  "val": 10,
+                  "tol": {
+                      "tol": 40,
+                      "type": "<"
+                  }
+              }
+          },
+          "right_upLeg_joint": {
+              "y": {
+                  "val": 0,
+                  "tol": {
+                      "tol": 20,
+                      "type": "<"
+                  }
+              }
+          },
+          "left_upLeg_joint": {
+              "y": {
+                  "val": -20,
+                  "tol": {
+                      "tol": -20,
+                      "type": ">"
+                  }
+              }
+          }
+        }
+      },
+      "feedback": {}
+    },
+    "states": [
+        {
+          "name": "UP-START",
+          "duration": 0,
+          "jointAngles": {
+            "jointAngles": {
+              "right_leg_joint": {
+                  "z": {
+                      "val": 10,
+                      "tol": {
+                          "tol": 40,
+                          "type": "<"
+                      }
+                  }
+              },
+              "left_leg_joint": {
+                  "z": {
+                      "val": 10,
+                      "tol": {
+                          "tol": 40,
+                          "type": "<"
+                      }
+                  }
+              },
+              "right_upLeg_joint": {
+                  "y": {
+                      "val": 0,
+                      "tol": {
+                          "tol": 20,
+                          "type": "<"
+                      }
+                  }
+              },
+              "left_upLeg_joint": {
+                  "y": {
+                      "val": -20,
+                      "tol": {
+                          "tol": -20,
+                          "type": ">"
+                      }
+                  }
+              }
+            }
+          },
+          "feedback": {}
+        },
+        {
+          "name": "LEFT",
+          "duration": 0,
+          "jointAngles": {
+              "jointAngles": {
+                  "right_leg_joint": {
+                      "z": {
+                          "val": 40,
+                          "tol": {
+                              "tol": -10,
+                              "type": ">"
+                          }
+                      }
+                  },
+                  "left_leg_joint": {
+                      "z": {
+                          "val": 80,
+                          "tol": {
+                              "tol": -10,
+                              "type": ">"
+                          }
+                      }
+                  },
+                  "right_upLeg_joint": {
+                      "y": {
+                          "val": -10,
+                          "tol": {
+                              "tol": 30,
+                              "type": "<"
+                          }
+                      }
+                  },
+                  "left_upLeg_joint": {
+                      "y": {
+                          "val": -60,
+                          "tol": {
+                              "tol": 10,
+                              "type": "<"
+                          }
+                      }
+                  }
+              }
+          },
+          "feedback": {}
+      },
+      {
+          "name": "RIGHT",
+          "duration": 0,
+          "jointAngles": {
+              "jointAngles": {
+                  "right_leg_joint": {
+                      "z": {
+                          "val": 70,
+                          "tol": {
+                              "tol": -10,
+                              "type": ">"
+                          }
+                      }
+                  },
+                  "left_leg_joint": {
+                      "z": {
+                          "val": 40,
+                          "tol": {
+                              "tol": -10,
+                              "type": ">"
+                          }
+                      }
+                  },
+                  "right_upLeg_joint": {
+                      "y": {
+                          "val": 60,
+                          "tol": {
+                              "tol": -10,
+                              "type": ">"
+                          }
+                      }
+                  },
+                  "left_upLeg_joint": {
+                      "y": {
+                          "val": 10,
+                          "tol": {
+                              "tol": -10,
+                              "type": ">"
+                          }
+                      }
+                  }
+              }
+          },
+          "feedback": {}
+      }
+    ]
   }
 ]
