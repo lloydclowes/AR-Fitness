@@ -17,55 +17,81 @@
       "jointAngles": {
         "jointAngles": {
           "left_arm_joint": {
-            "y": 60
+            "y": {
+              "val": 60,
+              "tol": {
+                "tol": -30,
+                "type": ">"
+              }
+            }
           },
           "right_arm_joint": {
-            "y": 60
+            "y": {
+              "val": 60,
+              "tol": {
+                "tol": -30,
+                "type": ">"
+              }
+            }
           },
           "left_forearm_joint": {
-            "z": -30
+            "z": {
+              "val": -30,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           },
           "right_forearm_joint": {
-            "z": -30
-          }
-        }
-      },
-      "tolerances": {
-        "jointAngles": {
-          "left_arm_joint": {
-            "y": -30
-          },
-          "right_arm_joint": {
-            "y": -30
-          },
-          "left_forearm_joint": {
-            "z": -20
-          },
-          "right_forearm_joint": {
-            "z": -20
+            "z": {
+              "val": -30,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           }
         }
       },
       "feedback": {
         "left_arm_joint": {
-          "action": "lower",
-          "side": "left",
-          "name": "arm"
+          "y": {
+            "action": [
+              "lower",
+              "raise"
+            ],
+            "side": "left",
+            "name": "arm"
+          }
         },
         "right_arm_joint": {
-          "action": "lower",
-          "side": "right",
-          "name": "arm"
+          "y": {
+            "action": [
+              "lower",
+              "raise"
+            ],
+            "side": "right",
+            "name": "arm"
+          }
         },
         "left_forearm_joint": {
-          "action": "straighten",
-          "side": "left",
-          "name": "elbow"
+          "z": {
+            "action": [
+              "straighten"
+            ],
+            "side": "left",
+            "name": "elbow"
+          }
         },
         "right_forearm_joint": {
-          "action": "straighten",
-          "side": "right",
-          "name": "elbow"
+          "z": {
+            "action": [
+              "straighten"
+            ],
+            "side": "right",
+            "name": "elbow"
+          }
         }
       }
     },
@@ -76,55 +102,83 @@
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
-              "y": 0
+              "y": {
+                "val": -12,
+                "tol": {
+                  "tol": 10,
+                  "type": "~"
+                }
+              }
             },
             "right_arm_joint": {
-              "y": 0
+              "y": {
+                "val": -12,
+                "tol": {
+                  "tol": 10,
+                  "type": "~"
+                }
+              }
             },
             "left_forearm_joint": {
-              "z": -30
+              "z": {
+                "val": -30,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              }
             },
             "right_forearm_joint": {
-              "z": -30
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": 5
-            },
-            "right_arm_joint": {
-              "y": 5
-            },
-            "left_forearm_joint": {
-              "z": -15
-            },
-            "right_forearm_joint": {
-              "z": -15
+              "z": {
+                "val": -30,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              }
             }
           }
         },
         "feedback": {
           "left_arm_joint": {
-            "action": "raise",
-            "side": "left",
-            "name": "arm"
+            "y": {
+              "action": [
+                "lower",
+                "raise"
+              ],
+              "side": "left",
+              "name": "arm"
+            }
           },
           "right_arm_joint": {
-            "action": "raise",
-            "side": "right",
-            "name": "arm"
+            "y": {
+              "action": [
+                "lower",
+                "raise"
+              ],
+              "side": "right",
+              "name": "arm"
+            }
           },
           "left_forearm_joint": {
-            "action": "straighten",
-            "side": "left",
-            "name": "elbow"
+            "z": {
+              "action": [
+                "straighten",
+                "bend"
+              ],
+              "side": "left",
+              "name": "elbow"
+            }
           },
           "right_forearm_joint": {
-            "action": "straighten",
-            "side": "right",
-            "name": "elbow"
+            "z": {
+              "action": [
+                "straighten",
+                "bend"
+              ],
+              "side": "right",
+              "name": "elbow"
+            }
           }
         }
       }
@@ -148,55 +202,81 @@
       "jointAngles": {
         "jointAngles": {
           "left_arm_joint": {
-            "y": 60
+            "y": {
+              "val": 60,
+              "tol": {
+                "tol": -30,
+                "type": ">"
+              }
+            }
           },
           "right_arm_joint": {
-            "y": 60
+            "y": {
+              "val": 60,
+              "tol": {
+                "tol": -30,
+                "type": ">"
+              }
+            }
           },
           "left_forearm_joint": {
-            "z": -30
+            "z": {
+              "val": -30,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           },
           "right_forearm_joint": {
-            "z": -30
-          }
-        }
-      },
-      "tolerances": {
-        "jointAngles": {
-          "left_arm_joint": {
-            "y": -30
-          },
-          "right_arm_joint": {
-            "y": -30
-          },
-          "left_forearm_joint": {
-            "z": -20
-          },
-          "right_forearm_joint": {
-            "z": -20
+            "z": {
+              "val": -30,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           }
         }
       },
       "feedback": {
         "left_arm_joint": {
-          "action": "lower",
-          "side": "left",
-          "name": "arm"
+          "y": {
+            "action": [
+              "lower",
+              "raise"
+            ],
+            "side": "left",
+            "name": "arm"
+          }
         },
         "right_arm_joint": {
-          "action": "lower",
-          "side": "right",
-          "name": "arm"
+          "y": {
+            "action": [
+              "lower",
+              "raise"
+            ],
+            "side": "right",
+            "name": "arm"
+          }
         },
         "left_forearm_joint": {
-          "action": "straighten",
-          "side": "left",
-          "name": "elbow"
+          "z": {
+            "action": [
+              "straighten"
+            ],
+            "side": "left",
+            "name": "elbow"
+          }
         },
         "right_forearm_joint": {
-          "action": "straighten",
-          "side": "right",
-          "name": "elbow"
+          "z": {
+            "action": [
+              "straighten"
+            ],
+            "side": "right",
+            "name": "elbow"
+          }
         }
       }
     },
@@ -207,55 +287,83 @@
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
-              "y": 60
+              "y": {
+                "val": 60,
+                "tol": {
+                  "tol": -30,
+                  "type": ">"
+                }
+              }
             },
             "right_arm_joint": {
-              "y": 60
+              "y": {
+                "val": 60,
+                "tol": {
+                  "tol": -30,
+                  "type": ">"
+                }
+              }
             },
             "left_forearm_joint": {
-              "z": -30
+              "z": {
+                "val": -30,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             },
             "right_forearm_joint": {
-              "z": -30
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": -30
-            },
-            "right_arm_joint": {
-              "y": -30
-            },
-            "left_forearm_joint": {
-              "z": -20
-            },
-            "right_forearm_joint": {
-              "z": -20
+              "z": {
+                "val": -30,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             }
           }
         },
         "feedback": {
           "left_arm_joint": {
-            "action": "lower",
-            "side": "left",
-            "name": "arm"
+            "y": {
+              "action": [
+                "lower",
+                "raise"
+              ],
+              "side": "left",
+              "name": "arm"
+            }
           },
           "right_arm_joint": {
-            "action": "lower",
-            "side": "right",
-            "name": "arm"
+            "y": {
+              "action": [
+                "lower",
+                "raise"
+              ],
+              "side": "right",
+              "name": "arm"
+            }
           },
           "left_forearm_joint": {
-            "action": "straighten",
-            "side": "left",
-            "name": "elbow"
+            "z": {
+              "action": [
+                "straighten",
+                "bend"
+              ],
+              "side": "left",
+              "name": "elbow"
+            }
           },
           "right_forearm_joint": {
-            "action": "straighten",
-            "side": "right",
-            "name": "elbow"
+            "z": {
+              "action": [
+                "straighten",
+                "bend"
+              ],
+              "side": "right",
+              "name": "elbow"
+            }
           }
         }
       },
@@ -265,55 +373,83 @@
         "jointAngles": {
           "jointAngles": {
             "left_arm_joint": {
-              "y": 0
+              "y": {
+                "val": 0,
+                "tol": {
+                  "tol": 5,
+                  "type": "<"
+                }
+              }
             },
             "right_arm_joint": {
-              "y": 0
+              "y": {
+                "val": 0,
+                "tol": {
+                  "tol": 5,
+                  "type": "<"
+                }
+              }
             },
             "left_forearm_joint": {
-              "z": -30
+              "z": {
+                "val": -30,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              }
             },
             "right_forearm_joint": {
-              "z": -30
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_arm_joint": {
-              "y": 5
-            },
-            "right_arm_joint": {
-              "y": 5
-            },
-            "left_forearm_joint": {
-              "z": -15
-            },
-            "right_forearm_joint": {
-              "z": -15
+              "z": {
+                "val": -30,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              }
             }
           }
         },
         "feedback": {
           "left_arm_joint": {
-            "action": "raise",
-            "side": "left",
-            "name": "arm"
+            "y": {
+              "action": [
+                "lower",
+                "raise"
+              ],
+              "side": "left",
+              "name": "arm"
+            }
           },
           "right_arm_joint": {
-            "action": "raise",
-            "side": "right",
-            "name": "arm"
+            "y": {
+              "action": [
+                "lower",
+                "raise"
+              ],
+              "side": "right",
+              "name": "arm"
+            }
           },
           "left_forearm_joint": {
-            "action": "straighten",
-            "side": "left",
-            "name": "elbow"
+            "z": {
+              "action": [
+                "straighten",
+                "bend"
+              ],
+              "side": "left",
+              "name": "elbow"
+            }
           },
           "right_forearm_joint": {
-            "action": "straighten",
-            "side": "right",
-            "name": "elbow"
+            "z": {
+              "action": [
+                "straighten",
+                "bend"
+              ],
+              "side": "right",
+              "name": "elbow"
+            }
           }
         }
       }
@@ -335,55 +471,83 @@
       "jointAngles": {
         "jointAngles": {
           "left_upLeg_joint": {
-            "y": 0
+            "y": {
+              "val": 0,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           },
           "right_upLeg_joint": {
-            "y": 0
+            "y": {
+              "val": 0,
+              "tol": {
+                "tol": 20,
+                "type": "<"
+              }
+            }
           },
           "left_leg_joint": {
-            "z": 15
+            "z": {
+              "val": 15,
+              "tol": {
+                "tol": 25,
+                "type": "<"
+              }
+            }
           },
           "right_leg_joint": {
-            "z": 15
-          }
-        }
-      },
-      "tolerances": {
-        "jointAngles": {
-          "left_upLeg_joint": {
-            "y": -20
-          },
-          "right_upLeg_joint": {
-            "y": 20
-          },
-          "left_leg_joint": {
-            "z": 25
-          },
-          "right_leg_joint": {
-            "z": 25
+            "z": {
+              "val": 15,
+              "tol": {
+                "tol": 25,
+                "type": "<"
+              }
+            }
           }
         }
       },
       "feedback": {
         "left_upLeg_joint": {
-          "action": "push through",
-          "side": "both",
-          "name": "hip"
+          "y": {
+            "action": [
+              "push through",
+              "lower"
+            ],
+            "side": "both",
+            "name": "hip"
+          }
         },
         "right_upLeg_joint": {
-          "action": "push through",
-          "side": "both",
-          "name": "hip"
+          "y": {
+            "action": [
+              "lower",
+              "push through"
+            ],
+            "side": "both",
+            "name": "hip"
+          }
         },
         "left_leg_joint": {
-          "action": "straighten",
-          "side": "left",
-          "name": "knee"
+          "z": {
+            "action": [
+              "bend",
+              "straighten"
+            ],
+            "side": "left",
+            "name": "knee"
+          }
         },
         "right_leg_joint": {
-          "action": "straighten",
-          "side": "right",
-          "name": "knee"
+          "z": {
+            "action": [
+              "bend",
+              "straighten"
+            ],
+            "side": "right",
+            "name": "knee"
+          }
         }
       }
     },
@@ -394,55 +558,83 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "y": 0
+              "y": {
+                "val": 0,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             },
             "right_upLeg_joint": {
-              "y": 0
+              "y": {
+                "val": 0,
+                "tol": {
+                  "tol": 20,
+                  "type": "<"
+                }
+              }
             },
             "left_leg_joint": {
-              "z": 15
+              "z": {
+                "val": 15,
+                "tol": {
+                  "tol": 25,
+                  "type": "<"
+                }
+              }
             },
             "right_leg_joint": {
-              "z": 15
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": -20
-            },
-            "right_upLeg_joint": {
-              "y": 20
-            },
-            "left_leg_joint": {
-              "z": 25
-            },
-            "right_leg_joint": {
-              "z": 25
+              "z": {
+                "val": 15,
+                "tol": {
+                  "tol": 25,
+                  "type": "<"
+                }
+              }
             }
           }
         },
         "feedback": {
           "left_upLeg_joint": {
-            "action": "push through",
-            "side": "both",
-            "name": "hip"
+            "y": {
+              "action": [
+                "push through",
+                "lower"
+              ],
+              "side": "both",
+              "name": "hip"
+            }
           },
           "right_upLeg_joint": {
-            "action": "push through",
-            "side": "both",
-            "name": "hip"
+            "y": {
+              "action": [
+                "lower",
+                "push through"
+              ],
+              "side": "both",
+              "name": "hip"
+            }
           },
           "left_leg_joint": {
-            "action": "straighten",
-            "side": "left",
-            "name": "knee"
+            "z": {
+              "action": [
+                "bend",
+                "straighten"
+              ],
+              "side": "left",
+              "name": "knee"
+            }
           },
           "right_leg_joint": {
-            "action": "straighten",
-            "side": "right",
-            "name": "knee"
+            "z": {
+              "action": [
+                "bend",
+                "straighten"
+              ],
+              "side": "right",
+              "name": "knee"
+            }
           }
         }
       },
@@ -452,55 +644,83 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "y": -75
+              "y": {
+                "val": -75,
+                "tol": {
+                  "tol": 25,
+                  "type": "<"
+                }
+              }
             },
             "right_upLeg_joint": {
-              "y": 75
+              "y": {
+                "val": 75,
+                "tol": {
+                  "tol": -25,
+                  "type": ">"
+                }
+              }
             },
             "left_leg_joint": {
-              "z": 90
+              "z": {
+                "val": 90,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             },
             "right_leg_joint": {
-              "z": 90
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": 25
-            },
-            "right_upLeg_joint": {
-              "y": -25
-            },
-            "left_leg_joint": {
-              "z": -20
-            },
-            "right_leg_joint": {
-              "z": -20
+              "z": {
+                "val": 90,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             }
           }
         },
         "feedback": {
           "left_upLeg_joint": {
-            "action": "squat deeper on",
-            "side": "left",
-            "name": "side"
+            "y": {
+              "action": [
+                "push through",
+                "lower"
+              ],
+              "side": "both",
+              "name": "hip"
+            }
           },
           "right_upLeg_joint": {
-            "action": "squat deeper on",
-            "side": "right",
-            "name": "side"
+            "y": {
+              "action": [
+                "lower",
+                "push through"
+              ],
+              "side": "both",
+              "name": "hip"
+            }
           },
           "left_leg_joint": {
-            "action": "bend",
-            "side": "left",
-            "name": "knee"
+            "z": {
+              "action": [
+                "bend",
+                "straighten"
+              ],
+              "side": "left",
+              "name": "knee"
+            }
           },
           "right_leg_joint": {
-            "action": "bend",
-            "side": "right",
-            "name": "knee"
+            "z": {
+              "action": [
+                "bend",
+                "straighten"
+              ],
+              "side": "right",
+              "name": "knee"
+            }
           }
         }
       }
@@ -522,55 +742,83 @@
       "jointAngles": {
         "jointAngles": {
           "left_upLeg_joint": {
-            "y": 0
+            "y": {
+              "val": 0,
+              "tol": {
+                "tol": -10,
+                "type": ">"
+              }
+            }
           },
           "right_upLeg_joint": {
-            "y": 0
+            "y": {
+              "val": 0,
+              "tol": {
+                "tol": 10,
+                "type": "<"
+              }
+            }
           },
           "left_leg_joint": {
-            "z": 15
+            "z": {
+              "val": 15,
+              "tol": {
+                "tol": 15,
+                "type": "<"
+              }
+            }
           },
           "right_leg_joint": {
-            "z": 15
-          }
-        }
-      },
-      "tolerances": {
-        "jointAngles": {
-          "left_upLeg_joint": {
-            "y": -10
-          },
-          "right_upLeg_joint": {
-            "y": 10
-          },
-          "left_leg_joint": {
-            "z": 15
-          },
-          "right_leg_joint": {
-            "z": 15
+            "z": {
+              "val": 15,
+              "tol": {
+                "tol": 15,
+                "type": "<"
+              }
+            }
           }
         }
       },
       "feedback": {
         "left_upLeg_joint": {
-          "action": "push through",
-          "side": "both",
-          "name": "hip"
+          "y": {
+            "action": [
+              "push through",
+              "lower"
+            ],
+            "side": "both",
+            "name": "hip"
+          }
         },
         "right_upLeg_joint": {
-          "action": "push through",
-          "side": "both",
-          "name": "hip"
+          "y": {
+            "action": [
+              "lower",
+              "push through"
+            ],
+            "side": "both",
+            "name": "hip"
+          }
         },
         "left_leg_joint": {
-          "action": "straighten",
-          "side": "left",
-          "name": "knee"
+          "z": {
+            "action": [
+              "bend",
+              "straighten"
+            ],
+            "side": "left",
+            "name": "knee"
+          }
         },
         "right_leg_joint": {
-          "action": "straighten",
-          "side": "right",
-          "name": "knee"
+          "z": {
+            "action": [
+              "bend",
+              "straighten"
+            ],
+            "side": "right",
+            "name": "knee"
+          }
         }
       }
     },
@@ -581,55 +829,83 @@
         "jointAngles": {
           "jointAngles": {
             "left_upLeg_joint": {
-              "y": -75
+              "y": {
+                "val": -75,
+                "tol": {
+                  "tol": 25,
+                  "type": "<"
+                }
+              }
             },
             "right_upLeg_joint": {
-              "y": 75
+              "y": {
+                "val": 75,
+                "tol": {
+                  "tol": -25,
+                  "type": ">"
+                }
+              }
             },
             "left_leg_joint": {
-              "z": 90
+              "z": {
+                "val": 90,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             },
             "right_leg_joint": {
-              "z": 90
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "left_upLeg_joint": {
-              "y": 25
-            },
-            "right_upLeg_joint": {
-              "y": -25
-            },
-            "left_leg_joint": {
-              "z": -20
-            },
-            "right_leg_joint": {
-              "z": -20
+              "z": {
+                "val": 90,
+                "tol": {
+                  "tol": -20,
+                  "type": ">"
+                }
+              }
             }
           }
         },
         "feedback": {
           "left_upLeg_joint": {
-            "action": "squat deeper on",
-            "side": "left",
-            "name": "side"
+            "y": {
+              "action": [
+                "push through",
+                "lower"
+              ],
+              "side": "both",
+              "name": "hip"
+            }
           },
           "right_upLeg_joint": {
-            "action": "squat deeper on",
-            "side": "right",
-            "name": "side"
+            "y": {
+              "action": [
+                "lower",
+                "push through"
+              ],
+              "side": "both",
+              "name": "hip"
+            }
           },
           "left_leg_joint": {
-            "action": "bend",
-            "side": "left",
-            "name": "knee"
+            "z": {
+              "action": [
+                "bend",
+                "straighten"
+              ],
+              "side": "left",
+              "name": "knee"
+            }
           },
           "right_leg_joint": {
-            "action": "bend",
-            "side": "right",
-            "name": "knee"
+            "z": {
+              "action": [
+                "bend",
+                "straighten"
+              ],
+              "side": "right",
+              "name": "knee"
+            }
           }
         }
       }
@@ -651,40 +927,115 @@
       "jointAngles": {
         "jointAngles": {
           "right_arm_joint": {
-            "x": 40,
-            "y": 50
+            "x": {
+              "val": 40,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            },
+            "y": {
+              "val": 50,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           },
           "left_arm_joint": {
-            "x": 40,
-            "y": 50
+            "x": {
+              "val": 40,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            },
+            "y": {
+              "val": 50,
+              "tol": {
+                "tol": -20,
+                "type": ">"
+              }
+            }
           },
           "right_upLeg_joint": {
-            "z": 80
+            "z": {
+              "val": 80,
+              "tol": {
+                "tol": -15,
+                "type": ">"
+              }
+            }
           },
           "left_upLeg_joint": {
-            "z": -80
+            "z": {
+              "val": -80,
+              "tol": {
+                "tol": 15,
+                "type": "<"
+              }
+            }
           }
         }
       },
-      "tolerances": {
-        "jointAngles": {
-          "right_arm_joint": {
-            "x": -15,
-            "y": -15
+      "feedback": {
+        "left_arm_joint": {
+            "x": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "left",
+              "name": "arm"
+            },
+            "y": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "left",
+              "name": "arm"
+            }
+        },
+        "right_arm_joint": {
+          "x": {
+            "action": [
+                "bring in",
+                "spread"
+            ],
+            "side": "right",
+            "name": "arm"
           },
-          "left_arm_joint": {
-            "x": -15,
-            "y": -15
-          },
-          "right_upLeg_joint": {
-            "z": -10
-          },
-          "left_upLeg_joint": {
-            "z": 10
+          "y": {
+            "action": [
+                "bring in",
+                "spread"
+            ],
+            "side": "right",
+            "name": "arm"
+          }
+        },
+        "left_upLeg_joint": {
+          "z": {
+               "action": [
+                   "spread",
+                   "bring in"
+               ],
+               "side": "left",
+               "name": "leg"
+          }
+        },
+        "right_upLeg_joint": {
+          "z": {
+               "action": [
+                   "bring in",
+                   "spread"
+               ],
+               "side": "right",
+               "name": "leg"
           }
         }
-      },
-      "feedback": {}
+      }
     },
     "states": [
       {
@@ -693,40 +1044,115 @@
         "jointAngles": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": 40,
-              "y": 50
+              "x": {
+                "val": 40,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              },
+              "y": {
+                "val": 50,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              }
             },
             "left_arm_joint": {
-              "x": 40,
-              "y": 50
+              "x": {
+                "val": 40,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              },
+              "y": {
+                "val": 50,
+                "tol": {
+                  "tol": -15,
+                  "type": ">"
+                }
+              }
             },
             "right_upLeg_joint": {
-              "z": 85
+              "z": {
+                "val": 80,
+                "tol": {
+                  "tol": -10,
+                  "type": ">"
+                }
+              }
             },
             "left_upLeg_joint": {
-              "z": -85
+              "z": {
+                "val": -80,
+                "tol": {
+                  "tol": 10,
+                  "type": "<"
+                }
+              }
             }
           }
         },
-        "tolerances": {
-          "jointAngles": {
-            "right_arm_joint": {
-              "x": -15,
-              "y": -15
+        "feedback": {
+          "left_arm_joint": {
+              "x": {
+                "action": [
+                    "bring in",
+                    "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              },
+              "y": {
+                "action": [
+                    "bring in",
+                    "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              }
+          },
+          "right_arm_joint": {
+            "x": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "right",
+              "name": "arm"
             },
-            "left_arm_joint": {
-              "x": -15,
-              "y": -15
-            },
-            "right_upLeg_joint": {
-              "z": -5
-            },
-            "left_upLeg_joint": {
-              "z": 5
+            "y": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "right",
+              "name": "arm"
+            }
+          },
+          "left_upLeg_joint": {
+            "z": {
+                 "action": [
+                     "spread",
+                     "bring in"
+                 ],
+                 "side": "left",
+                 "name": "leg"
+            }
+          },
+          "right_upLeg_joint": {
+            "z": {
+                 "action": [
+                     "bring in",
+                     "spread"
+                 ],
+                 "side": "right",
+                 "name": "leg"
             }
           }
-        },
-        "feedback": {}
+        }
       },
       {
         "name": "UP",
@@ -734,60 +1160,114 @@
         "jointAngles": {
           "jointAngles": {
             "right_arm_joint": {
-              "x": -50,
-              "y": -30
+              "x": {
+                "val": -50,
+                "tol": {
+                  "tol": 15,
+                  "type": "<"
+                }
+              },
+              "y": {
+                "val": -30,
+                "tol": {
+                  "tol": 15,
+                  "type": "<"
+                }
+              }
             },
             "left_arm_joint": {
-              "x": -50,
-              "y": -30
+              "x": {
+                "val": -50,
+                "tol": {
+                  "tol": 15,
+                  "type": "<"
+                }
+              },
+              "y": {
+                "val": -30,
+                "tol": {
+                  "tol": 15,
+                  "type": "<"
+                }
+              }
             },
             "right_upLeg_joint": {
-              "z": 65
+              "z": {
+                "val": 65,
+                "tol": {
+                  "tol": -5,
+                  "type": "<"
+                }
+              }
             },
             "left_upLeg_joint": {
-              "z": -65
-            }
-          }
-        },
-        "tolerances": {
-          "jointAngles": {
-            "right_arm_joint": {
-              "x": 15,
-              "y": 15
-            },
-            "left_arm_joint": {
-              "x": 15,
-              "y": 15
-            },
-            "right_upLeg_joint": {
-              "z": -5
-            },
-            "left_upLeg_joint": {
-              "z": 5
+              "z": {
+                "val": -65,
+                "tol": {
+                  "tol": 5,
+                  "type": ">"
+                }
+              }
             }
           }
         },
         "feedback": {
-            "left_upLeg_joint" : {
-                "action" : "spread out",
-                "side" : "left",
-                "name" : "leg"
+          "left_arm_joint": {
+              "x": {
+                "action": [
+                    "bring in",
+                    "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              },
+              "y": {
+                "action": [
+                    "bring in",
+                    "spread"
+                ],
+                "side": "left",
+                "name": "arm"
+              }
+          },
+          "right_arm_joint": {
+            "x": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "right",
+              "name": "arm"
             },
-            "right_upLeg_joint" : {
-                "action" : "spread out",
-                "side" : "right",
-                "name" : "leg"
-            },
-            "left_arm_joint" : {
-                "action" : "raise",
-                "side" : "left",
-                "name" : "arm"
-            },
-            "right_arm_joint" : {
-                "action" : "raise",
-                "side" : "right",
-                "name" : "arm"
+            "y": {
+              "action": [
+                  "bring in",
+                  "spread"
+              ],
+              "side": "right",
+              "name": "arm"
             }
+          },
+          "left_upLeg_joint": {
+            "z": {
+                 "action": [
+                     "spread",
+                     "bring in"
+                 ],
+                 "side": "left",
+                 "name": "leg"
+            }
+          },
+          "right_upLeg_joint": {
+            "z": {
+                 "action": [
+                     "bring in",
+                     "spread"
+                 ],
+                 "side": "right",
+                 "name": "leg"
+            }
+          }
         }
       }
     ]

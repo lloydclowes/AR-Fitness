@@ -5,9 +5,9 @@ class ActivityMonitor {
     
     let speaker = SpeechService.shared
     
-    let noStateThreshold = 0.15
+    let noStateThreshold = 0.2
     let retryThreshold = 3.0
-    let maxFrameTime = 0.1
+    let maxFrameTime = 0.2
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 30
@@ -23,7 +23,8 @@ class ActivityMonitor {
     let startState : TargetState
     let targetStates : [TargetState]
     
-    var startReached : Bool!
+    var startSpoken : Bool!
+    var startedSpoken : Bool!
     var ready : Bool!
     
     var paused : Bool!
@@ -94,16 +95,17 @@ class ActivityMonitor {
     }
     
     func restart() {
-        self.startReached = false
+        self.startSpoken = false
+        self.startedSpoken = false
         self.ready = false
         self.paused = false
         self.hitFirstTarget = false
         
         self.currentState = ActivityState()
         for (joint, angles) in targetStates[0].jointAngles {
-            let x : Float? = angles.x != nil ? Float(0) : nil
-            let y : Float? = angles.y != nil ? Float(0) : nil
-            let z : Float? = angles.z != nil ? Float(0) : nil
+            let x = angles.x != nil ? EulerAngle(0) : nil
+            let y = angles.y != nil ? EulerAngle(0) : nil
+            let z = angles.z != nil ? EulerAngle(0) : nil
             // TODO: addAnchor can set the initial angles
             self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
@@ -136,15 +138,15 @@ class ActivityMonitor {
     func isTurningPoint() -> Bool {
         for (joint, velocities) in currentState.jointVelocities {
             if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
-                abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
+                abs(vcur.val) > turningPointTolerance && vprev.val.sign == vcur.val.sign {
                 return false
             }
             if let vcur = velocities.y, let vprev = prevState.jointVelocities[joint]?.y,
-                abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
+                abs(vcur.val) > turningPointTolerance && vprev.val.sign == vcur.val.sign {
                 return false
             }
             if let vcur = velocities.z, let vprev = prevState.jointVelocities[joint]?.z,
-                abs(vcur) > turningPointTolerance && vprev.sign == vcur.sign {
+                abs(vcur.val) > turningPointTolerance && vprev.val.sign == vcur.val.sign {
                 return false
             }
         }
@@ -199,7 +201,7 @@ class ActivityMonitor {
         
         targetIndex = to
         if targetIndex != 1  {
-            feedbackGenerator.advanced() {}
+            feedbackGenerator.advanced(newState: targetStates[targetIndex].name) {}
         }
     }
     
@@ -279,7 +281,7 @@ class ActivityMonitor {
         
         // use    isTurningPoint()      ??????
         let currentTarget = targetStates[targetIndex]
-        let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+        let difference = currentTarget.jointAngles.difference(currentState.jointAngles)
         for joint in targetStates[targetIndex].jointAngles.keys {
             if !difference.keys.contains(joint) {
                 stateSuccesses[targetIndex].jointFailures.remove(joint)
@@ -305,24 +307,30 @@ class ActivityMonitor {
             return
         }
         
-        if !startReached {
-            if currentState.reaches(startState) {
-                self.startReached = true
-                self.lastArrived = curTime
-                feedbackGenerator.started {
-                    self.ready = true
+        if !ready {
+            if !startSpoken {
+                if curTime - lastStartPrompt > startPromptDuration {
+                    lastStartPrompt = curTime
+                    speaker.speak(text: "Please assume the start position.") {
+                        self.startSpoken = true
+                    }
                 }
                 return
             }
+            
             if curTime - lastStartPrompt > startPromptDuration {
                 lastStartPrompt = curTime
-                speaker.speak(text: "Please assume the start position.")
+                speaker.speak(text: "Please assume the start position.") {}
             }
-            return
-        }
-        
-        if !ready {
-            return
+            
+            if !startedSpoken && currentState.reaches(startState) {
+                startedSpoken = true
+                feedbackGenerator.started {
+                    self.ready = true
+                }
+            } else {
+                return
+            }
         }
                 
         // If the index hasn't changed then ignore
@@ -339,7 +347,7 @@ class ActivityMonitor {
                 }
             } else {
                 let currentTarget = targetStates[targetIndex]
-                let difference = currentTarget.jointAngles.difference(currentState.jointAngles, currentTarget.tolerances)
+                let difference = currentTarget.jointAngles.difference(currentState.jointAngles)
                 feedbackGenerator.next(targetName: currentTarget.name, difference: difference.jointAngles) {}
             }
             return
@@ -388,46 +396,5 @@ class ActivityMonitor {
         }
                 
         noState()
-    }
-    
-    private func generateFeedback(difference: Dictionary<String, EulerAngles>) -> String {
-        var feedbackDict : Dictionary<String, Dictionary<String, String?>> = [:]
-        for (joint, _) in difference {
-
-            if targetStates[targetIndex].feedback[joint] == nil {
-                continue
-            }
-
-            let action = targetStates[targetIndex].feedback[joint]!.action
-            let side = targetStates[targetIndex].feedback[joint]!.side
-            let name = targetStates[targetIndex].feedback[joint]!.name
-            if feedbackDict.keys.contains(action) {
-                if feedbackDict[action]!.keys.contains(name) {
-                    feedbackDict[action]![name] = "both"
-                } else {
-                    feedbackDict[action]![name] = side
-                }
-            } else {
-                feedbackDict[action] = [name: side]
-            }
-        }
-        
-        var feedback = [String]()
-        for (action, nameToSides) in feedbackDict {
-            var actionJoints = [String]()
-            for (name, sides) in nameToSides {
-                var jointFeedback = ""
-                if sides == nil {
-                    jointFeedback = "your \(name)"
-                } else if sides! == "both" {
-                    jointFeedback = "both \(name)s"
-                } else {
-                    jointFeedback = "your \(sides!) \(name)"
-                }
-                actionJoints.append(jointFeedback)
-            }
-            feedback.append("\(action) " + spokenListJoin(actionJoints))
-        }
-        return spokenListJoin(feedback)
     }
 }

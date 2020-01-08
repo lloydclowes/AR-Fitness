@@ -14,7 +14,12 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     static let shared = SpeechService()
     
     static let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
+    static let completions = ["Good job!", "Well done!", "Perfect"]
+    static let positives = ["Good", "Nice", "Great"]
+    static let neutrals = ["Okay", "Alright"]
     static let improvements = ["Much Better!", "That's more like it!"]
+    static let failures = ["Unlucky, you failed.", "Sorry, you failed.", "Bad luck, you failed.", "Not quite."]
+    static let recoveries = ["Good recovery.", "Well recovered.", "That's better."]
     static let tooFastStatements = ["Move a bit slower", "Not so fast", "You're moving too fast", "Slow down a bit"]
     
     var isSpeechEnabled : Bool {
@@ -48,16 +53,36 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         speak(text: text) {}
     }
     
-    func speakRandomReward() {
-        speak(text: SpeechService.rewards.randomElement()!)
+    func speakRandomReward(completion: @escaping () -> Void) {
+        speak(text: SpeechService.rewards.randomElement()!, completion: completion)
     }
     
-    func speakRandomTooFast() {
-        speak(text: SpeechService.tooFastStatements.randomElement()!)
+    func speakRandomTooFast(completion: @escaping () -> Void) {
+        speak(text: SpeechService.tooFastStatements.randomElement()!, completion: completion)
     }
     
-    func speakRandomImprovement() {
-        speak(text: SpeechService.improvements.randomElement()!)
+    func speakWithRandomCompletionPrefix(text: String, completion: @escaping () -> Void) {
+        speak(text: SpeechService.completions.randomElement()! + ", " + text, completion: completion)
+    }
+    
+    func speakWithRandomPositivePrefix(text : String, completion: @escaping () -> Void) {
+        speak(text: SpeechService.positives.randomElement()! + ", " + text, completion: completion)
+    }
+    
+    func speakWithRandomNeutralPrefix(text : String, completion: @escaping () -> Void) {
+        speak(text: SpeechService.neutrals.randomElement()! + ", " + text, completion: completion)
+    }
+    
+    func speakWithRandomNegativePrefix(text: String, completion: @escaping () -> Void) {
+        speak(text: SpeechService.failures.randomElement()! + ", " + text, completion: completion)
+    }
+    
+    func speakRandomImprovement(completion: @escaping () -> Void) {
+        speak(text: SpeechService.improvements.randomElement()!, completion: completion)
+    }
+    
+    func speakRandomRecovery(completion: @escaping () -> Void) {
+        speak(text: SpeechService.recoveries.randomElement()!, completion: completion)
     }
     
     func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
@@ -66,7 +91,6 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             return
         }
         
-        print("Speaking: '\(text)'")
         if !self.speechEnabled {
             completion()
             return
@@ -75,6 +99,8 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         if self.busy {
             cutOffSpeech()
         }
+        
+        print("Speaking: '\(text)'")
         
         self.busy = true
         
@@ -114,13 +140,14 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
     // Returns false if nothing is currently being said; true if the speech was cut off
     @discardableResult
     func cutOffSpeech() -> Bool {
+        print("cut")
         if !self.busy {
             return false
         }
+        self.player?.stop()
         if let completion = completionHandler {
             completion()
         }
-        self.player?.stop()
         return true
     }
     
