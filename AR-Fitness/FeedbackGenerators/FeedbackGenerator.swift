@@ -53,7 +53,9 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     }
     
     func started(startMsg: String, finished: @escaping () -> Void) {
-        finished()
+        speaker.speak(text: "Let's go!") {
+            finished()
+        }
     }
     
     func reached(finished: @escaping () -> Void)  {
