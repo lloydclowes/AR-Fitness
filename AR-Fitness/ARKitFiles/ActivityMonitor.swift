@@ -6,7 +6,7 @@ class ActivityMonitor {
     let speaker = SpeechService.shared
     
     let noStateThreshold = 0.3
-    let retryThreshold = 3.0
+    let retryThreshold = 5.0
     
     let turningPointTolerance : Float = 1.5
     let maxAbsoluteSpeed : Float = 30
