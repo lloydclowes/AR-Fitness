@@ -19,7 +19,7 @@ protocol FeedbackGenerator {
 
 class BaseFeedbackGenerator : FeedbackGenerator {
         
-    let speaker = SpeechService.shared
+    let speaker : Speaker = SpeechService.shared
     
     let feedbackDict : Dictionary<String, Dictionary<String, JointFeedback>>
     
@@ -36,7 +36,7 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     var advancedSpeaking = false
     var successSpeaking = false
 
-    internal var curTime : TimeInterval {
+    var curTime : TimeInterval {
         return Date().timeIntervalSince1970
     }
     
@@ -63,57 +63,49 @@ class BaseFeedbackGenerator : FeedbackGenerator {
     }
     
     func advanced(newState: String, finished: @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func completeSuccess(finished: @escaping () -> Void) {
-           finished()
+        finished()
     }
     
     func completeFail(tooFast: Bool = false, missedStates: Dictionary<String, Set<String>> = [:], shortStates: [String] = [], finished: @escaping () -> Void) {
-           finished()
+        finished()
     }
     
     func jumped(to: Int, finished: @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func resume(finished: @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func tooFast(finished: @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func stay(finished : @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func next(targetName : String, difference : Dictionary<String, EulerAngles>, finished : @escaping () -> Void)  {
-           finished()
+        finished()
     }
 
     func noState(targetName : String, difference : Dictionary<String, EulerAngles>, finished: @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func expired(finished: @escaping () -> Void)  {
-           finished()
+        finished()
     }
     
     func generateNoStateFeedback(targetName : String, difference: Dictionary<String, EulerAngles>) -> String {
         var diffDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for (joint, angles) in difference {
-            if feedbackDict[targetName] == nil || feedbackDict[targetName]![joint] == nil {
-                print("aaa")
-                continue
-            }
-            
-
-            
             if let dx = angles.x?.val {
-
                 let action = feedbackDict[targetName]![joint]!.x!.action[dx > 0 ? 0 : 1]
                 let side = feedbackDict[targetName]![joint]!.x!.side
                 let name = feedbackDict[targetName]![joint]!.x!.name
@@ -129,7 +121,6 @@ class BaseFeedbackGenerator : FeedbackGenerator {
             }
             
             if let dy = angles.y?.val {
-//                print("y")
                 let action = feedbackDict[targetName]![joint]!.y!.action[dy > 0 ? 0 : 1]
                 let side = feedbackDict[targetName]![joint]!.y!.side
                 let name = feedbackDict[targetName]![joint]!.y!.name
@@ -145,7 +136,6 @@ class BaseFeedbackGenerator : FeedbackGenerator {
             }
             
             if let dz = angles.z?.val {
-//                print("z")
                 let action = feedbackDict[targetName]![joint]!.z!.action[dz > 0 ? 0 : 1]
                 let side = feedbackDict[targetName]![joint]!.z!.side
                 let name = feedbackDict[targetName]![joint]!.z!.name
@@ -177,19 +167,13 @@ class BaseFeedbackGenerator : FeedbackGenerator {
             }
             feedback.append("\(action) " + spokenListJoin(actionJoints))
         }
-        if feedback.count > 0 {
-            print(difference)
-        }
+
         return spokenListJoin(feedback)
     }
     
     func generateMissedFeedback(stateName : String, joints : Set<String>) -> String {
         var stateDict : Dictionary<String, Dictionary<String, String?>> = [:]
         for joint in joints {
-            
-            if feedbackDict[stateName] == nil || feedbackDict[stateName]![joint] == nil {
-                continue
-            }
             
             if let fbx = feedbackDict[stateName]?[joint]?.x {
                 let action = fbx.action[0]

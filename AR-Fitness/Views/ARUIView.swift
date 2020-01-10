@@ -17,8 +17,7 @@ struct ARUIView : View {
             .navigationBarTitle(exercise.name)
         .navigationBarItems(trailing:
             NavigationLink(destination: ExerciseInstructionsView(exercise: exercise)) {
-                Text(
-                "Instructions")
+                Text("Instructions")
             }
         )
     }

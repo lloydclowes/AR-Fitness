@@ -17,11 +17,7 @@ class RepCountController : ARViewController {
         if instructions {
             gen = RepCountInstructionsFeedbackGenerator(feedbackDict: feedbackDict)
         } else {
-            if (exercise.name == "Lunges" || exercise.name == "Jumping Jacks") {
-                gen = BaseFeedbackGenerator(feedbackDict: feedbackDict)
-            } else {
-                gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
-            }
+            gen = RepCountFeedbackGenerator(feedbackDict: feedbackDict)
         }
         self.activityMonitor = ActivityMonitor(exercise: exercise, feedbackGenerator: gen, countFirstRep: countFirstRep)
     }
@@ -32,18 +28,6 @@ class RepCountController : ARViewController {
         } else {
             self.scoreLabel.removeFromSuperview()
         }
-    }
-    
-    override func handleRewards() {
-//        // successCount
-//        if activityMonitor.repCount > 0 && activityMonitor.repCount.isMultiple(of: 5) {
-//            if !rewarded {
-//                rewarded = true
-//                speaker.speakRandomReward() {}
-//            }
-//        } else {
-//            rewarded = false
-//        }
     }
 }
 

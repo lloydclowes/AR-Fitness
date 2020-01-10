@@ -1,53 +1,31 @@
 import AVFoundation
 
-enum VoiceType: String {
+fileprivate enum VoiceType: String {
     case undefined
     case female = "en-GB-Wavenet-A"
     case male = "en-GB-Wavenet-B"
 }
 
-let ttsAPIUrl = "https://texttospeech.googleapis.com/v1beta1/text:synthesize"
-let APIKey = "AIzaSyDYl9FJoFbjV2d7661n67Orek6kPxGmslo"
+fileprivate let ttsAPIUrl = "https://texttospeech.googleapis.com/v1beta1/text:synthesize"
+fileprivate let APIKey = "AIzaSyDYl9FJoFbjV2d7661n67Orek6kPxGmslo"
 
-class SpeechService: NSObject, AVAudioPlayerDelegate {
-
+class SpeechService: NSObject, Speaker, AVAudioPlayerDelegate {
+    
     static let shared = SpeechService()
     
-    static let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
-    static let completions = ["Good job!", "Well done!", "Perfect"]
-    static let positives = ["Good", "Nice", "Great"]
-    static let neutrals = ["Okay", "Alright"]
-    static let improvements = ["Much Better!", "That's more like it!"]
-    static let failures = ["Unlucky, you failed.", "Sorry, you failed.", "Bad luck, you failed.", "Not quite."]
-    static let recoveries = ["Good recovery.", "Well recovered.", "That's better."]
-    static let tooFastStatements = ["Move a bit slower", "Not so fast", "You're moving too fast", "Slow down a bit"]
-    
-    var isSpeechEnabled : Bool {
-        get { return speechEnabled }
-    }
-    
-    var isBusy : Bool {
-        get { return self.busy }
-    }
-    
-    private var speechEnabled : Bool
-    
-    private(set) var busy: Bool = false
-    private var isExplainingExercise: Bool = false
-    private var player: AVAudioPlayer?
-    private var completionHandler: (() -> Void)?
-    
-    init(speechEnabled : Bool = true) {
-        self.speechEnabled = speechEnabled
-    }
-    
-    func enableSpeech() {
-        speechEnabled = true
-    }
-    
-    func disableSpeech() {
-        speechEnabled = false
-    }
+    private static let rewards = ["Good job!", "Well done!", "Keep up the good work!", "Perfect!", "You're rocking it!", "Keep it up!"]
+    private static let completions = ["Good job!", "Well done!", "Perfect"]
+    private static let positives = ["Good", "Nice", "Great"]
+    private static let neutrals = ["Okay", "Alright"]
+    private static let improvements = ["Much Better!", "That's more like it!"]
+    private static let failures = ["Unlucky, you failed.", "Sorry, you failed.", "Bad luck, you failed.", "Not quite."]
+    private static let recoveries = ["Good recovery.", "Well recovered.", "That's better."]
+    private static let tooFastStatements = ["Move a bit slower", "Not so fast", "You're moving too fast", "Slow down a bit"]
+        
+    private var busy : Bool = false
+    private var isExplainingExercise : Bool = false
+    private var player : AVAudioPlayer?
+    private var completionHandler : (() -> Void)?
     
     func speak(text: String) {
         speak(text: text) {}
@@ -90,18 +68,19 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         speak(text: SpeechService.recoveries.randomElement()!, completion: completion)
     }
     
-    func speak(text: String, voiceType: VoiceType = .female, completion: @escaping () -> Void) {
+    func speak(text: String, completion: @escaping () -> Void) {
+        speak(text: text, voiceType: .female, completion: completion)
+    }
+    
+    private func speak(text: String, voiceType: VoiceType, completion: @escaping () -> Void) {
         if text == "" {
             completion()
             return
         }
         
-        if !self.speechEnabled {
-            completion()
-            return
+        if busy {
+            cutOffSpeech()
         }
-        
-        cutOffSpeech()
         
         print("Speaking: '\(text)'")
         
@@ -112,7 +91,6 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             let headers = ["X-Goog-Api-Key": APIKey, "Content-Type": "application/json; charset=utf-8"]
             let response = self.makePOSTRequest(url: ttsAPIUrl, postData: postData, headers: headers)
 
-            // Get the `audioContent` (as a base64 encoded string) from the response.
             guard let audioContent = response["audioContent"] as? String else {
                 print("Invalid response: \(response)")
                 self.busy = false
@@ -122,7 +100,6 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
                 return
             }
             
-            // Decode the base64 string into a Data object
             guard let audioData = Data(base64Encoded: audioContent) else {
                 self.busy = false
                 DispatchQueue.main.async {
@@ -143,13 +120,11 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    // Returns false if nothing is currently being said; true if the speech was cut off
     @discardableResult
     func cutOffSpeech() -> Bool {
-//        if !self.busy {
-//            print("not busy")
-//            return false
-//        }
+        if !self.busy {
+            return false
+        }
 
         self.player?.stop()
         if let completion = completionHandler {
@@ -182,12 +157,10 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             ]
         ]
 
-        // Convert the Dictionary to Data
         let data = try! JSONSerialization.data(withJSONObject: params)
         return data
     }
     
-    // Just a function that makes a POST request.
     private func makePOSTRequest(url: String, postData: Data, headers: [String: String] = [:]) -> [String: AnyObject] {
         var dict: [String: AnyObject] = [:]
         
@@ -199,7 +172,6 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
             request.addValue(header.value, forHTTPHeaderField: header.key)
         }
         
-        // Using semaphore to make request synchronous
         let semaphore = DispatchSemaphore(value: 0)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -216,7 +188,6 @@ class SpeechService: NSObject, AVAudioPlayerDelegate {
         return dict
     }
     
-    // Implement AVAudioPlayerDelegate "did finish" callback to cleanup and notify listener of completion.
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         self.player?.delegate = nil
         self.player = nil

@@ -1,18 +1,16 @@
 import ARKit
 import Compression
 
+fileprivate let serverURL = "https://"
+
 class RecordingSession {
     
-    var isRecording = false
-    var stateHistory = [TimedState]()
-    var lastPoll : Date
-    
-    init() {
-        self.lastPoll = Date()
-    }
+    private var isRecording = false
+    private var stateHistory = [TimedState]()
+    private var lastPoll = Date()
     
     func startRecording() {
-        lastPoll = Date();
+        lastPoll = Date()
         stateHistory = []
         isRecording = true
     }
@@ -36,13 +34,10 @@ class RecordingSession {
         lastPoll = currentTime
         
         stateHistory.append(TimedState(currentTime, ActivityState(copyOf: state)))
-        //stateHistory.history.append(thing)
     }
 
     func upload() {
-//        let url = URL(string: "https://d0b9e6a5.ngrok.io/record")!
-        let url = URL(string: "https://11efb413.ngrok.io/record")!
-
+        let url = URL(string: serverURL + "/record")!
         
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = "POST"

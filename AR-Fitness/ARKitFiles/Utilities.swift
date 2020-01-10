@@ -1,10 +1,3 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-Utility functions that support the sample app.
-*/
-
 import Foundation
 import RealityKit
 import ARKit

@@ -7,14 +7,12 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
     }
     
     override func advanced(newState: String, finished: @escaping () -> Void) {
-//        print("advanced")
         lastNextPrompt = curTime
         advancedSpeaking = true
         successSpeaking = false
         speaker.speakWithRandomPositivePrefix(text: "Now the \(newState) state") {
             self.advancedSpeaking = false
             if !self.successSpeaking {
-//                print("reset lastNext")
                 self.lastNextPrompt = TimeInterval()
             }
             finished()
@@ -23,7 +21,6 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
     }
     
     override func completeSuccess(finished: @escaping () -> Void) {
-//        print("successs")
         lastNextPrompt = curTime
         successiveReps += 1
         self.successSpeaking = true
@@ -32,7 +29,6 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
             speaker.speak(text: "Congratulations! You're ready for the real thing.") {
                 self.successSpeaking = false
                 if !self.advancedSpeaking {
-//                    print("reset lastNext")
                     self.lastNextPrompt = TimeInterval()
                 }
                 finished()
@@ -41,7 +37,6 @@ class RepCountInstructionsFeedbackGenerator : RepCountFeedbackGenerator {
             speaker.speakRandomReward() {
                 self.successSpeaking = false
                 if !self.advancedSpeaking {
-//                    print("reset lastNext")
                     self.lastNextPrompt = TimeInterval()
                 }
                 finished()

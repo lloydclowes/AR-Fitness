@@ -43,7 +43,6 @@ struct JointAngles : Hashable, Codable, Sequence {
     func difference(_ other : JointAngles) -> JointAngles {
         var diff = JointAngles()
         for (joint, angles) in jointAngles {
-//            let otherAngles = other.jointAngles[joint] ?? EulerAngles()
             let jointDiff = angles.difference(other.jointAngles[joint]!)
             if jointDiff != EulerAngles() {
                 diff[joint] = jointDiff

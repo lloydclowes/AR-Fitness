@@ -3,51 +3,51 @@ import ARKit
 
 class ActivityMonitor {
     
-    let speaker = SpeechService.shared
+    private let speaker = SpeechService.shared
     
-    let noStateThreshold = 0.3
-    let retryThreshold = 5.0
+    private let noStateThreshold = 0.3
+    private let retryThreshold = 5.0
     
-    let turningPointTolerance : Float = 1.5
-    let maxAbsoluteSpeed : Float = 30
+    private let turningPointTolerance : Float = 1.5
+    private let maxAbsoluteSpeed : Float = 10
 
-    let startPromptDuration = 10.0
+    private let startPromptDuration = 10.0
     
-    let feedbackGenerator : FeedbackGenerator
+    private let feedbackGenerator : FeedbackGenerator
     
-    let countFirstRep : Bool
+    private let countFirstRep : Bool
     
-    let exerciseType : ExerciseType
+    private let exerciseType : ExerciseType
     
-    let startState : TargetState
-    let targetStates : [TargetState]
+    private let startState : TargetState
+    private let targetStates : [TargetState]
     
-    var startSpoken : Bool!
-    var startedSpoken : Bool!
-    var ready : Bool!
-    var startMessage : String = ""
+    private var startSpoken : Bool!
+    private var startedSpoken : Bool!
+    private var ready : Bool!
+    private var startMessage : String = ""
     
-    var paused : Bool!
-    var hitFirstTarget : Bool!
+    private var paused : Bool!
+    private var hitFirstTarget : Bool!
     
     var currentState : ActivityState!
-    var prevState : ActivityState!
+    private var prevState : ActivityState!
     
-    var stateSuccesses : [StateSuccess]!
-    var repTooFast : Bool!
+    private var stateSuccesses : [StateSuccess]!
+    private var repTooFast : Bool!
     
-    var index : Int!
-    var lastIndex : Int!
-    var targetIndex : Int!
-    var repCount : Int!
+    private var index : Int!
+    private var lastIndex : Int!
+    private var targetIndex : Int!
+    private var repCount : Int!
     
-    var curTime : TimeInterval!
-    var prevTime = TimeInterval()
-    var lastStartPrompt : TimeInterval!
+    private var curTime : TimeInterval!
+    private var prevTime = TimeInterval()
+    private var lastStartPrompt : TimeInterval!
     
-    var lastArrived : TimeInterval!
+    private var lastArrived : TimeInterval!
     
-    var lastFeedback : TimeInterval!
+    private var lastFeedback : TimeInterval!
     
     var targetStateName : String {
         get { return targetStates[targetIndex].name }
@@ -97,7 +97,6 @@ class ActivityMonitor {
     func restart() {
         self.startSpoken = false
         self.startedSpoken = false
-        print("paused = false")
         self.ready = false
         self.paused = false
         self.hitFirstTarget = false
@@ -107,7 +106,6 @@ class ActivityMonitor {
             let x = angles.x != nil ? EulerAngle(0) : nil
             let y = angles.y != nil ? EulerAngle(0) : nil
             let z = angles.z != nil ? EulerAngle(0) : nil
-            // TODO: addAnchor can set the initial angles
             self.currentState.jointAngles[joint] = EulerAngles(x: x, y: y, z: z)
             self.currentState.jointVelocities[joint] = EulerAngles(x: x, y: y, z: z)
         }
@@ -127,15 +125,7 @@ class ActivityMonitor {
         self.targetIndex = 0
         self.repCount = 0
     }
-    
-    func prettifyJointFailures(state : String, joints : [String]) -> String {
-        if joints.count == 0 {
-            return "Your joints didn't reach the \(state) state at the same time"
-        } else {
-            return "Your \(spokenListJoin(joints.map(jointToName))) didn't reach the \(state) state"
-        }
-    }
-      
+
     func isTurningPoint() -> Bool {
         for (joint, velocities) in currentState.jointVelocities {
             if let vcur = velocities.x, let vprev = prevState.jointVelocities[joint]?.x,
@@ -159,9 +149,6 @@ class ActivityMonitor {
     }
     
     func updateState(_ bodyAnchor : ARBodyAnchor, _ delta : Double) {
-//        if let ct = curTime {
-//            prevTime = ct
-//        }
         curTime = Date().timeIntervalSince1970
 
         prevState = currentState
@@ -178,16 +165,6 @@ class ActivityMonitor {
             
         updateIndex(delta)
     }
-    
-//    private func started() {
-//        if !speakingStart {
-//            speakingStart = true
-//            speaker.speak(text: "") {
-//                self.speakingStart = false
-//                self.hasStarted = true
-//            }
-//        }
-//    }
     
     private func advanceTarget(to : Int) {
         if to == 1 || to == 0 && targetStates.count == 1 {
@@ -235,19 +212,12 @@ class ActivityMonitor {
             repCount += 1
             feedbackGenerator.completeSuccess() {}
         } else {
-            print("paused = true")
             paused = true
             feedbackGenerator.completeFail(tooFast: repTooFast, missedStates: missedStates, shortStates: shortDurations) {
-                print("paused = false")
                 self.paused = false
             }
         }
-        
-        // TODO:   vv or similar
-        // if exercise.type == .hold {
-        //     restart()
-        // }
-        
+
         // Reset the success info
         for i in 0..<targetStates.count {
             self.stateSuccesses[i] = StateSuccess(joints: Array(targetStates[i].jointAngles.keys))
@@ -265,7 +235,6 @@ class ActivityMonitor {
     private func tooFast() {
         repTooFast = true
         feedbackGenerator.tooFast() {}
-//        print("too fast: \(currentState.getMaxSpeed())")
     }
     
     private func jump(to : Int) {
@@ -283,7 +252,6 @@ class ActivityMonitor {
             return
         }
         
-        // use    isTurningPoint()      ??????
         let currentTarget = targetStates[targetIndex]
         let difference = currentTarget.jointAngles.difference(currentState.jointAngles)
         for joint in targetStates[targetIndex].jointAngles.keys {
@@ -295,21 +263,16 @@ class ActivityMonitor {
         feedbackGenerator.noState(targetName: targetStates[targetIndex].name, difference: difference.jointAngles) {}
         
         if exerciseType == .hold && lastIndex == 0 && curTime - lastArrived > retryThreshold {
-            print("paused = true")
             self.paused = true
             feedbackGenerator.expired() {
                 self.restart()
             }
         }
-        
-//        print("no state")
     }
     
     private func updateIndex(_ delta : Double) {
-        
         // If the exercise has terminated, don't update
         if paused {
-            print("paused")
             return
         }
         
@@ -361,7 +324,6 @@ class ActivityMonitor {
 
         // If we returned to the same state as before, resume
         if index == -1 && lastIndex != -1 && currentState.reaches(targetStates[lastIndex]) {
-//            print("returning")
             if curTime - lastArrived > noStateThreshold {
                 stateSuccesses[lastIndex].duration = floor(stateSuccesses[lastIndex].duration)
                 if exerciseType == .hold && curTime - lastArrived <= retryThreshold {
@@ -383,7 +345,6 @@ class ActivityMonitor {
         
         // If we have reached the target, update state accordingly
         if currentState.reaches(targetStates[targetIndex]) {
-//            print("advancing")
             jump(to: targetIndex)
             feedbackGenerator.reached() {}
             return

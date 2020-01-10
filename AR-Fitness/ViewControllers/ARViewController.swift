@@ -52,9 +52,11 @@ class ARViewController : UIViewController, ARSessionDelegate {
     
     @IBAction func toggleRobot(sender: UIButton) {
         self.showRobot = !self.showRobot
-    sender.setAttributedTitle(NSAttributedString(string: showRobot ? "Hide robot" : "Show robot", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor:
-        UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]), for: .normal)
-//        sender.setAttributedTitle(showRobot ? "Hide robot" : "Show robot", for: .normal)  // TODO: Fix this
+        sender.setAttributedTitle(
+            NSAttributedString(string: showRobot ? "Hide robot" : "Show robot",
+                               attributes: [.font: UIFont.boldSystemFont(ofSize: 13),
+                                            .foregroundColor: UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)]),
+            for: .normal)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -135,7 +137,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
                 }
             }
             
-            //handleRewards()
+            handleRewards()
         }
     }
     
@@ -159,7 +161,6 @@ class ARViewController : UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 110))
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -110))
         self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 50))
-//        self.view.addConstraint(NSLayoutConstraint(item: scoreLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 150))
         
         // toggle robot button constraints
         robotButton.translatesAutoresizingMaskIntoConstraints = false
@@ -168,6 +169,7 @@ class ARViewController : UIViewController, ARSessionDelegate {
         self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 100))
         self.view.addConstraint(NSLayoutConstraint(item: robotButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30))
         
+        // ARView constraints
         ARViewController.arView.translatesAutoresizingMaskIntoConstraints = false
         ARViewController.arView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         ARViewController.arView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true

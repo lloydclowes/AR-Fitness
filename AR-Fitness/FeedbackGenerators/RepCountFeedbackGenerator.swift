@@ -1,8 +1,6 @@
 import Foundation
 
-class RepCountFeedbackGenerator : BaseFeedbackGenerator
-
-    {
+class RepCountFeedbackGenerator : BaseFeedbackGenerator {
     var successiveReps = 0
     
     override func started(startMsg: String, finished: @escaping () -> Void) {
@@ -26,7 +24,6 @@ class RepCountFeedbackGenerator : BaseFeedbackGenerator
             speaker.speakRandomReward() {
                 self.successSpeaking = false
                 if !self.advancedSpeaking {
-//                    print("reset lastNext")
                     self.lastNextPrompt = TimeInterval()
                 }
                 finished()
